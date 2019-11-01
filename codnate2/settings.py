@@ -25,7 +25,9 @@ SECRET_KEY = ')08fs-0ye4dw!)pj1mb#0vn-awx)-&flx$&^e3l8&@&**f8^d2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '3.133.83.204'
+]
 
 
 # Application definition
@@ -76,7 +78,7 @@ WSGI_APPLICATION = 'codnate2.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'codnate',
         'USER': 'tanuki',
         'PASSWORD': 'mondkaki2',

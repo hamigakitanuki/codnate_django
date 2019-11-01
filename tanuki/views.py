@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Photo
+from .models import Photo,Account
 import json
 from django.db import models
 from django.http.response import JsonResponse
@@ -8,14 +8,29 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.sites.shortcuts import get_current_site
 import re
 from django.core.files import File
+from django.db.models import Max
 
 #テスト用
 def index(request):
-    return render(request,'tanuki/form.html')
+    return HttpResponse("hallo aws")
 
 """
 """
-
+@ensure_csrf_cookie
+def newAccount(requset):
+    if requset == 'GET':
+        return HttpResponse({})
+    try:
+        ac = Account(name=requset.GET.get('name'),
+                     sex=requset.GET.get('sex'),
+                     age=requset.GET.get('age'),
+                     type=requset.GET.get('type'))
+        ac.save()
+        UserNo = models.QuerySet(Account).all().aggregate(Max('id'))
+        HttpResponse(UserNo)
+    except Exception:
+        HttpResponse('totyudeerror')
+        
 #画像のPOST用　userNoとファイルとファイル名がセットで来る
 @ensure_csrf_cookie
 def imgInDB(request):
@@ -36,12 +51,9 @@ def imgInDB(request):
         userNo = re.split('_',FileName)
         print(userNo)
         userNo = int(userNo[0])
-        print(userNo)
         #画像をDBに登録
         photo = Photo(userNo=userNo,FileName=FileName,file=upload_file)
-        print('user')
         photo.save()
-        print('db')
         #画像のパスを作成
         #飛んできたリクエストからURLを取得
         current_site = get_current_site(request)
@@ -53,12 +65,9 @@ def imgInDB(request):
         domain,
         photo.file.url,
         )
-        print(download_url)
         #DBの画像のURLを更新
         photo = models.QuerySet(Photo)
-        print(1)
         photo_obj = photo.filter(FileName=FileName).first()
-        print(photo_obj)
         photo_obj.FilePath = download_url
         photo_obj.save()
         #URLを文字列として返してあげる
@@ -79,14 +88,22 @@ def getImage(request):
     sub = request.GET.get('sub')
     color = request.GET.get('color')
     
+    #UserNoがない場合はエラー
     if(userNo == 'None'):
         HttpResponse('UserNo None')
     #画像のクエリ作成
     ac = models.QuerySet(Photo)
     #画像からUserNoで抽出
     ac =  ac.filter(userNo = userNo)
-
-    #クエリをリスト型にする
+    #カテゴリで選別
+    if(cate != 'None'):
+        ac = ac.filter(cate = cate)
+    if(sub != 'None'):
+        ac = ac.filter(sub = cate)
+    if(color != 'None'):
+        ac = ac.filter(color = cate)
+    
+    #クエリをリスト型にする 画像のあるURLを送る
     path_list = list(ac.values_list('FilePath',flat=True))
     print(path_list)
     #dict型にする

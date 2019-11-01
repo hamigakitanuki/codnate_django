@@ -9,6 +9,11 @@ class Photo(models.Model):
     sub = models.CharField(max_length=10,default='other')
     color = models.CharField(max_length=10,null=True)
 
+class Account(modesl.Model):
+    name = models.CharField(max_length=100,default='none')
+    sex = models.CharField(max_length=2)
+    age = models.IntegerField()
+    type = models.CharField(max_length=10,default='none')
 
     
 
