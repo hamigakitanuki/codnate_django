@@ -107,16 +107,10 @@ def getImage(request):
     
     #クエリをリスト型にする 画像のあるURLを送る
     path_list = list(ac.values_list('FilePath',flat=True))
-    cate_list = list(ac.values_list('cate',flat=True))
-    sub_list = list(ac.values_list('sub',flat=True))
-    color_list = list(ac.values_list('color',flat=True))
     print(path_list)
     #dict型にする
     d = {
-        'path_list':path_list,
-        'cate_list':cate_list,
-        'sub_list':sub_list,
-        'color_list':color_list
+        'path_list':path_list
     }
     return JsonResponse(d)
     #画像のURLをまとめて送る
