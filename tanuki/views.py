@@ -9,24 +9,26 @@ from django.contrib.sites.shortcuts import get_current_site
 import re
 from django.core.files import File
 from django.db.models import Max
-from .forms import PhotoForm
+from .forms import PhotoForm,AccountForm
 from django.views.decorators.csrf import csrf_exempt
 
 #テスト用
 def index(request):
     return HttpResponse("hallo django")
 
-"""
-"""
 @csrf_exempt
 def newAccount(requset):
     if requset == 'GET':
         return HttpResponse({})
     try:
-        ac = Account(name=requset.GET.get('name'),
-                     sex=requset.GET.get('sex'),
-                     age=requset.GET.get('age'),
-                     type=requset.GET.get('type'))
+        form = AccountForm(requset.POST)
+        if not form.is_valid:
+            raise ValueError('invalid form')
+        ac = Account(name=form.cleaned_data['name'],
+                     sex=form.cleaned_data['sex'],
+                     age=form.cleaned_data['age'],
+                     type=form.cleaned_data['type']
+        )
         ac.save()
         UserNo = models.QuerySet(Account).all().aggregate(Max('id'))
         HttpResponse(UserNo)
@@ -79,8 +81,6 @@ def imgInDB(request):
         #画像じゃないとき、または例外発生
         return HttpResponse('totyu de error')
 
-"""
-"""
 
 #画像のGET専用
 def getImage(request):

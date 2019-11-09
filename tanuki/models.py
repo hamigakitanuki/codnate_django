@@ -19,5 +19,13 @@ class BlackList(models.Model):
     sub1 = models.CharField(max_length=30)
     sub2 = models.CharField(max_length=30)
 
+class Codenate(models.Model):
+    sub1 = models.CharField(max_length=30,null=True)
+    sub2 = models.CharField(max_length=30,null=True)
+    sub3 = models.CharField(max_length=30,null=True)
+    sub4 = models.CharField(max_length=30,null=True)
+    sub5 = models.CharField(max_length=30,null=True)
+
+
     
 
