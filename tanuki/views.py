@@ -9,6 +9,8 @@ from django.contrib.sites.shortcuts import get_current_site
 import re
 from django.core.files import File
 from django.db.models import Max
+from .forms import PhotoForm
+from django.views.decorators.csrf import csrf_exempt
 
 #テスト用
 def index(request):
@@ -32,7 +34,7 @@ def newAccount(requset):
         HttpResponse('totyudeerror')
         
 #画像のPOST用　userNoとファイルとファイル名がセットで来る
-@ensure_csrf_cookie
+
 def imgInDB(request):
     
     #GETだった場合
@@ -42,17 +44,17 @@ def imgInDB(request):
     try:
         #ファイルが入っているか確認
         if request.FILES == None:
-            HttpResponse('none file')
+            HttpResponse('error')
         #アップロードされたファイルを変数に格納
-        upload_file = request.FILES['file']
-        
-        FileName = str(upload_file)
-        print(FileName)
-        userNo = re.split('_',FileName)
-        print(userNo)
+        form = PhotoForm(request.POST,request.FILES)
+        if not form.is_valid():
+            raise ValueError('invalid form')        
+        filename = str(form.cleaned_data['image'])
+        userNo = re.split('_',filename)
         userNo = int(userNo[0])
+
         #画像をDBに登録
-        photo = Photo(userNo=userNo,FileName=FileName,file=upload_file)
+        photo = Photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'])
         photo.save()
         #画像のパスを作成
         #飛んできたリクエストからURLを取得
@@ -67,7 +69,7 @@ def imgInDB(request):
         )
         #DBの画像のURLを更新
         photo = models.QuerySet(Photo)
-        photo_obj = photo.filter(FileName=FileName).first()
+        photo_obj = photo.filter(FileName=filename).first()
         photo_obj.FilePath = download_url
         photo_obj.save()
         #URLを文字列として返してあげる
@@ -105,10 +107,16 @@ def getImage(request):
     
     #クエリをリスト型にする 画像のあるURLを送る
     path_list = list(ac.values_list('FilePath',flat=True))
+    cate_list = list(ac.values_list('cate',flat=True))
+    sub_list = list(ac.values_list('sub',flat=True))
+    color_list = list(ac.values_list('color',flat=True))
     print(path_list)
     #dict型にする
     d = {
-        'path_list':path_list
+        'path_list':path_list,
+        'cate_list':cate_list,
+        'sub_list':sub_list,
+        'color_list':color_list
     }
     return JsonResponse(d)
     #画像のURLをまとめて送る
