@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 #テスト用
 def index(request):
-    return HttpResponse("hallo aws")
+    return HttpResponse("hallo django")
 
 """
 """
@@ -107,6 +107,8 @@ def getImage(request):
     
     #クエリをリスト型にする 画像のあるURLを送る
     path_list = list(ac.values_list('FilePath',flat=True))
+    cate_list = list(ac.values_list('cate',flat=True))
+
     print(path_list)
     #dict型にする
     d = {
