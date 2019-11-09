@@ -18,7 +18,7 @@ def index(request):
 
 """
 """
-@ensure_csrf_cookie
+@csrf_exempt
 def newAccount(requset):
     if requset == 'GET':
         return HttpResponse({})
@@ -34,7 +34,7 @@ def newAccount(requset):
         HttpResponse('totyudeerror')
         
 #画像のPOST用　userNoとファイルとファイル名がセットで来る
-
+@csrf_exempt
 def imgInDB(request):
     
     #GETだった場合
@@ -117,3 +117,5 @@ def getImage(request):
     return JsonResponse(d)
     #画像のURLをまとめて送る
     #return render(request,'tanuki/imagePath.html',context=d)
+
+    
