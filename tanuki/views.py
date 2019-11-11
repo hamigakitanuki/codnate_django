@@ -23,18 +23,17 @@ def newAccount(request):
     try:
         print(request.POST)
         form = AccountForm(request.POST,request.FILES)
-        if not form.is_valid:
-            raise ValueError('invalid form')
-        ac = Account(name=form.cleaned_data['name'],
-                     sex=form.cleaned_data['sex'],
-                     age=form.cleaned_data['age'],
-                     type=form.cleaned_data['type']
-        )
+        name = request.POST['name']
+        sex  = request.POST['sex']
+        age  = request.POST['age']
+        type = request.POST['type']
+        
+        ac = Account(name=name,sex=sex,age=age,type=type)
         ac.save()
         UserNo = models.QuerySet(Account).all().aggregate(Max('id'))
-        HttpResponse(UserNo)
+        return HttpResponse(UserNo)
     except Exception:
-        HttpResponse('totyudeerror')
+        return HttpResponse('totyudeerror')
         
 #画像のPOST用　userNoとファイルとファイル名がセットで来る
 @csrf_exempt
