@@ -17,11 +17,12 @@ def index(request):
     return HttpResponse("hallo django")
 
 @csrf_exempt
-def newAccount(requset):
-    if requset == 'GET':
-        return HttpResponse({})
+def newAccount(request):
+    if request == 'GET':
+        return HttpResponse('a')
     try:
-        form = AccountForm(requset.POST)
+        print(request.POST)
+        form = AccountForm(request.POST,request.FILES)
         if not form.is_valid:
             raise ValueError('invalid form')
         ac = Account(name=form.cleaned_data['name'],

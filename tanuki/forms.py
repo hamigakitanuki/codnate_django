@@ -4,7 +4,7 @@ class PhotoForm(forms.Form):
 
 class AccountForm(forms.Form):
     name = forms.CharField(max_length=100)
-    sex  = forms.CharField(max_length=2)
+    sex  = forms.CharField(max_length=5)
     age  = forms.IntegerField()
     type = forms.CharField(max_length=30)
 
