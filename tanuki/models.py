@@ -11,7 +11,7 @@ class Photo(models.Model):
 
 class Account(models.Model):
     name = models.CharField(max_length=100,default='none')
-    sex = models.CharField(max_length=2,default='none')
+    sex = models.CharField(max_length=10,default='none')
     age = models.IntegerField()
     type = models.CharField(max_length=30,default='none')
 

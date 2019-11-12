@@ -18,20 +18,19 @@ def index(request):
 
 @csrf_exempt
 def newAccount(request):
-    if request == 'GET':
+    if request.method == 'GET':
         return HttpResponse('a')
     try:
-        print(request.POST)
         form = AccountForm(request.POST,request.FILES)
         name = request.POST['name']
         sex  = request.POST['sex']
-        age  = request.POST['age']
+        age  = int(request.POST['age'])
         type = request.POST['type']
         
         ac = Account(name=name,sex=sex,age=age,type=type)
         ac.save()
         UserNo = models.QuerySet(Account).all().aggregate(Max('id'))
-        return HttpResponse(UserNo)
+        return HttpResponse(UserNo['id_max'])
     except Exception:
         return HttpResponse('totyudeerror')
         
@@ -40,23 +39,31 @@ def newAccount(request):
 def imgInDB(request):
     
     #GETだった場合
-    if request == 'GET':
-        return HttpResponse({})
+    if request.method == 'GET':
+        return HttpResponse("error")
     
     try:
         #ファイルが入っているか確認
         if request.FILES == None:
             HttpResponse('error')
         #アップロードされたファイルを変数に格納
+        print(request.POST)
         form = PhotoForm(request.POST,request.FILES)
         if not form.is_valid():
+            return HttpResponse("error")
             raise ValueError('invalid form')        
         filename = str(form.cleaned_data['image'])
         userNo = re.split('_',filename)
         userNo = int(userNo[0])
+        cate = request.POST['cate']
+        sub = request.POST['sub']
+        color = request.POST['color']
+        
+
 
         #画像をDBに登録
-        photo = Photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'])
+        photo = Photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'],
+                      cate=cate,sub=sub,color=color)
         photo.save()
         #画像のパスを作成
         #飛んできたリクエストからURLを取得
@@ -80,6 +87,18 @@ def imgInDB(request):
     except Exception:
         #画像じゃないとき、または例外発生
         return HttpResponse('totyu de error')
+
+@csrf_exempt
+def imgChageInfo(request):
+    if request.method == 'GET':
+        return HttpResponse('error')
+
+    else:
+        try:
+
+            return HttpResponse('info change compleate')
+        except Exception:
+            return HttpResponse('totyuu de erorr')
 
 
 #画像のGET専用
