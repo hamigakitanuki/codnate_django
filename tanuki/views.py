@@ -161,47 +161,52 @@ def getCodenate(request):
 
     for i in range(3):
         #トップスからランダムで出力
-        tops_idx = random.randint(0,len(photo_tops_sub))
+        tops_idx = random.randint(0,len(photo_tops_sub)-1)
 
         #ブラックリストで除外するボトムスをリスト形式で出力
-        out_list = list(blackList.filter(sub1=photo_tops_sub[tops_idx]).values_list('sub2',flat=True))
-        print(out_list)
+        tops_out_list = list(blackList.filter(sub1=photo_tops_sub[tops_idx]).values_list('sub2',flat=True))
+        print(tops_out_list)
         
         #ボトムスのサブカテゴリリストから除外して出力するものだけを残す
-        photo_botoms_sub = list(photo_all.filter(cate='ボトムス').values_list('sub'))
+        photo_botoms_sub = list(photo_all.filter(cate='ボトムス').values_list('sub',flat=True))
         if len(photo_botoms_sub) >=1:
-            photo_botoms_sub = [s for s in photo_botoms_sub if s != out_list[:]]
-            photo_botoms_path = list(photo_all.filter(sub__in=photo_botoms_sub[0]).values_list('FilePath'))
+            photo_botoms_sub = [s for s in photo_botoms_sub if s != tops_out_list[:]]
+
+            photo_botoms_sub = list(photo_all.filter(sub__in=photo_botoms_sub).values_list('sub',flat=True))
+            photo_botoms_path = list(photo_all.filter(sub__in=photo_botoms_sub).values_list('FilePath',flat=True))
             #ボトムスからランダムで出力
             if len(photo_botoms_path) >= 1:
                 botoms_idx = random.randint(0,len(photo_botoms_path)-1)
                 botoms_path.append(photo_botoms_path[botoms_idx])
-        print(photo_botoms_sub)
-        print(photo_botoms_path)
+                botoms_out_list = list(blackList.filter(sub1=photo_botoms_sub[botoms_idx]).values_list('sub2',flat=True))
 
+        
         #アウターのサブカテゴリリストから除外して出力するものだけを残す
-        photo_outer_sub = list(photo_all.filter(cate='アウター').values_list('sub'))
+        photo_outer_sub = list(photo_all.filter(cate='アウター').values_list('sub',flat=True))
         if len(photo_outer_sub) >= 1:
-            photo_outer_sub = [s for s in photo_outer_sub if s != out_list[:]]
-            photo_outer_path = list(photo_all.filter(sub__in=photo_outer_sub[0]).values_list('FilePath'))
+            photo_outer_sub = [s for s in photo_outer_sub if s != tops_out_list[:]]
+
+            photo_outer_sub = list(photo_all.filter(sub__in=photo_outer_sub).values_list('sub',flat=True))
+            photo_outer_path = list(photo_all.filter(sub__in=photo_outer_sub).values_list('FilePath',flat=True))
             #アウターからランダムで出力       
             if len(photo_outer_path) >= 1:
                 outer_idx = random.randint(0,len(photo_outer_path)-1)
                 outer_path.append(photo_outer_path[outer_idx])
-        print(photo_outer_sub)
-        print(photo_outer_path)
+                outer_out_list = list(blackList.filter(sub1=photo_outer_sub[outer_idx]).values_list('sub2',flat=True))
+
 
         #シューズのサブカテゴリリストから除外して出力するものだけを残す
-        photo_shoese_sub = list(photo_all.filter(cate='シューズ').values_list('sub'))
+        photo_shoese_sub = list(photo_all.filter(cate='シューズ').values_list('sub',flat=True))
         if len(photo_shoese_sub) >= 1:
-            photo_shoese_sub = [s for s in photo_shoese_sub if s != out_list[:]]
-            photo_shoese_path = list(photo_all.filter(sub__in=photo_shoese_sub[0]).values_list('FilePath'))
+            photo_shoese_sub = [s for s in photo_shoese_sub if s != tops_out_list[:]]
+
+            photo_shoese_path = list(photo_all.filter(sub__in=photo_shoese_sub).values_list('sub',flat=True))
+            photo_shoese_path = list(photo_all.filter(sub__in=photo_shoese_sub).values_list('FilePath',flat=True))
             #シューズからランダムで出力
             if len(photo_shoese_path) >= 1:
                 shoese_idx = random.randint(0,len(photo_shoese_path)-1)
                 shoese_path.append(photo_shoese_path[shoese_idx])
-        print(photo_shoese_sub)
-        print(photo_shoese_path)
+                shoese_out_list = list(blackList.filter(sub1=photo_shoese_sub[shoese_idx]).values_list('sub2',flat=True))
         
         tops_path.append(photo_tops_path[tops_idx])
         
