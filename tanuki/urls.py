@@ -6,4 +6,6 @@ urlpatterns = [
      path(r'imgInDB',views.imgInDB,name = 'imgInDB'),
      path(r'getImage',views.getImage,name = 'getImage'),
      path(r'newAccount',views.newAccount,name = 'newAccount'),
+     path(r'getCodenate',views.getCodenate,name = 'getCodenate'),
+
 ]

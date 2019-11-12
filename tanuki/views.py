@@ -145,6 +145,7 @@ def getImage(request):
 def getCodenate(request):
     userNo = request.GET.get('UserNo')
     photo_all = models.QuerySet(Photo)
+    print(str(userNo))
     #ユーザーの服を全部出力
     photo_all  = photo_all.filter(userNo=userNo)
     #サブカテゴリとファイルパスを出力
@@ -165,33 +166,42 @@ def getCodenate(request):
         #ブラックリストで除外するボトムスをリスト形式で出力
         out_list = list(blackList.filter(sub1=photo_tops_sub[tops_idx]).values_list('sub2',flat=True))
         print(out_list)
+        
         #ボトムスのサブカテゴリリストから除外して出力するものだけを残す
         photo_botoms_sub = list(photo_all.filter(cate='ボトムス').values_list('sub'))
-        photo_botoms_sub = [s for s in photo_botoms_sub if s != out_list[:]]
-        photo_botoms_path = list(photo_all.filter(sub_in=photo_botoms_sub).values_list('FilePath'))
-        #ボトムスからランダムで出力
-        botoms_idx = random.randint(0,len(photo_botoms_path))
+        if photo_botoms_sub is not 'None':
+            photo_botoms_sub = [s for s in photo_botoms_sub if s != out_list[:]]
+            photo_botoms_path = list(photo_all.filter(sub_in=photo_botoms_sub).values_list('FilePath'))
+            #ボトムスからランダムで出力
+            if len(photo_botoms_path) > 1:
+                botoms_idx = random.randint(0,len(photo_botoms_path))
+                botoms_path.append(photo_botoms_path[botoms_idx])
         print(photo_botoms_path)
+
         #アウターのサブカテゴリリストから除外して出力するものだけを残す
         photo_outer_sub = list(photo_all.filter(cate='アウター').values_list('sub'))
-        photo_outer_sub = [s for s in photo_outer_sub if s != out_list[:]]
-        photo_outer_path = list(photo_all.filter(sub_in=photo_outer_sub).values_list('FilePath'))
-        #アウターからランダムで出力
-        outer_idx = random.randint(0,len(photo_outer_path))
+        if photo_outer_sub is not 'None':
+            photo_outer_sub = [s for s in photo_outer_sub if s != out_list[:]]
+            photo_outer_path = list(photo_all.filter(sub_in=photo_outer_sub).values_list('FilePath'))
+            #アウターからランダムで出力       
+            if len(photo_outer_path) > 1:
+                outer_idx = random.randint(0,len(photo_outer_path))
+                outer_path.append(photo_outer_path[outer_idx])
         print(photo_outer_path)
+
         #シューズのサブカテゴリリストから除外して出力するものだけを残す
         photo_shoese_sub = list(photo_all.filter(cate='シューズ').values_list('sub'))
-        photo_shoese_sub = [s for s in photo_shoese_sub if s != out_list[:]]
-        photo_shoese_path = list(photo_all.filter(sub_in=photo_shoese_sub).values_list('FilePath'))
-        #シューズからランダムで出力
-        shoese_idx = random.randint(0,len(photo_shoese_path))
+        if photo_shoese_sub is not 'None':
+            photo_shoese_sub = [s for s in photo_shoese_sub if s != out_list[:]]
+            photo_shoese_path = list(photo_all.filter(sub_in=photo_shoese_sub).values_list('FilePath'))
+            #シューズからランダムで出力
+            if len(photo_shoese_path) > 0:
+                shoese_idx = random.randint(0,len(photo_shoese_path))
+                shoese_path.append(photo_shoese_path[shoese_idx])
         print(photo_shoese_path)
         
-        
         tops_path.append(photo_tops_path[tops_idx])
-        botoms_path.append(photo_botoms_path[botoms_idx])
-        outer_path.append(photo_outer_path[outer_idx])
-        shoese_path.append(photo_shoese_path[shoese_idx])
+        
     
     d = {"tops_path":tops_path,
          "botoms_path":botoms_path,
