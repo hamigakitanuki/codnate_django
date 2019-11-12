@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Photo,Account
+from .models import Photo,Account,BlackList
 import json
 from django.db import models
 from django.http.response import JsonResponse
@@ -11,6 +11,7 @@ from django.core.files import File
 from django.db.models import Max
 from .forms import PhotoForm,AccountForm
 from django.views.decorators.csrf import csrf_exempt
+import random
 
 #テスト用
 def index(request):
@@ -30,7 +31,8 @@ def newAccount(request):
         ac = Account(name=name,sex=sex,age=age,type=type)
         ac.save()
         UserNo = models.QuerySet(Account).all().aggregate(Max('id'))
-        return HttpResponse(UserNo['id_max'])
+        
+        return HttpResponse(str(UserNo['id__max']))
     except Exception:
         return HttpResponse('totyudeerror')
         
@@ -100,7 +102,6 @@ def imgChageInfo(request):
         except Exception:
             return HttpResponse('totyuu de erorr')
 
-
 #画像のGET専用
 def getImage(request):
     #それぞれを抽出(UserNo以外配列)
@@ -110,18 +111,18 @@ def getImage(request):
     color = request.GET.get('color')
     
     #UserNoがない場合はエラー
-    if(userNo == 'None'):
+    if(userNo is 'None'):
         HttpResponse('UserNo None')
     #画像のクエリ作成
     ac = models.QuerySet(Photo)
     #画像からUserNoで抽出
     ac =  ac.filter(userNo = userNo)
     #カテゴリで選別
-    if(cate != 'None'):
+    if(cate is not 'None'):
         ac = ac.filter(cate = cate)
-    if(sub != 'None'):
+    if(sub is not 'None'):
         ac = ac.filter(sub = cate)
-    if(color != 'None'):
+    if(color is not  'None'):
         ac = ac.filter(color = cate)
     
     #クエリをリスト型にする 画像のあるURLを送る
@@ -139,5 +140,63 @@ def getImage(request):
         'sub_list'  :sub_list,
         'color_list':color_list
     }
+    return JsonResponse(d)
+
+def getCodenate(request):
+    userNo = request.GET.get('UserNo')
+    photo_all = models.QuerySet(Photo)
+    #ユーザーの服を全部出力
+    photo_all  = photo_all.filter(userNo=userNo)
+    #サブカテゴリとファイルパスを出力
+    photo_tops_sub = list(photo_all.filter(cate='トップス').values_list('sub',flat=True))
+    photo_tops_path = list(photo_all.filter(cate='トップス').values_list('FilePath',flat=True))
+    #ブラックリストを出力
+    blackList = models.QuerySet(BlackList)
+
+    tops_path = []
+    botoms_path = []
+    outer_path = []
+    shoese_path = []
+
+    for i in range(3):
+        #トップスからランダムで出力
+        tops_idx = random.randint(0,len(photo_tops_sub))
+
+        #ブラックリストで除外するボトムスをリスト形式で出力
+        out_list = list(blackList.filter(sub1=photo_tops_sub[tops_idx]).values_list('sub2',flat=True))
+        print(out_list)
+        #ボトムスのサブカテゴリリストから除外して出力するものだけを残す
+        photo_botoms_sub = list(photo_all.filter(cate='ボトムス').values_list('sub'))
+        photo_botoms_sub = [s for s in photo_botoms_sub if s != out_list[:]]
+        photo_botoms_path = list(photo_all.filter(sub_in=photo_botoms_sub).values_list('FilePath'))
+        #ボトムスからランダムで出力
+        botoms_idx = random.randint(0,len(photo_botoms_path))
+        print(photo_botoms_path)
+        #アウターのサブカテゴリリストから除外して出力するものだけを残す
+        photo_outer_sub = list(photo_all.filter(cate='アウター').values_list('sub'))
+        photo_outer_sub = [s for s in photo_outer_sub if s != out_list[:]]
+        photo_outer_path = list(photo_all.filter(sub_in=photo_outer_sub).values_list('FilePath'))
+        #アウターからランダムで出力
+        outer_idx = random.randint(0,len(photo_outer_path))
+        print(photo_outer_path)
+        #シューズのサブカテゴリリストから除外して出力するものだけを残す
+        photo_shoese_sub = list(photo_all.filter(cate='シューズ').values_list('sub'))
+        photo_shoese_sub = [s for s in photo_shoese_sub if s != out_list[:]]
+        photo_shoese_path = list(photo_all.filter(sub_in=photo_shoese_sub).values_list('FilePath'))
+        #シューズからランダムで出力
+        shoese_idx = random.randint(0,len(photo_shoese_path))
+        print(photo_shoese_path)
+        
+        
+        tops_path.append(photo_tops_path[tops_idx])
+        botoms_path.append(photo_botoms_path[botoms_idx])
+        outer_path.append(photo_outer_path[outer_idx])
+        shoese_path.append(photo_shoese_path[shoese_idx])
+    
+    d = {"tops_path":tops_path,
+         "botoms_path":botoms_path,
+         "outer_path":outer_path,
+         "shoese_path":shoese_path}
+    print(d)
     return JsonResponse(d)
 
