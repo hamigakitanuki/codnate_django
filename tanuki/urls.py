@@ -7,5 +7,5 @@ urlpatterns = [
      path(r'getImage',views.getImage,name = 'getImage'),
      path(r'newAccount',views.newAccount,name = 'newAccount'),
      path(r'getCodenate',views.getCodenate,name = 'getCodenate'),
-
+     path(r'img_Delete',views.img_delete,name = 'img_Delete'),
 ]

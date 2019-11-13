@@ -102,6 +102,16 @@ def imgChageInfo(request):
         except Exception:
             return HttpResponse('totyuu de erorr')
 
+@csrf_exempt
+def img_delete(request):
+    if request.method == "GET":
+        return HttpResponse("error")
+    try:
+        path = request.POST["filePath"]
+        photo = models.QuerySet(Photo).filter(filePath=path).delete()
+        return HttpResponse("Delete compleate")
+    except Exception:
+        return HttpResponse("totyu de error")
 #画像のGET専用
 def getImage(request):
     #それぞれを抽出(UserNo以外配列)
@@ -118,11 +128,11 @@ def getImage(request):
     #画像からUserNoで抽出
     ac =  ac.filter(userNo = userNo)
     #カテゴリで選別
-    if(cate is not 'None'):
+    if(cate is not None):
         ac = ac.filter(cate = cate)
-    if(sub is not 'None'):
+    if(sub is not None):
         ac = ac.filter(sub = cate)
-    if(color is not  'None'):
+    if(color is not None):
         ac = ac.filter(color = cate)
     
     #クエリをリスト型にする 画像のあるURLを送る
