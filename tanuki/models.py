@@ -32,8 +32,9 @@ class Photo(models.Model):
     cate = models.CharField(verbose_name='カテゴリ',max_length=30,default='other')
     sub = models.CharField(verbose_name='サブカテゴリ',max_length=30,default='other')
     color = models.CharField(verbose_name='色',max_length=30,default='other')    
-    sub_type_value = models.ForeignKey(Sub_type_value,on_delete=models.CASCADE)
-    color_type_value = models.ForeignKey(Color_type_value,on_delete=models.CASCADE)
+    sub_type_value1 = models.QuerySet(Sub_type_value).filter(sub=sub).type1
+    sub_type_value2 = models.QuerySet(Sub_type_value).filter(sub=sub).type2
+    color_type_value = models.QuerySet(Color_type_value).filter(color=color).type
 
     def __str__(self):
         return 'userNo:'+ self.userNo + ' FileName:' + self.FileName + ' sub:' + self.sub
