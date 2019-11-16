@@ -60,8 +60,6 @@ def imgInDB(request):
         cate = request.POST['cate']
         sub = request.POST['sub']
         color = request.POST['color']
-        
-
 
         #画像をDBに登録
         photo = Photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'],
@@ -97,7 +95,7 @@ def imgChageInfo(request):
 
     else:
         try:
-
+            
             return HttpResponse('info change compleate')
         except Exception:
             return HttpResponse('totyuu de erorr')
@@ -108,7 +106,7 @@ def img_delete(request):
         return HttpResponse("error")
     try:
         path = request.POST["filePath"]
-        photo = models.QuerySet(Photo).filter(filePath=path).delete()
+        Photo.objects.filter(FilePath=path).delete()
         return HttpResponse("Delete compleate")
     except Exception:
         return HttpResponse("totyu de error")
@@ -122,7 +120,7 @@ def getImage(request):
     
     #UserNoがない場合はエラー
     if(userNo is 'None'):
-        HttpResponse('UserNo None')
+        return HttpResponse('UserNo None')
     #画像のクエリ作成
     ac = models.QuerySet(Photo)
     #画像からUserNoで抽出
@@ -140,6 +138,10 @@ def getImage(request):
     cate_list  = list(ac.values_list('cate',flat=True))
     sub_list   = list(ac.values_list('sub',flat=True))
     color_list = list(ac.values_list('color',flat=True))
+    sub_type_value_list1 = list(ac.values_list('Sub_type_value.type1',flat=True))
+    sub_type_value_list2 = list(ac.values_list('Sub_type_value.type2',flat=True))
+    color_type_value_list = list(ac.values_list('Color_type_value.type',flat=True))
+
     
 
     print(path_list)
@@ -148,7 +150,11 @@ def getImage(request):
         'path_list' :path_list,
         'cate_list' :cate_list,
         'sub_list'  :sub_list,
-        'color_list':color_list
+        'color_list':color_list,
+        'sub_type_value_list1':sub_type_value_list1,
+        'sub_type_value_list2':sub_type_value_list2,
+        'color_type_value_list':color_type_value_list,
+
     }
     return JsonResponse(d)
 
