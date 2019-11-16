@@ -32,9 +32,9 @@ class Photo(models.Model):
     cate = models.CharField(verbose_name='カテゴリ',max_length=30,default='other')
     sub = models.CharField(verbose_name='サブカテゴリ',max_length=30,default='other')
     color = models.CharField(verbose_name='色',max_length=30,default='other')    
-    sub_type_value1 = models.QuerySet(Sub_type_value).filter(sub=sub).type1
-    sub_type_value2 = models.QuerySet(Sub_type_value).filter(sub=sub).type2
-    color_type_value = models.QuerySet(Color_type_value).filter(color=color).type
+    sub_type_value1 = models.CharField(default=models.QuerySet(Sub_type_value).filter(sub=sub).values('type1'),max_length=30)
+    sub_type_value2 = models.CharField(default=models.QuerySet(Sub_type_value).filter(sub=sub).values('type2'),max_length=30)
+    color_type_value = models.CharField(default=models.QuerySet(Color_type_value).filter(color=color).values('type'),max_length=30)
 
     def __str__(self):
         return 'userNo:'+ self.userNo + ' FileName:' + self.FileName + ' sub:' + self.sub
