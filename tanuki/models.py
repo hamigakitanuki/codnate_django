@@ -1,5 +1,17 @@
 from django.db import models
 
+class Sub_type_value(models.Model):
+    sub = models.CharField(max_length=30)
+    type1 = models.CharField(max_length=30,null=True)
+    type2 = models.CharField(max_length=30,null=True)
+
+    def __str__(self):
+        return '&lt;Sub_type_value:id=' + str(self.id) + ',' + self.type1 + ',' + self.type2 +'&gt;'
+
+class Color_type_value(models.Model):
+    color = models.CharField(max_length=30)
+    type = models.CharField(max_length=30)
+    
 class Photo(models.Model):
     userNo = models.IntegerField()
     FileName = models.CharField(max_length=40,default='none')
@@ -19,14 +31,7 @@ class BlackList(models.Model):
     sub1 = models.CharField(max_length=30)
     sub2 = models.CharField(max_length=30)
 
-class Sub_type_value(models.Model):
-    sub = models.CharField(max_length=30)
-    type1 = models.CharField(max_length=30,null=True)
-    type2 = models.CharField(max_length=30,null=True)
 
-class Color_type_value(models.Model):
-    color = models.CharField(max_length=30)
-    type = models.CharField(max_length=30)
 
 
 class Codenate(models.Model):
