@@ -35,7 +35,7 @@ class Photo(models.Model):
     sub_type_value = models.ForeignKey(Sub_type_value,on_delete=models.CASCADE)
     color_type_value = models.ForeignKey(Color_type_value,on_delete=models.CASCADE)
     def __str__(self):
-        return 'userNo:'+ self.userNo + ' FileName:' + self.FileName + ' sub:' + self.sub
+        return 'userNo:'+ str(self.userNo) + ' FileName:' + self.FileName + ' sub:' + self.sub
 class Account(models.Model):
     class Meta:
         db_table = 'Account'
@@ -58,7 +58,7 @@ class BlackList(models.Model):
     def __str__(self):
         return 'sub1:' + self.sub1 + ' sub2:' + self.sub2
 
-class Codenate(models.Model):
+class Codnate(models.Model):
     class Meta:
         db_table = 'Codnate'
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Photo,Account,BlackList
+from .models import Photo,Account,BlackList,Sub_type_value,Color_type_value
 import json
 from django.db import models
 from django.http.response import JsonResponse
@@ -63,7 +63,7 @@ def imgInDB(request):
 
         #画像をDBに登録
         photo = Photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'],
-                      cate=cate,sub=sub,color=color)
+                      cate=cate,sub=sub,color=color,sub_type_value=Sub_type_value(sub=sub),color_type_value=Color_type_value(color=color))
         photo.save()
         #画像のパスを作成
         #飛んできたリクエストからURLを取得
