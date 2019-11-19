@@ -140,11 +140,51 @@ def getImage(request):
     cate_list  = list(ac.values_list('cate',flat=True))
     sub_list   = list(ac.values_list('sub',flat=True))
     color_list = list(ac.values_list('color',flat=True))
-    sub_type_value_list1 = list(ac.values_list('Sub_type_value.type1',flat=True))
-    sub_type_value_list2 = list(ac.values_list('Sub_type_value.type2',flat=True))
-    color_type_value_list = list(ac.values_list('Color_type_value.type',flat=True))
-
+    sub_type_value_list = list(ac.values_list('sub_type_value',flat=True))
+    sub_type_value_distinct = list(ac.values_list('sub_type_value',flat=True).distinct())
+    color_type_value_list = list(ac.values_list('color_type_value',flat=True))
+    color_type_value_distinct = list(ac.values_list('color_type_value',flat=True).distinct())
     
+    kawaii = 0
+    cool = 0
+    simple = 0
+    adult = 0
+    
+    sub_type_value = models.QuerySet(Sub_type_value)
+    for i,id in enumerate(sub_type_value_distinct):
+        count = sub_type_value_list.count(id)
+        type1 = list(sub_type_value.filter(id=id).values_list('type1',flat=True))[0]
+        type2 = list(sub_type_value.filter(id=id).values_list('type2',flat=True))[0]
+        if type1 == 'カワイイ':
+            kawaii = kawaii + count
+        elif type1 == 'クール':
+            cool = cool + count
+        elif type1 == 'シンプル':
+            simple = simple + count
+        elif type1 == 'アダルト':
+            adult = adult + count
+        if type2 == 'カワイイ':
+            kawaii = kawaii + count
+        elif type2 == 'クール':
+            cool = cool + count
+        elif type2 == 'シンプル':
+            simple = simple + count
+        elif type2 == 'アダルト':
+            adult = adult + count
+    
+    color_type_value = models.QuerySet(Color_type_value)
+    for i,id in enumerate(Color_type_value):
+        count = color_type_value_list.count(id)
+        type = list(color_type_value.filter(id=id).values_list('type',flat=True))[0]
+        if type == 'カワイイ':
+            kawaii = kawaii + count
+        elif type == 'クール':
+            cool = cool + count
+        elif type == 'シンプル':
+            simple = simple + count
+        elif type == 'アダルト':
+            adult = adult + count
+    type_value = {kawaii,cool,simple,adult}
 
     print(path_list)
     #dict型にする
@@ -153,10 +193,7 @@ def getImage(request):
         'cate_list' :cate_list,
         'sub_list'  :sub_list,
         'color_list':color_list,
-        'sub_type_value_list1':sub_type_value_list1,
-        'sub_type_value_list2':sub_type_value_list2,
-        'color_type_value_list':color_type_value_list,
-
+        'type_value':type_value
     }
     return JsonResponse(d)
 
