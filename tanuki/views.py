@@ -60,10 +60,11 @@ def imgInDB(request):
         cate = request.POST['cate']
         sub = request.POST['sub']
         color = request.POST['color']
-
+        prin = Sub_type_value.objects.get(sub=sub)[0]
+        print(prin)
         #画像をDBに登録
         photo = Photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'],
-                      cate=cate,sub=sub,color=color,sub_type_value=Sub_type_value(sub=sub),color_type_value=Color_type_value(color=color))
+                      cate=cate,sub=sub,color=color,sub_type_value=Sub_type_value.objects.get(sub=sub),color_type_value=Color_type_value.objects.get(color=color))
         photo.save()
         #画像のパスを作成
         #飛んできたリクエストからURLを取得
