@@ -8,4 +8,5 @@ urlpatterns = [
      path(r'newAccount',views.newAccount,name = 'newAccount'),
      path(r'getCodenate',views.getCodenate,name = 'getCodenate'),
      path(r'img_Delete',views.img_delete,name = 'img_Delete'),
+     path(r'get_Cate',views.getCate,name = 'get_Cate'),
 ]

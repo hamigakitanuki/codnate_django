@@ -9,4 +9,7 @@ class AccountForm(forms.Form):
     sex  = forms.CharField(max_length=5)
     age  = forms.IntegerField()
     type = forms.CharField(max_length=30)
+class PhotoOneForm(forms.Form):
+    image = forms.ImageField()
+    
 

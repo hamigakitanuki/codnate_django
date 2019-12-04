@@ -9,9 +9,24 @@ from django.contrib.sites.shortcuts import get_current_site
 import re
 from django.core.files import File
 from django.db.models import Max
-from .forms import PhotoForm,AccountForm
+from .forms import PhotoForm,AccountForm,PhotoOneForm
 from django.views.decorators.csrf import csrf_exempt
 import random
+
+import cv2
+from sklearn.model_selection import train_test_split
+from keras.optimizers import SGD , Adadelta
+import numpy as np
+from keras.preprocessing.image import ImageDataGenerator
+from PIL import Image
+from collections import Counter
+import os
+from keras.utils import np_utils
+from keras.models import Sequential
+from keras.layers.convolutional import MaxPooling2D
+from keras.layers import Activation , Conv2D , Flatten , Dense , Dropout
+
+cate_num = 0
 
 #テスト用
 def index(request):
@@ -173,7 +188,7 @@ def getImage(request):
             adult = adult + count
     
     color_type_value = models.QuerySet(Color_type_value)
-    for i,id in enumerate(Color_type_value):
+    for i,id in enumerate(color_type_value_distinct):
         count = color_type_value_list.count(id)
         type = list(color_type_value.filter(id=id).values_list('type',flat=True))[0]
         if type == 'カワイイ':
@@ -184,7 +199,10 @@ def getImage(request):
             simple = simple + count
         elif type == 'アダルト':
             adult = adult + count
-    type_value = {kawaii,cool,simple,adult}
+    type_value = {'kawaii':kawaii,
+                  'cool':cool,
+                  'simple':simple,
+                  'adult':adult}
 
     print(path_list)
     #dict型にする
@@ -193,7 +211,11 @@ def getImage(request):
         'cate_list' :cate_list,
         'sub_list'  :sub_list,
         'color_list':color_list,
-        'type_value':type_value
+        'type_value':type_value,
+        'kawaii':kawaii,
+        'cool':cool,
+        'simple':simple,
+        'adult':adult
     }
     return JsonResponse(d)
 
@@ -272,4 +294,126 @@ def getCodenate(request):
          "shoese_path":shoese_path}
     print(d)
     return JsonResponse(d)
+
+def getCate(request):
+    if request.method("GET"):
+        return HttpResponse("error")
+    else:
+        if request.FILES is None:
+            return HttpResponse("no File error")
+        photoForm = PhotoOneForm(request.POST,request.FILES)
+        if not photoForm.is_valid:
+            raise ValueError("invaled error")
+
+        img = photoForm.cleaned_data['image']
+
+        model = Mynet();
+        model.load_weights('huku.h5')
+        
+        cate_num = 4
+
+        #画像をリサイズ（今回は64）
+        cutx = cv2.resize(img,(64,64))
+        #画像の色をRGB形式に変更
+        cutx = cv2.cvtColor(cutx,cv2.COLOR_BGR2RGB).astype(np.float32)
+        #次元数を上げる
+        cutx = cutx.reshape((1,)+cutx.shape)
+        cutx /= 255
+        #モデルに掛ける（チェック）
+        pred = model.predict(cutx,1,0)
+        label = np.argmax(pred)
+        score = np.max(pred)
+
+        #tops
+        if   label == 0:
+            model.load_weights('tops.h5')
+            model.load_weights('huku.h5')
+        
+            cate_num = 5
+
+            cate_name=['ブラウス_チュニック','ビスチェ_キャミソール_タンクトップ','カットソー_ニット_オフショルダー','スウェット_セーター_パーカー','シャツ_Ｔシャツ_ポロシャツ']
+
+            #画像をリサイズ（今回は64）
+            cutx = cv2.resize(img,(64,64))
+            #画像の色をRGB形式に変更
+            cutx = cv2.cvtColor(cutx,cv2.COLOR_BGR2RGB).astype(np.float32)
+            #次元数を上げる
+            cutx = cutx.reshape((1,)+cutx.shape)
+            cutx /= 255
+            #モデルに掛ける（チェック）
+            pred = model.predict(cutx,1,0)
+            label = np.argmax(pred)
+            score = np.max(pred)
+
+            print(cate_name[label])
+            return HttpResponse(cate_name[label])
+        #onepeace
+        elif label == 1:
+            model.load_weights('onepeace.h5')
+            
+        #outer
+        elif label == 2:
+            model.load_weights('outer.h5')
+            
+        #botoms
+        elif label == 3:
+            model.load_weights('botoms.h5')
+            
+
+def Mynet():
+    img_height, img_width = 64,64
+
+        #~~~~~１層~~~~~#
+    #訓練レイヤーが扱える関数を格納(損失値や評価、重みづけなど))
+    model = Sequential()
+
+    #畳み込み層を追加　32行になるように　3×3の畳み込み係数（カーネル）を使い
+    #ゼロパディングを追加して出力後のデータが元の大きさになるように　画像を出力していく　
+    model.add(Conv2D(32, (3, 3), padding = 'same',input_shape=(img_height,img_width,3)))
+
+    #活性化関数を追加　「relu」は微分を行う(マイナスならば0 プラスならばそのまま))
+    model.add(Activation('relu'))
+
+    #32行になるように畳み込みを行う(長方形の行列から正方形の行列になるように)
+    model.add(Conv2D(32,(3,3)))
+
+    #もう一度微分
+    model.add(Activation('relu'))
+
+    #画像のスケールダウンを行う(垂直、水平)
+    model.add(MaxPooling2D(pool_size=(2,2)))
+
+    #0.25以下の数をなくす　これにより計算の数が減少
+    model.add(Dropout(0.25))
+
+    #~~~~~２層~~~~~#
+    #64行に増やしていく
+    model.add(Conv2D(64, (3, 3), padding = 'same'))
+    model.add(Activation('relu'))
+    model.add(Conv2D(64,(3,3)))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(Dropout(0.375))
+
+    #~~~~~３層~~~~~#
+    #多次元配列を平らにする 
+    #もとは４次元テンソル(画像のサンプル数、画像のチャネル数（色情報)、画像の縦幅、画像の横幅）を１次元に落とし込む
+    model.add(Flatten())
+
+    #512行の行列として出力
+    model.add(Dense(512))
+
+    #微分する
+    model.add(Activation('relu'))
+
+    #0.5以下のやつを省く
+    model.add(Dropout(0.5))
+
+    #フォルダ数と同じ行列にして出力
+    model.add(Dense(cate_num))
+    #ソフトマックス関数 ここで隠れ層を通過し、確率を表す数字が出てきたところで「全体から見て何割の確率か」を算出する
+    model.add(Activation('softmax'))
+
+    return model
+
 
