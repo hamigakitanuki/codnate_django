@@ -305,6 +305,7 @@ def getCate(request):
         if not photoForm.is_valid:
             raise ValueError("invaled error")
 
+        print(request.POST)
         img = photoForm.cleaned_data['image']
 
         model = Mynet();
