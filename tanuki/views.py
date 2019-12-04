@@ -296,7 +296,7 @@ def getCodenate(request):
     return JsonResponse(d)
 
 def getCate(request):
-    if request.method("GET"):
+    if request.method == 'GET':
         return HttpResponse("error")
     else:
         if request.FILES is None:
