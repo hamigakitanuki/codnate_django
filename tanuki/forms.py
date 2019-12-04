@@ -11,5 +11,8 @@ class AccountForm(forms.Form):
     type = forms.CharField(max_length=30)
 class PhotoOneForm(forms.Form):
     image = forms.ImageField()
+
+    #post受付の際に使用、画像ファイル単体で受け取る方法が不明
+    sub = forms.CharField(max_length=30,required=False)
     
 
