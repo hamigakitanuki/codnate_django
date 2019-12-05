@@ -335,15 +335,12 @@ def getCate(request):
         pred = model.predict(cutx,1,0)
         label = np.argmax(pred)
         score = np.max(pred)
-        
+
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         keras.backend.clear_session()
 
         #tops
-        if   label == 0:
-            model = Mynet(5)
-            model.load_weights('/home/ubuntu/codnate_jango/tanuki/tops.h5')
-        
+        if label == 0:
             cate_name=['ブラウス_チュニック',
                        'ビスチェ_キャミソール_タンクトップ',
                        'カットソー_ニット_オフショルダー',
