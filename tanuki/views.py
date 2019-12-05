@@ -335,7 +335,7 @@ def getCate(request):
         label = np.argmax(pred)
         score = np.max(pred)
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
-
+        label = 0
         #tops
         if   label == 0:
             model = Mynet(5)
@@ -355,7 +355,7 @@ def getCate(request):
 
             return HttpResponse(cate_name[label])
         #onepeace
-        elif label == 1:
+        if label == 0:
             model = Mynet(5)
             model.load_weights('/home/ubuntu/codnate_jango/tanuki/onepeace.h5')
         
@@ -371,11 +371,11 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
 
-            return HttpResponse(cate_name[label])
+            #return HttpResponse(cate_name[label])
             
             
         #outer
-        elif label == 2:
+        if label == 0:
             model = Mynet(9)
             model.load_weights('/home/ubuntu/codnate_jango/tanuki/outer.h5')
         
@@ -395,10 +395,10 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
 
-            return HttpResponse(cate_name[label])
+            #return HttpResponse(cate_name[label])
             
         #botoms
-        elif label == 3:
+        if label == 0:
             model = Mynet(8)
             model.load_weights('/home/ubuntu/codnate_jango/tanuki/botoms.h5')
         
