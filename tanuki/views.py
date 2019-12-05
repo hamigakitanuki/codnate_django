@@ -334,42 +334,90 @@ def getCate(request):
         pred = model.predict(cutx,1,0)
         label = np.argmax(pred)
         score = np.max(pred)
-        print('label:'+label+' score:'+score+' cate:'+cate_label[label])
+        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
 
         #tops
         if   label == 0:
+            model = Mynet(5)
             model.load_weights('tops.h5')
         
-            cate_num = 4
+            cate_name=['ブラウス_チュニック',
+                       'ビスチェ_キャミソール_タンクトップ',
+                       'カットソー_ニット_オフショルダー',
+                       'スウェット_セーター_パーカー',
+                       'シャツ_Ｔシャツ_ポロシャツ']
 
-            cate_name=['ブラウス_チュニック','ビスチェ_キャミソール_タンクトップ','カットソー_ニット_オフショルダー','スウェット_セーター_パーカー','シャツ_Ｔシャツ_ポロシャツ']
-
-            #画像をリサイズ（今回は64）
-            cutx = cv2.resize(img,(64,64))
-            #画像の色をRGB形式に変更
-            cutx = cv2.cvtColor(cutx,cv2.COLOR_BGR2RGB).astype(np.float32)
-            #次元数を上げる
-            cutx = cutx.reshape((1,)+cutx.shape)
-            cutx /= 255
             #モデルに掛ける（チェック）
             pred = model.predict(cutx,1,0)
             label = np.argmax(pred)
             score = np.max(pred)
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
 
-            print(cate_name[label])
             return HttpResponse(cate_name[label])
         #onepeace
         elif label == 1:
+            model = Mynet(5)
             model.load_weights('onepeace.h5')
+        
+            cate_name=['ドレス',
+                       'キャミドレス_マキシ丈ドレス',
+                       'ワンピース_ひざ丈ドレス_ミニドレス',
+                       'サロペット_コンビネゾン_オーバーオール',
+                       'シャツドレス_ニットドレス']
+
+            #モデルに掛ける（チェック）
+            pred = model.predict(cutx,1,0)
+            label = np.argmax(pred)
+            score = np.max(pred)
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+
+            return HttpResponse(cate_name[label])
             
             
         #outer
         elif label == 2:
+            model = Mynet(9)
             model.load_weights('outer.h5')
+        
+            cate_name=['ポンチョ',
+                       'カーディガン',
+                       'ファーコート',
+                       'ジャケット',
+                       'MA1_ブルゾン_ミリタリージャケット',
+                       'マウンテンパーカー',
+                       'ダウンコート_ダウンベスト',
+                       'デニムジャケット_レザージャケット',
+                       'チェスターコート_ピーコート_ダッフルコート']
+
+            #モデルに掛ける（チェック）
+            pred = model.predict(cutx,1,0)
+            label = np.argmax(pred)
+            score = np.max(pred)
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+
+            return HttpResponse(cate_name[label])
             
         #botoms
         elif label == 3:
+            model = Mynet(8)
             model.load_weights('botoms.h5')
+        
+            cate_name=['カーゴパンツ',
+                       'タイトスカート',
+                       'デニム_スキニーパンツ_スウェットパンツ',
+                       'デニムスカート_ミニスカート',
+                       'フレアスカート_プリーツスカート',
+                       'ハーフパンツ',
+                       'マキシ丈スカート_ミモレスカート',
+                       'タックパンツ_ワイドパンツ']
+
+            #モデルに掛ける（チェック）
+            pred = model.predict(cutx,1,0)
+            label = np.argmax(pred)
+            score = np.max(pred)
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+
+            return HttpResponse(cate_name[label])
             
 
 def Mynet(cate_num):
