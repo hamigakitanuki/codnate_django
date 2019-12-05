@@ -331,7 +331,7 @@ def getCate(request):
         if   label == 0:
             model.load_weights('tops.h5')
         
-            cate_num = 5
+            cate_num = 4
 
             cate_name=['ブラウス_チュニック','ビスチェ_キャミソール_タンクトップ','カットソー_ニット_オフショルダー','スウェット_セーター_パーカー','シャツ_Ｔシャツ_ポロシャツ']
 
@@ -387,7 +387,7 @@ def Mynet():
     model.add(MaxPooling2D(pool_size=(2,2)))
 
     #0.25以下の数をなくす　これにより計算の数が減少
-    model.add(Dropout(0.125))
+    model.add(Dropout(0.25))
 
     #~~~~~２層~~~~~#
     #64行に増やしていく
@@ -396,7 +396,7 @@ def Mynet():
     model.add(Conv2D(64,(3,3)))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2,2)))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.375))
 
     #~~~~~３層~~~~~#
     #多次元配列を平らにする 
@@ -410,7 +410,7 @@ def Mynet():
     model.add(Activation('relu'))
 
     #0.5以下のやつを省く
-    model.add(Dropout(0.375))
+    model.add(Dropout(0.5))
 
     #フォルダ数と同じ行列にして出力
     model.add(Dense(cate_num))
