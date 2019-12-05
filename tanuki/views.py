@@ -335,6 +335,7 @@ def getCate(request):
         pred = model.predict(cutx,1,0)
         label = np.argmax(pred)
         score = np.max(pred)
+        
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         keras.backend.clear_session()
 
