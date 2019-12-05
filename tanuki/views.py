@@ -307,10 +307,10 @@ def getCate(request):
 
         print(request.POST)
         img = photoForm.cleaned_data['image']
-
+        print(img)
         model = Mynet();
         model.load_weights('huku.h5')
-        
+        print('kokomade')
         cate_num = 4
 
         cate_label = ['tops','onepeace','outer','botoms']
@@ -387,7 +387,7 @@ def Mynet():
     model.add(MaxPooling2D(pool_size=(2,2)))
 
     #0.25以下の数をなくす　これにより計算の数が減少
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.125))
 
     #~~~~~２層~~~~~#
     #64行に増やしていく
@@ -396,7 +396,7 @@ def Mynet():
     model.add(Conv2D(64,(3,3)))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2,2)))
-    model.add(Dropout(0.375))
+    model.add(Dropout(0.25))
 
     #~~~~~３層~~~~~#
     #多次元配列を平らにする 
@@ -410,7 +410,7 @@ def Mynet():
     model.add(Activation('relu'))
 
     #0.5以下のやつを省く
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.375))
 
     #フォルダ数と同じ行列にして出力
     model.add(Dense(cate_num))
