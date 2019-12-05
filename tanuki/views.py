@@ -309,7 +309,7 @@ def getCate(request):
         img = photoForm.cleaned_data['image']
         print(img)
         model = Mynet();
-        model.load_weights('huku.h5')
+        model.load_weights('/home/ubuntu/codnate_jango/tanuki/huku.h5')
         print('kokomade')
         cate_num = 4
 
