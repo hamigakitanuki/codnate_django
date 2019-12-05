@@ -309,14 +309,15 @@ def getCate(request):
         img = photoForm.cleaned_data['image']
         print(img)
 
+        
         import keras.backend.tensorflow_backend as tb
         tb._SYMBOLIC_SCOPE.value = True
         print('mynet')
-        model = Mynet();
+        model = Mynet(4);
         model.load_weights('/home/ubuntu/codnate_jango/tanuki/huku.h5')
         print('kokomade')
-        cate_num = 4
-
+        
+        print(type(img))
         cate_label = ['tops','onepeace','outer','botoms']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
@@ -367,7 +368,7 @@ def getCate(request):
             model.load_weights('botoms.h5')
             
 
-def Mynet():
+def Mynet(cate_num):
     img_height, img_width = 64,64
 
         #~~~~~１層~~~~~#
