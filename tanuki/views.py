@@ -21,6 +21,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from PIL import Image
 from collections import Counter
 import os
+from tensorflow import keras
 from keras.utils import np_utils
 from keras.models import Sequential
 from keras.layers.convolutional import MaxPooling2D
@@ -335,86 +336,91 @@ def getCate(request):
         label = np.argmax(pred)
         score = np.max(pred)
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        keras.backend.clear_session()
+
         #tops
+        if   label == 0:
+            model = Mynet(5)
+            model.load_weights('/home/ubuntu/codnate_jango/tanuki/tops.h5')
         
-        model = Mynet(5)
-        model.load_weights('/home/ubuntu/codnate_jango/tanuki/tops.h5')
-    
-        cate_name=['ブラウス_チュニック',
-                    'ビスチェ_キャミソール_タンクトップ',
-                    'カットソー_ニット_オフショルダー',
-                    'スウェット_セーター_パーカー',
-                    'シャツ_Ｔシャツ_ポロシャツ']
+            cate_name=['ブラウス_チュニック',
+                       'ビスチェ_キャミソール_タンクトップ',
+                       'カットソー_ニット_オフショルダー',
+                       'スウェット_セーター_パーカー',
+                       'シャツ_Ｔシャツ_ポロシャツ']
 
-        #モデルに掛ける（チェック）
-        pred = model.predict(cutx,1,0)
-        label = np.argmax(pred)
-        score = np.max(pred)
-        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-
-        #return HttpResponse(cate_name[label])
+            #モデルに掛ける（チェック）
+            pred = model.predict(cutx,1,0)
+            label = np.argmax(pred)
+            score = np.max(pred)
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            keras.backend.clear_session()
+            return HttpResponse(cate_name[label])
         #onepeace
+        elif label == 1:
+            model = Mynet(5)
+            model.load_weights('/home/ubuntu/codnate_jango/tanuki/onepeace.h5')
         
-        model = Mynet(5)
-        model.load_weights('/home/ubuntu/codnate_jango/tanuki/onepeace.h5')
-    
-        cate_name=['ドレス',
-                    'キャミドレス_マキシ丈ドレス',
-                    'ワンピース_ひざ丈ドレス_ミニドレス',
-                    'サロペット_コンビネゾン_オーバーオール',
-                    'シャツドレス_ニットドレス']
+            cate_name=['ドレス',
+                       'キャミドレス_マキシ丈ドレス',
+                       'ワンピース_ひざ丈ドレス_ミニドレス',
+                       'サロペット_コンビネゾン_オーバーオール',
+                       'シャツドレス_ニットドレス']
 
-        #モデルに掛ける（チェック）
-        pred = model.predict(cutx,1,0)
-        label = np.argmax(pred)
-        score = np.max(pred)
-        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            #モデルに掛ける（チェック）
+            pred = model.predict(cutx,1,0)
+            label = np.argmax(pred)
+            score = np.max(pred)
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            keras.backend.clear_session()
 
-        #return HttpResponse(cate_name[label])
+            return HttpResponse(cate_name[label])
             
             
         #outer
-        model = Mynet(9)
-        model.load_weights('/home/ubuntu/codnate_jango/tanuki/outer.h5')
-    
-        cate_name=['ポンチョ',
-                    'カーディガン',
-                    'ファーコート',
-                    'ジャケット',
-                    'MA1_ブルゾン_ミリタリージャケット',
-                    'マウンテンパーカー',
-                    'ダウンコート_ダウンベスト',
-                    'デニムジャケット_レザージャケット',
-                    'チェスターコート_ピーコート_ダッフルコート']
+        elif label == 2:
+            model = Mynet(9)
+            model.load_weights('/home/ubuntu/codnate_jango/tanuki/outer.h5')
+        
+            cate_name=['ポンチョ',
+                       'カーディガン',
+                       'ファーコート',
+                       'ジャケット',
+                       'MA1_ブルゾン_ミリタリージャケット',
+                       'マウンテンパーカー',
+                       'ダウンコート_ダウンベスト',
+                       'デニムジャケット_レザージャケット',
+                       'チェスターコート_ピーコート_ダッフルコート']
 
-        #モデルに掛ける（チェック）
-        pred = model.predict(cutx,1,0)
-        label = np.argmax(pred)
-        score = np.max(pred)
-        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-
-        #return HttpResponse(cate_name[label])
+            #モデルに掛ける（チェック）
+            pred = model.predict(cutx,1,0)
+            label = np.argmax(pred)
+            score = np.max(pred)
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            keras.backend.clear_session()
+            return HttpResponse(cate_name[label])
             
         #botoms
-        model = Mynet(8)
-        model.load_weights('/home/ubuntu/codnate_jango/tanuki/botoms.h5')
-    
-        cate_name=['カーゴパンツ',
-                    'タイトスカート',
-                    'デニム_スキニーパンツ_スウェットパンツ',
-                    'デニムスカート_ミニスカート',
-                    'フレアスカート_プリーツスカート',
-                    'ハーフパンツ',
-                    'マキシ丈スカート_ミモレスカート',
-                    'タックパンツ_ワイドパンツ']
+        elif label == 3:
+            model = Mynet(8)
+            model.load_weights('/home/ubuntu/codnate_jango/tanuki/botoms.h5')
+        
+            cate_name=['カーゴパンツ',
+                       'タイトスカート',
+                       'デニム_スキニーパンツ_スウェットパンツ',
+                       'デニムスカート_ミニスカート',
+                       'フレアスカート_プリーツスカート',
+                       'ハーフパンツ',
+                       'マキシ丈スカート_ミモレスカート',
+                       'タックパンツ_ワイドパンツ']
 
-        #モデルに掛ける（チェック）
-        pred = model.predict(cutx,1,0)
-        label = np.argmax(pred)
-        score = np.max(pred)
-        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-
-        return HttpResponse(cate_name[label])
+            #モデルに掛ける（チェック）
+            pred = model.predict(cutx,1,0)
+            label = np.argmax(pred)
+            score = np.max(pred)
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            keras.backend.clear_session()
+            return HttpResponse(cate_name[label])
             
 
 def Mynet(cate_num):
