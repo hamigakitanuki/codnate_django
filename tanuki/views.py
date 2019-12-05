@@ -339,7 +339,7 @@ def getCate(request):
         #tops
         if   label == 0:
             model = Mynet(5)
-            model.load_weights('tops.h5')
+            model.load_weights('/home/ubuntu/codnate_jango/tanuki/tops.h5')
         
             cate_name=['ブラウス_チュニック',
                        'ビスチェ_キャミソール_タンクトップ',
@@ -357,7 +357,7 @@ def getCate(request):
         #onepeace
         elif label == 1:
             model = Mynet(5)
-            model.load_weights('onepeace.h5')
+            model.load_weights('/home/ubuntu/codnate_jango/tanuki/onepeace.h5')
         
             cate_name=['ドレス',
                        'キャミドレス_マキシ丈ドレス',
@@ -377,7 +377,7 @@ def getCate(request):
         #outer
         elif label == 2:
             model = Mynet(9)
-            model.load_weights('outer.h5')
+            model.load_weights('/home/ubuntu/codnate_jango/tanuki/outer.h5')
         
             cate_name=['ポンチョ',
                        'カーディガン',
@@ -400,7 +400,7 @@ def getCate(request):
         #botoms
         elif label == 3:
             model = Mynet(8)
-            model.load_weights('botoms.h5')
+            model.load_weights('/home/ubuntu/codnate_jango/tanuki/botoms.h5')
         
             cate_name=['カーゴパンツ',
                        'タイトスカート',
