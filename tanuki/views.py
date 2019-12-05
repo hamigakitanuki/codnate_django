@@ -302,7 +302,7 @@ def getCate(request):
         if request.FILES is None:
             return HttpResponse("no File error")
         photoForm = PhotoOneForm(request.POST,request.FILES)
-        if not photoForm.is_valid:
+        if not photoForm.is_valid():
             raise ValueError("invaled error")
 
         print(request.POST)
@@ -313,6 +313,7 @@ def getCate(request):
         
         cate_num = 4
 
+        cate_label = ['tops','onepeace','outer','botoms']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
@@ -324,11 +325,11 @@ def getCate(request):
         pred = model.predict(cutx,1,0)
         label = np.argmax(pred)
         score = np.max(pred)
+        print('label:'+label+' score:'+score+' cate:'+cate_label[label])
 
         #tops
         if   label == 0:
             model.load_weights('tops.h5')
-            model.load_weights('huku.h5')
         
             cate_num = 5
 
@@ -351,6 +352,7 @@ def getCate(request):
         #onepeace
         elif label == 1:
             model.load_weights('onepeace.h5')
+            
             
         #outer
         elif label == 2:
