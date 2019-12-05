@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Photo,Account,BlackList,Sub_type_value,Color_type_value
+from .models import Photo,Account,BlackList,Sub_type_value,Color_type_value,Photo_one
 import json
 from django.db import models
 from django.http.response import JsonResponse
@@ -317,7 +317,11 @@ def getCate(request):
         model.load_weights('/home/ubuntu/codnate_jango/tanuki/huku.h5')
         print('kokomade')
         
-        print(type(img))
+        photo_one = Photo_one(photo=img)
+        photo_one.save()
+        print(photo_one.photo.url)
+        img = cv2.imread(photo_one.photo.url,1)
+        
         cate_label = ['tops','onepeace','outer','botoms']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))

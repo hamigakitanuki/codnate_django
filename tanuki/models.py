@@ -1,5 +1,10 @@
 from django.db import models
 
+class Photo_one(models.Model):
+    class Meta:
+        db_table = 'Photo_one'
+    
+    photo = models.ImageField(verbose_name='画像',upload_to='tanuki')
 class Sub_type_value(models.Model):
     class Meta:
         db_table = 'Sub_type_value'
