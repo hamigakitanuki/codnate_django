@@ -308,6 +308,10 @@ def getCate(request):
         print(request.POST)
         img = photoForm.cleaned_data['image']
         print(img)
+
+        import keras.backend.tensorflow_backend as tb
+        tb._SYMBOLIC_SCOPE.value = True
+        print('mynet')
         model = Mynet();
         model.load_weights('/home/ubuntu/codnate_jango/tanuki/huku.h5')
         print('kokomade')
