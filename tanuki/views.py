@@ -320,8 +320,8 @@ def getCate(request):
         photo_one = Photo_one(photo=img)
         photo_one.save()
         print(photo_one.photo.url)
-        img = cv2.imread(photo_one.photo.url,1)
-        
+        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
+
         cate_label = ['tops','onepeace','outer','botoms']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
