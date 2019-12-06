@@ -13,6 +13,7 @@ from .forms import PhotoForm,AccountForm,PhotoOneForm
 from django.views.decorators.csrf import csrf_exempt
 import random
 
+
 import cv2
 from sklearn.model_selection import train_test_split
 from keras.optimizers import SGD , Adadelta
@@ -21,7 +22,8 @@ from keras.preprocessing.image import ImageDataGenerator
 from PIL import Image
 from collections import Counter
 import os
-from tensorflow import keras
+import tensorflow as tf
+from keras import backend as K 
 from keras.utils import np_utils
 from keras.models import Sequential
 from keras.layers.convolutional import MaxPooling2D
@@ -337,7 +339,8 @@ def getCate(request):
         score = np.max(pred)
 
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
-        keras.backend.clear_session()
+        K.backend.clear_session()
+        tf.reset_default_graph()
 
         #tops
         if label == 0:
@@ -352,7 +355,9 @@ def getCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            keras.backend.clear_session()
+            K.backend.clear_session()
+            tf.reset_default_graph()
+
             return HttpResponse(cate_name[label])
         #onepeace
         elif label == 1:
@@ -370,7 +375,8 @@ def getCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            keras.backend.clear_session()
+            K.backend.clear_session()
+            tf.reset_default_graph()
 
             return HttpResponse(cate_name[label])
             
@@ -395,7 +401,9 @@ def getCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            keras.backend.clear_session()
+            K.backend.clear_session()
+            tf.reset_default_graph()
+
             return HttpResponse(cate_name[label])
             
         #botoms
@@ -417,7 +425,9 @@ def getCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            keras.backend.clear_session()
+            K.backend.clear_session()
+            tf.reset_default_graph()
+
             return HttpResponse(cate_name[label])
             
 
