@@ -342,7 +342,6 @@ def getCate(request):
 
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
-        tf.reset_default_graph()
 
         #tops
         if label == 0:
@@ -358,7 +357,6 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
-            tf.reset_default_graph()
 
             return HttpResponse(cate_name[label])
         #onepeace
@@ -378,7 +376,6 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
-            tf.reset_default_graph()
 
             return HttpResponse(cate_name[label])
             
@@ -404,7 +401,6 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
-            tf.reset_default_graph()
 
             return HttpResponse(cate_name[label])
             
