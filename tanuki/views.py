@@ -232,7 +232,8 @@ def getCodenate(request):
     photo_tops_path = list(photo_all.filter(cate='トップス').values_list('FilePath',flat=True))
     #ブラックリストを出力
     blackList = models.QuerySet(BlackList)
-
+    if photo_tops_sub is None:
+        return HttpResponse("gazou ga naiyo")
     tops_path = []
     botoms_path = []
     outer_path = []
@@ -244,9 +245,7 @@ def getCodenate(request):
 
         #ブラックリストで除外するボトムスをリスト形式で出力
         tops_out_list = list(blackList.filter(sub1=photo_tops_sub[tops_idx]).values_list('sub2',flat=True))
-        if tops_out_list is None:
-            break
-        print(tops_out_list)
+        
         
         #ボトムスのサブカテゴリリストから除外して出力するものだけを残す
         photo_botoms_sub = list(photo_all.filter(cate='ボトムス').values_list('sub',flat=True))
