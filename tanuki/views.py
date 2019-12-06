@@ -13,6 +13,7 @@ from .forms import PhotoForm,AccountForm,PhotoOneForm
 from django.views.decorators.csrf import csrf_exempt
 import random
 
+import keras.backend.tensorflow_backend as tb
 
 import cv2
 from sklearn.model_selection import train_test_split
@@ -243,6 +244,8 @@ def getCodenate(request):
 
         #ブラックリストで除外するボトムスをリスト形式で出力
         tops_out_list = list(blackList.filter(sub1=photo_tops_sub[tops_idx]).values_list('sub2',flat=True))
+        if tops_out_list is None:
+            break
         print(tops_out_list)
         
         #ボトムスのサブカテゴリリストから除外して出力するものだけを残す
@@ -299,6 +302,7 @@ def getCodenate(request):
 @csrf_exempt
 def getCate(request):
     
+    
     if request.method == 'GET':
         return HttpResponse("error")
     else:
@@ -313,7 +317,6 @@ def getCate(request):
         print(img)
 
         
-        import keras.backend.tensorflow_backend as tb
         tb._SYMBOLIC_SCOPE.value = True
         print('mynet')
         model = Mynet(4);
@@ -339,7 +342,7 @@ def getCate(request):
         score = np.max(pred)
 
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
-        K.backend.clear_session()
+        K.clear_session()
         tf.reset_default_graph()
 
         #tops
@@ -355,7 +358,7 @@ def getCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            K.backend.clear_session()
+            K.clear_session()
             tf.reset_default_graph()
 
             return HttpResponse(cate_name[label])
@@ -375,7 +378,7 @@ def getCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            K.backend.clear_session()
+            K.clear_session()
             tf.reset_default_graph()
 
             return HttpResponse(cate_name[label])
@@ -401,7 +404,7 @@ def getCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            K.backend.clear_session()
+            K.clear_session()
             tf.reset_default_graph()
 
             return HttpResponse(cate_name[label])
@@ -425,7 +428,7 @@ def getCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            K.backend.clear_session()
+            K.clear_session()
             tf.reset_default_graph()
 
             return HttpResponse(cate_name[label])
