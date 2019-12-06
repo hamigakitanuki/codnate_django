@@ -27,8 +27,6 @@ from keras.models import Sequential
 from keras.layers.convolutional import MaxPooling2D
 from keras.layers import Activation , Conv2D , Flatten , Dense , Dropout
 
-cate_num = 0
-
 #テスト用
 def index(request):
     return HttpResponse("hallo django")
@@ -294,9 +292,11 @@ def getCodenate(request):
          "outer_path":outer_path,
          "shoese_path":shoese_path}
     print(d)
-    return JsonResponse(d)
+    return JsonResponse(d)@csrf_exempt
 
+@csrf_exempt
 def getCate(request):
+    
     if request.method == 'GET':
         return HttpResponse("error")
     else:
