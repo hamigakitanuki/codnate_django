@@ -462,7 +462,7 @@ def getCate(request):
              'type':'dress',
              'type_value':0.67,
              'tag':['1','2','3','4']}
-
+        print(d)
         return JsonResponse(d)
 
 
