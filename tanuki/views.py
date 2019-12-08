@@ -319,6 +319,7 @@ def getCate(request):
 
         
         tb._SYMBOLIC_SCOPE.value = True
+
         print('mynet')
         model_cate = Mynet(4);
         model_cate.load_weights('/home/ubuntu/codnate_jango/tanuki/huku.h5')
@@ -345,6 +346,7 @@ def getCate(request):
 
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
+        tf.keras.backend.clear_session()
         cate_res_name = cate_label[label]
         sub_res_name = ''
 
@@ -368,6 +370,8 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
+            tf.keras.backend.clear_session()
+
             sub_res_name = cate_name[label]
 
         #onepeace
@@ -391,6 +395,8 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
+            tf.keras.backend.clear_session()
+
             sub_res_name = cate_name[label]
                
         #outer
@@ -423,6 +429,8 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
+            tf.keras.backend.clear_session()
+
 
             sub_res_name = cate_name[label]
         #botoms
@@ -453,6 +461,8 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
+            tf.keras.backend.clear_session()
+
             sub_res_name = cate_name[label]
         
 
