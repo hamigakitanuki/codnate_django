@@ -380,7 +380,7 @@ def getCate(request):
             #           'ワンピース_ひざ丈ドレス_ミニドレス',
             #           'サロペット_コンビネゾン_オーバーオール',
             #           'シャツドレス_ニットドレス']
-            cate_name=['dress'
+            cate_name=['dress',
                        'camisole_maxidress',
                        'onepeace_knee-lengthdress',
                        'saropetto_convenience_overalls',
