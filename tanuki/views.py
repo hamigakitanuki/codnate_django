@@ -298,7 +298,7 @@ def getCodenate(request):
          "outer_path":outer_path,
          "shoese_path":shoese_path}
     print(d)
-    return JsonResponse(d)@csrf_exempt
+    return JsonResponse(d)
 
 @csrf_exempt
 def getCate(request):
@@ -329,7 +329,8 @@ def getCate(request):
         print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
-        cate_label = ['トップス','ワンピース','アウター','ボトムス']
+        #cate_label = ['トップス','ワンピース','アウター','ボトムス']
+        cate_label = ['tops','onepeace','outer','botoms']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
@@ -351,12 +352,16 @@ def getCate(request):
         if label == 0:
             model_tops = Mynet(5)
             model_tops.load_weights('/home/ubuntu/codnate_jango/tanuki/tops.h5')
-            cate_name=['ブラウス_チュニック',
-                       'ビスチェ_キャミソール_タンクトップ',
-                       'カットソー_ニット_オフショルダー',
-                       'スウェット_セーター_パーカー',
-                       'シャツ_Ｔシャツ_ポロシャツ']
-
+            #cate_name=['ブラウス_チュニック',
+            #           'ビスチェ_キャミソール_タンクトップ',
+            #           'カットソー_ニット_オフショルダー',
+            #           'スウェット_セーター_パーカー',
+            #           'シャツ_Ｔシャツ_ポロシャツ']
+            cate_name =['blouse_tunic',
+                        'busiter_camisole_tanktop'
+                        'cut-and-saw_knit_offshoulder'
+                        'swrat_sweater_parker'
+                        'shirt_t-shirt_poloshirt']
             #モデルに掛ける（チェック）
             pred = model_tops.predict(cutx,1,0)
             label = np.argmax(pred)
@@ -370,12 +375,16 @@ def getCate(request):
             model_onepeace = Mynet(5)
             model_onepeace.load_weights('/home/ubuntu/codnate_jango/tanuki/onepeace.h5')
         
-            cate_name=['ドレス',
-                       'キャミドレス_マキシ丈ドレス',
-                       'ワンピース_ひざ丈ドレス_ミニドレス',
-                       'サロペット_コンビネゾン_オーバーオール',
-                       'シャツドレス_ニットドレス']
-
+            #cate_name=['ドレス',
+            #          'キャミドレス_マキシ丈ドレス',
+            #           'ワンピース_ひざ丈ドレス_ミニドレス',
+            #           'サロペット_コンビネゾン_オーバーオール',
+            #           'シャツドレス_ニットドレス']
+            cate_name=['dress'
+                       'camisole_maxidress',
+                       'onepeace_knee-lengthdress',
+                       'saropetto_convenience_overalls'
+                       'shirtdress_nittodress']
             #モデルに掛ける（チェック）
             pred = model_onepeace.predict(cutx,1,0)
             label = np.argmax(pred)
@@ -389,15 +398,24 @@ def getCate(request):
             model_outer = Mynet(9)
             model_outer.load_weights('/home/ubuntu/codnate_jango/tanuki/outer.h5')
         
-            cate_name=['ポンチョ',
-                       'カーディガン',
-                       'ファーコート',
-                       'ジャケット',
-                       'MA1_ブルゾン_ミリタリージャケット',
-                       'マウンテンパーカー',
-                       'ダウンコート_ダウンベスト',
-                       'デニムジャケット_レザージャケット',
-                       'チェスターコート_ピーコート_ダッフルコート']
+            #cate_name=['ポンチョ',
+            #           'カーディガン',
+            #           'ファーコート',
+            #           'ジャケット',
+            #           'MA1_ブルゾン_ミリタリージャケット',
+            #           'マウンテンパーカー',
+            #           'ダウンコート_ダウンベスト',
+            #           'デニムジャケット_レザージャケット',
+            #           'チェスターコート_ピーコート_ダッフルコート']
+            cate_name=['boncho',
+                       'cardigan',
+                       'hur-coat',
+                       'jacket',
+                       'ma1_blouson_military-acket'
+                       'moutain-perker_mods-coat_raincoat'
+                       'down-coat_down-vest'
+                       'denim-jacket_leather-jacket'
+                       'chester-coat_pcoat_duffle-coat']
 
             #モデルに掛ける（チェック）
             pred = model_outer.predict(cutx,1,0)
@@ -412,15 +430,23 @@ def getCate(request):
             model_botoms = Mynet(8)
             model_botoms.load_weights('/home/ubuntu/codnate_jango/tanuki/botoms.h5')
         
-            cate_name=['カーゴパンツ',
-                       'タイトスカート',
-                       'デニム_スキニーパンツ_スウェットパンツ',
-                       'デニムスカート_ミニスカート',
-                       'フレアスカート_プリーツスカート',
-                       'ハーフパンツ',
-                       'マキシ丈スカート_ミモレスカート',
-                       'タックパンツ_ワイドパンツ']
-
+            #cate_name=['カーゴパンツ',
+            #           'タイトスカート',
+            #           'デニム_スキニーパンツ_スウェットパンツ',
+            #           'デニムスカート_ミニスカート',
+            #           'フレアスカート_プリーツスカート',
+            #           'ハーフパンツ',
+            #           'マキシ丈スカート_ミモレスカート',
+            #           'タックパンツ_ワイドパンツ']
+            
+            cate_name = ['cargopants',
+                         'tightskirt',
+                         'denim_skinnypants_sweatpants',
+                         'denimskirt_miniskirt'
+                         'flareskirt_pleatedskirt_tuleskirt'
+                         'harfpants'
+                         'maxilengthskirt_mimoreskirt',
+                         'tuckpants_widepants']
             #モデルに掛ける（チェック）
             pred = model_botoms.predict(cutx,1,0)
             label = np.argmax(pred)
@@ -433,9 +459,9 @@ def getCate(request):
 
         d = {'cate':cate_res_name,
              'sub':sub_res_name,
-             'type':'ドレス',
+             'type':'dress',
              'type_value':0.67,
-             'tag':['カワイイ','大人っぽい','きれい','ふわふわ']}
+             'tag':['1','2','3','4']}
 
         return JsonResponse(d)
 
