@@ -458,8 +458,8 @@ def getCate(request):
 
         d = {'cate':cate_res_name,
              'sub':sub_res_name,
-             'type':'dress',
-             'type_value':0.67,
+             'type':['dress','casual','simmple'],
+             'type_value':['0.63','0.21','0.16'],
              'tag':['1','2','3','4']}
         print(d)
         return JsonResponse(d)
