@@ -453,7 +453,6 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
-            tf.reset_default_graph()
             sub_res_name = cate_name[label]
         
 
