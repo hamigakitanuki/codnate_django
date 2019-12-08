@@ -30,6 +30,8 @@ from keras.models import Sequential
 from keras.layers.convolutional import MaxPooling2D
 from keras.layers import Activation , Conv2D , Flatten , Dense , Dropout
 
+
+
 #テスト用
 def index(request):
     return HttpResponse("hallo django")
@@ -238,7 +240,7 @@ def getCodenate(request):
     botoms_path = []
     outer_path = []
     shoese_path = []
-
+    
     for i in range(3):
         #トップスからランダムで出力
         tops_idx = random.randint(0,len(photo_tops_sub)-1)
@@ -327,7 +329,7 @@ def getCate(request):
         print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
-        cate_label = ['tops','onepeace','outer','botoms']
+        cate_label = ['トップス','ワンピース','アウター','ボトムス']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
@@ -342,6 +344,8 @@ def getCate(request):
 
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
+        cate_res_name = cate_label[label]
+        sub_res_name = ''
 
         #tops
         if label == 0:
@@ -354,14 +358,13 @@ def getCate(request):
                        'シャツ_Ｔシャツ_ポロシャツ']
 
             #モデルに掛ける（チェック）
-            
             pred = model_tops.predict(cutx,1,0)
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
+            sub_res_name = cate_name[label]
 
-            return HttpResponse(cate_name[label])
         #onepeace
         elif label == 1:
             model_onepeace = Mynet(5)
@@ -379,10 +382,8 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
-
-            return HttpResponse(cate_name[label])
-            
-            
+            sub_res_name = cate_name[label]
+               
         #outer
         elif label == 2:
             model_outer = Mynet(9)
@@ -405,8 +406,7 @@ def getCate(request):
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
-            return HttpResponse(cate_name[label])
-            
+            sub_res_name = cate_name[label]
         #botoms
         elif label == 3:
             model_botoms = Mynet(8)
@@ -428,8 +428,19 @@ def getCate(request):
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
             tf.reset_default_graph()
+            sub_res_name = cate_name[label]
+        
 
-            return HttpResponse(cate_name[label])
+        d = {'cate':cate_res_name,
+             'sub':sub_res_name,
+             'type':'ドレス',
+             'type_value':0.67,
+             'tag':['カワイイ','大人っぽい','きれい','ふわふわ']}
+
+        return JsonResponse(d)
+
+
+            
             
 
 def Mynet(cate_num):

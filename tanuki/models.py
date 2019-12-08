@@ -37,8 +37,11 @@ class Photo(models.Model):
     cate = models.CharField(verbose_name='カテゴリ',max_length=30,default='other')
     sub = models.CharField(verbose_name='サブカテゴリ',max_length=30,default='other')
     color = models.CharField(verbose_name='色',max_length=30,default='other')    
-    sub_type_value = models.ForeignKey(Sub_type_value,on_delete=models.CASCADE)
-    color_type_value = models.ForeignKey(Color_type_value,on_delete=models.CASCADE)
+    type = models.DecimalField(verbose_name="タイプ値",max_digits=3, decimal_places=2)
+    tag = models.CharField(verbose_name='タグ1',max_length=20,null=True)
+    tag2 = models.CharField(verbose_name='タグ2',max_length=20,null=True)
+    tag3 = models.CharField(verbose_name='タグ3',max_length=20,null=True)
+    tag4 = models.CharField(verbose_name='タグ4',max_length=20,null=True)
     def __str__(self):
         return 'userNo:'+ str(self.userNo) + ' FileName:' + self.FileName + ' sub:' + self.sub
 class Account(models.Model):
