@@ -358,9 +358,9 @@ def getCate(request):
             #           'スウェット_セーター_パーカー',
             #           'シャツ_Ｔシャツ_ポロシャツ']
             cate_name =['blouse_tunic',
-                        'busiter_camisole_tanktop'
-                        'cut-and-saw_knit_offshoulder'
-                        'swrat_sweater_parker'
+                        'busiter_camisole_tanktop',
+                        'cut-and-saw_knit_offshoulder',
+                        'swrat_sweater_parker',
                         'shirt_t-shirt_poloshirt']
             #モデルに掛ける（チェック）
             pred = model_tops.predict(cutx,1,0)
@@ -383,7 +383,7 @@ def getCate(request):
             cate_name=['dress'
                        'camisole_maxidress',
                        'onepeace_knee-lengthdress',
-                       'saropetto_convenience_overalls'
+                       'saropetto_convenience_overalls',
                        'shirtdress_nittodress']
             #モデルに掛ける（チェック）
             pred = model_onepeace.predict(cutx,1,0)
@@ -411,10 +411,10 @@ def getCate(request):
                        'cardigan',
                        'hur-coat',
                        'jacket',
-                       'ma1_blouson_military-acket'
-                       'moutain-perker_mods-coat_raincoat'
-                       'down-coat_down-vest'
-                       'denim-jacket_leather-jacket'
+                       'ma1_blouson_military-acket',
+                       'moutain-perker_mods-coat_raincoat',
+                       'down-coat_down-vest',
+                       'denim-jacket_leather-jacket',
                        'chester-coat_pcoat_duffle-coat']
 
             #モデルに掛ける（チェック）
@@ -442,9 +442,9 @@ def getCate(request):
             cate_name = ['cargopants',
                          'tightskirt',
                          'denim_skinnypants_sweatpants',
-                         'denimskirt_miniskirt'
-                         'flareskirt_pleatedskirt_tuleskirt'
-                         'harfpants'
+                         'denimskirt_miniskirt',
+                         'flareskirt_pleatedskirt_tuleskirt',
+                         'harfpants',
                          'maxilengthskirt_mimoreskirt',
                          'tuckpants_widepants']
             #モデルに掛ける（チェック）
