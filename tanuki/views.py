@@ -346,7 +346,6 @@ def getCate(request):
 
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
-        tf.keras.backend.clear_session()
         cate_res_name = cate_label[label]
         sub_res_name = ''
 
@@ -370,7 +369,6 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
-            tf.keras.backend.clear_session()
 
             sub_res_name = cate_name[label]
 
@@ -395,7 +393,6 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
-            tf.keras.backend.clear_session()
 
             sub_res_name = cate_name[label]
                
@@ -429,7 +426,6 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
-            tf.keras.backend.clear_session()
 
 
             sub_res_name = cate_name[label]
@@ -461,7 +457,6 @@ def getCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
-            tf.keras.backend.clear_session()
 
             sub_res_name = cate_name[label]
         
