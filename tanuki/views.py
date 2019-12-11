@@ -79,12 +79,15 @@ def imgInDB(request):
         cate = request.POST['cate']
         sub = request.POST['sub']
         color = request.POST['color']
-        prin = models.QuerySet(Sub_type_value).get(sub=sub)
-        print(prin)
+        type = request.POST['type']
+        tag1 = request.POST['tag1']
+        tag2 = request.POST['tag2']
+        tag3 = request.POST['tag3']
+        tag4 = request.POST['tag4']
+
         #画像をDBに登録
         photo = Photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'],
-                      cate=cate,sub=sub,color=color,sub_type_value=models.QuerySet(Sub_type_value).get(sub=sub),
-                      color_type_value=models.QuerySet(Color_type_value).get(color=color))
+                      cate=cate,sub=sub,color=color,type=type,tag=tag1,tag2=tag2,tag3=tag3,tag4=tag4)
         photo.save()
         #画像のパスを作成
         #飛んできたリクエストからURLを取得
