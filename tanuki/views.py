@@ -293,19 +293,9 @@ def getCodenate(request):
 @csrf_exempt
 def getCate(request):
     import cv2
-    from sklearn.model_selection import train_test_split
-    from keras.optimizers import SGD , Adadelta
     import numpy as np
-    from keras.preprocessing.image import ImageDataGenerator
-    from PIL import Image
-    from collections import Counter
-    import os
-    import tensorflow as tf
     from keras import backend as K 
-    from keras.utils import np_utils
-    from keras.models import Sequential
-    from keras.layers.convolutional import MaxPooling2D
-    from keras.layers import Activation , Conv2D , Flatten , Dense , Dropout
+    
     
     if request.method == 'GET':
         return HttpResponse("error")
@@ -477,6 +467,20 @@ def getCate(request):
             
 
 def Mynet(cate_num):
+    import cv2
+    from sklearn.model_selection import train_test_split
+    from keras.optimizers import SGD , Adadelta
+    import numpy as np
+    from keras.preprocessing.image import ImageDataGenerator
+    from PIL import Image
+    from collections import Counter
+    import os
+    import tensorflow as tf
+    from keras import backend as K 
+    from keras.utils import np_utils
+    from keras.models import Sequential
+    from keras.layers.convolutional import MaxPooling2D
+    from keras.layers import Activation , Conv2D , Flatten , Dense , Dropout
     img_height, img_width = 64,64
 
         #~~~~~１層~~~~~#
