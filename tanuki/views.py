@@ -162,10 +162,7 @@ def getImage(request):
             casual = count
         elif type == 'simple':
             simple = count
-    type_value = {'dress':dress,
-                  'casual':casual,
-                  'simple':simple,
-                  }
+    
 
     print(path_list)
     #dict型にする
