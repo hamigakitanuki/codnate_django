@@ -171,7 +171,6 @@ def getImage(request):
         'cate_list' :cate_list,
         'sub_list'  :sub_list,
         'color_list':color_list,
-        'type_value':type_value,
         'dress':dress,
         'casual':casual,
         'simple':simple,
