@@ -152,7 +152,9 @@ def getImage(request):
     type_list = list(ac.values_list('type_name',flat=True))
     
     
-    
+    dress = 0
+    casual = 0
+    simple = 0
     
     for i,type in enumerate(type_list):
         count = type_list.count(type)
