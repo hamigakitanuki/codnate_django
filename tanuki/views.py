@@ -66,7 +66,7 @@ def imgInDB(request):
         cate = request.POST['cate']
         sub = request.POST['sub']
         color = request.POST['color']
-        type = request.POST['type']
+        huku_type = request.POST['type']
         tag1 = request.POST['tag1']
         tag2 = request.POST['tag2']
         tag3 = request.POST['tag3']
@@ -74,7 +74,7 @@ def imgInDB(request):
 
         #画像をDBに登録
         photo = Photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'],
-                      cate=cate,sub=sub,color=color,type=type,tag=tag1,tag2=tag2,tag3=tag3,tag4=tag4)
+                      cate=cate,sub=sub,color=color,type=huku_type,tag=tag1,tag2=tag2,tag3=tag3,tag4=tag4)
         photo.save()
         #画像のパスを作成
         #飛んできたリクエストからURLを取得
