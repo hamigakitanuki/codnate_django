@@ -149,13 +149,13 @@ def getImage(request):
     cate_list  = list(ac.values_list('cate',flat=True))
     sub_list   = list(ac.values_list('sub',flat=True))
     color_list = list(ac.values_list('color',flat=True))
-    type_list = list(ac.velues_list('type_name',flat=True))
+    type_list = list(ac.values_list('type_name',flat=True))
     
     
     
     
     for i,type in enumerate(type_list):
-        count = type_list.count(id)
+        count = type_list.count(type)
         if type == 'dress':
             dress = count
         elif type == 'casual':
