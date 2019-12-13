@@ -149,54 +149,23 @@ def getImage(request):
     cate_list  = list(ac.values_list('cate',flat=True))
     sub_list   = list(ac.values_list('sub',flat=True))
     color_list = list(ac.values_list('color',flat=True))
-    sub_type_value_list = list(ac.values_list('sub_type_value',flat=True))
-    sub_type_value_distinct = list(ac.values_list('sub_type_value',flat=True).distinct())
-    color_type_value_list = list(ac.values_list('color_type_value',flat=True))
-    color_type_value_distinct = list(ac.values_list('color_type_value',flat=True).distinct())
+    type_list = list(ac.velues_list('type_name',flat=True))
     
-    kawaii = 0
-    cool = 0
-    simple = 0
-    adult = 0
     
-    sub_type_value = models.QuerySet(Sub_type_value)
-    for i,id in enumerate(sub_type_value_distinct):
-        count = sub_type_value_list.count(id)
-        type1 = list(sub_type_value.filter(id=id).values_list('type1',flat=True))[0]
-        type2 = list(sub_type_value.filter(id=id).values_list('type2',flat=True))[0]
-        if type1 == 'カワイイ':
-            kawaii = kawaii + count
-        elif type1 == 'クール':
-            cool = cool + count
-        elif type1 == 'シンプル':
-            simple = simple + count
-        elif type1 == 'アダルト':
-            adult = adult + count
-        if type2 == 'カワイイ':
-            kawaii = kawaii + count
-        elif type2 == 'クール':
-            cool = cool + count
-        elif type2 == 'シンプル':
-            simple = simple + count
-        elif type2 == 'アダルト':
-            adult = adult + count
     
-    color_type_value = models.QuerySet(Color_type_value)
-    for i,id in enumerate(color_type_value_distinct):
-        count = color_type_value_list.count(id)
-        type = list(color_type_value.filter(id=id).values_list('type',flat=True))[0]
-        if type == 'カワイイ':
-            kawaii = kawaii + count
-        elif type == 'クール':
-            cool = cool + count
-        elif type == 'シンプル':
-            simple = simple + count
-        elif type == 'アダルト':
-            adult = adult + count
-    type_value = {'kawaii':kawaii,
-                  'cool':cool,
+    
+    for i,type in enumerate(type_list):
+        count = type_list.count(id)
+        if type == 'dress':
+            dress = count
+        elif type == 'casual':
+            casual = count
+        elif type == 'simple':
+            simple = count
+    type_value = {'dress':dress,
+                  'casual':casual,
                   'simple':simple,
-                  'adult':adult}
+                  }
 
     print(path_list)
     #dict型にする
@@ -206,10 +175,6 @@ def getImage(request):
         'sub_list'  :sub_list,
         'color_list':color_list,
         'type_value':type_value,
-        'kawaii':kawaii,
-        'cool':cool,
-        'simple':simple,
-        'adult':adult
     }
     return JsonResponse(d)
 
