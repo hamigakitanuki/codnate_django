@@ -13,7 +13,6 @@ from .forms import PhotoForm,AccountForm,PhotoOneForm
 from django.views.decorators.csrf import csrf_exempt
 import random
 
-import keras.backend.tensorflow_backend as tb
 
 
 
@@ -261,8 +260,8 @@ def getCate(request):
     import cv2
     import numpy as np
     from keras import backend as K 
-    
-    
+    import keras.backend.tensorflow_backend as tb
+
     if request.method == 'GET':
         return HttpResponse("error")
     else:
@@ -289,8 +288,8 @@ def getCate(request):
         print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
-        #cate_label = ['トップス','ワンピース','アウター','ボトムス']
-        cate_label = ['tops','onepeace','outer','botoms']
+        cate_label = ['トップス','ワンピース','アウター','ボトムス']
+        #cate_label = ['tops','onepeace','outer','botoms']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
@@ -302,21 +301,112 @@ def getCate(request):
         pred = model_cate.predict(cutx,1,0)
         label = np.argmax(pred)
         score = np.max(pred)
+        
+        K.clear_session()
 
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
-        K.clear_session()
-        cate_res_name = cate_label[label]
-        sub_res_name = ''
+        return HttpResponse(cate_label[label])
+@csrf_exempt
+def getColor(request):
+    import cv2
+    import numpy as np
+    from keras import backend as K 
+    import keras.backend.tensorflow_backend as tb
 
+    if request.method == 'GET':
+        return HttpResponse("error")
+    else:
+        if request.FILES is None:
+            return HttpResponse("no File error")
+        photoForm = PhotoOneForm(request.POST,request.FILES)
+        if not photoForm.is_valid():
+            raise ValueError("invaled error")
+
+        print(request.POST)
+        img = photoForm.cleaned_data['image']
+        print(img)
+
+        
+        tb._SYMBOLIC_SCOPE.value = True
+
+        print('mynet')
+        model_cate = Mynet(4);
+        model_cate.load_weights('/home/ubuntu/codnate_jango/tanuki/huku.h5')
+        print('kokomade')
+        
+        photo_one = Photo_one(photo=img)
+        photo_one.save()
+        print(photo_one.photo.url)
+        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
+
+        cate_label = ['トップス','ワンピース','アウター','ボトムス']
+        #cate_label = ['tops','onepeace','outer','botoms']
+        #画像をリサイズ（今回は64）
+        cutx = cv2.resize(img,(64,64))
+        #画像の色をRGB形式に変更
+        cutx = cv2.cvtColor(cutx,cv2.COLOR_BGR2RGB).astype(np.float32)
+        #次元数を上げる
+        cutx = cutx.reshape((1,)+cutx.shape)
+        cutx /= 255
+        #モデルに掛ける（チェック）
+        pred = model_cate.predict(cutx,1,0)
+        label = np.argmax(pred)
+        score = np.max(pred)
+        
+        K.clear_session()
+
+        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        return HttpResponse(cate_label[label])
+
+@csrf_exempt
+def getsubCate(request):
+    
+    import cv2
+    import numpy as np
+    import keras.backend.tensorflow_backend as tb
+    from keras import backend as K 
+    
+    
+    if request.method == 'GET':
+        return HttpResponse("error")
+    else:
+        if request.FILES is None:
+            return HttpResponse("no File error")
+        photoForm = PhotoOneForm(request.POST,request.FILES)
+        if not photoForm.is_valid():
+            raise ValueError("invaled error")
+
+        print(request.POST)
+        img = photoForm.cleaned_data['image']
+        print(img)
+
+        
+        tb._SYMBOLIC_SCOPE.value = True
+        
+        sub = request.POST['sub']
+        
+        photo_one = Photo_one(photo=img)
+        photo_one.save()
+        print(photo_one.photo.url)
+        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,cv2.IMREAD_COLOR)
+
+        
+        #画像をリサイズ（今回は64）
+        cutx = cv2.resize(img,(64,64))
+        #画像の色をRGB形式に変更
+        cutx = cv2.cvtColor(cutx,cv2.COLOR_BGR2RGB).astype(np.float32)
+        #次元数を上げる
+        cutx = cutx.reshape((1,)+cutx.shape)
+        cutx /= 255
         #tops
-        if label == 0:
+        if sub == 'tops':
             model_tops = Mynet(5)
             model_tops.load_weights('/home/ubuntu/codnate_jango/tanuki/tops.h5')
             #cate_name=['ブラウス_チュニック',
-            #           'ビスチェ_キャミソール_タンクトップ',
-            #           'カットソー_ニット_オフショルダー',
-            #           'スウェット_セーター_パーカー',
-            #           'シャツ_Ｔシャツ_ポロシャツ']
+             #          'ビスチェ_キャミソール_タンクトップ',
+              #         'カットソー_ニット_オフショルダー',
+               #        'スウェット_セーター_パーカー',
+                #       'シャツ_Ｔシャツ_ポロシャツ']
             cate_name =['blouse_tunic',
                         'busiter_camisole_tanktop',
                         'cut-and-saw_knit_offshoulder',
@@ -329,22 +419,22 @@ def getCate(request):
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
-            sub_res_name = cate_name[label]
+            return HttpResponse(cate_name[label])
 
         #onepeace
-        elif label == 1:
+        elif sub == 'onepeace':
             model_onepeace = Mynet(5)
             model_onepeace.load_weights('/home/ubuntu/codnate_jango/tanuki/onepeace.h5')
         
             #cate_name=['ドレス',
-            #          'キャミドレス_マキシ丈ドレス',
-            #           'ワンピース_ひざ丈ドレス_ミニドレス',
-            #           'サロペット_コンビネゾン_オーバーオール',
-            #           'シャツドレス_ニットドレス']
+             #         'キャミドレス_マキシ丈ドレス',
+              #         'ワンピース_ひざ丈ドレス_ミニドレス',
+               #        'サロペット_コンビネゾン_オーバーオール',
+                #       'シャツドレス_ニットドレス']
             cate_name=['dress',
                        'camisole_maxidress',
-                       'onepeace_knee-lengthdress',
-                       'saropetto_convenience_overalls',
+                      'onepeace_knee-lengthdress',
+                     'saropetto_convenience_overalls',
                        'shirtdress_nittodress']
             #モデルに掛ける（チェック）
             pred = model_onepeace.predict(cutx,1,0)
@@ -353,22 +443,22 @@ def getCate(request):
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
-            sub_res_name = cate_name[label]
+            return HttpResponse(cate_name[label])
                
         #outer
-        elif label == 2:
+        elif sub == 'outer':
             model_outer = Mynet(9)
             model_outer.load_weights('/home/ubuntu/codnate_jango/tanuki/outer.h5')
         
             #cate_name=['ポンチョ',
-            #           'カーディガン',
-            #           'ファーコート',
-            #           'ジャケット',
-            #           'MA1_ブルゾン_ミリタリージャケット',
-            #           'マウンテンパーカー',
-            #           'ダウンコート_ダウンベスト',
-            #           'デニムジャケット_レザージャケット',
-            #           'チェスターコート_ピーコート_ダッフルコート']
+             #          'カーディガン',
+              #         'ファーコート',
+               #        'ジャケット',
+                #       'MA1_ブルゾン_ミリタリージャケット',
+                 #      'マウンテンパーカー',
+                  #     'ダウンコート_ダウンベスト',
+                   #    'デニムジャケット_レザージャケット',
+                    #   'チェスターコート_ピーコート_ダッフルコート']
             cate_name=['boncho',
                        'cardigan',
                        'hur-coat',
@@ -387,20 +477,20 @@ def getCate(request):
             K.clear_session()
 
 
-            sub_res_name = cate_name[label]
+            return HttpResponse(cate_name[label])
         #botoms
-        elif label == 3:
+        elif sub == 'botoms':
             model_botoms = Mynet(8)
             model_botoms.load_weights('/home/ubuntu/codnate_jango/tanuki/botoms.h5')
         
             #cate_name=['カーゴパンツ',
-            #           'タイトスカート',
-            #           'デニム_スキニーパンツ_スウェットパンツ',
-            #           'デニムスカート_ミニスカート',
-            #           'フレアスカート_プリーツスカート',
-            #           'ハーフパンツ',
-            #           'マキシ丈スカート_ミモレスカート',
-            #           'タックパンツ_ワイドパンツ']
+             #          'タイトスカート',
+              #         'デニム_スキニーパンツ_スウェットパンツ',
+               #        'デニムスカート_ミニスカート',
+                #       'フレアスカート_プリーツスカート',
+                 #      'ハーフパンツ',
+                  #     'マキシ丈スカート_ミモレスカート',
+                   #    'タックパンツ_ワイドパンツ']
             
             cate_name = ['cargopants',
                          'tightskirt',
@@ -417,20 +507,170 @@ def getCate(request):
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
-            sub_res_name = cate_name[label]
+            return HttpResponse(cate_name[label])
         
 
-        d = {'cate':cate_res_name,
-             'sub':sub_res_name,
-             'type':['dress','casual','simmple'],
-             'type_value':['0.63','0.21','0.16'],
-             'tag':['1','2','3','4']}
-        print(d)
-        return JsonResponse(d)
+@csrf_exempt
+def get_casual(request):
+    import cv2
+    import numpy as np
+    import keras.backend.tensorflow_backend as tb
+    from keras import backend as K 
+    
+    
+    if request.method == 'GET':
+        return HttpResponse("error")
+    else:
+        if request.FILES is None:
+            return HttpResponse("no File error")
+        photoForm = PhotoOneForm(request.POST,request.FILES)
+        if not photoForm.is_valid():
+            raise ValueError("invaled error")
 
+        print(request.POST)
+        img = photoForm.cleaned_data['image']
+        print(img)
 
-            
-            
+        
+        tb._SYMBOLIC_SCOPE.value = True
+        
+        sub = request.POST['sub']
+        
+        photo_one = Photo_one(photo=img)
+        photo_one.save()
+        print(photo_one.photo.url)
+        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
+
+        cate_label = ['simmple','casual','dress']
+        #画像をリサイズ（今回は64）
+        cutx = cv2.resize(img,(64,64))
+        #画像の色をRGB形式に変更
+        cutx = cv2.cvtColor(cutx,cv2.COLOR_BGR2RGB).astype(np.float32)
+        #次元数を上げる
+        cutx = cutx.reshape((1,)+cutx.shape)
+        cutx /= 255
+
+        model_casual = Mynet(3)
+        model_casual.load_weights('/home/ubuntu/codnate_jango/tanuki/casu_dore.h5')
+
+        pred = model_casual.predict(cutx,1,0)
+        label = np.argmax(pred)
+        score = np.max(pred)
+        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        K.clear_session()
+
+        return HttpResponse(str([pred[0],pred[1],pred[2]]))
+@csrf_exempt
+def get_tag(request):
+    import cv2
+    import numpy as np
+    import keras.backend.tensorflow_backend as tb
+    from keras import backend as K 
+    
+    
+    if request.method == 'GET':
+        return HttpResponse("error")
+    else:
+        if request.FILES is None:
+            return HttpResponse("no File error")
+        photoForm = PhotoOneForm(request.POST,request.FILES)
+        if not photoForm.is_valid():
+            raise ValueError("invaled error")
+
+        print(request.POST)
+        img = photoForm.cleaned_data['image']
+        print(img)
+
+        
+        tb._SYMBOLIC_SCOPE.value = True
+        
+        sub = request.POST['sub']
+        
+        photo_one = Photo_one(photo=img)
+        photo_one.save()
+        print(photo_one.photo.url)
+        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
+
+        #cate_label = ['ワイルド','ゆるい','かっこいい','かわいい','大人っぽい','子供っぽい','きれい','ふわふわ']
+        cate_label = ['wild','yurui','cool','kawaii','adult','child','beuty','huwahuwaa']
+        
+        #画像をリサイズ（今回は64）
+        cutx = cv2.resize(img,(64,64))
+        #画像の色をRGB形式に変更
+        cutx = cv2.cvtColor(cutx,cv2.COLOR_BGR2RGB).astype(np.float32)
+        #次元数を上げる
+        cutx = cutx.reshape((1,)+cutx.shape)
+        cutx /= 255
+
+        model_casual = Mynet(8)
+        model_casual.load_weights('/home/ubuntu/codnate_jango/tanuki/tag_list.h5')
+
+        pred = model_casual.predict(cutx,1,0)
+        label = np.argsort(pred)[::-1]
+        score = np.max(pred)
+    
+        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        K.clear_session()
+        tag = [cate_label[label[0]],cate_label[label[1]],cate_label[label[2]],cate_label[label[3]]]
+
+        return HttpResponse(tag)
+
+@csrf_exempt
+def get_vol(request):
+    import cv2
+    import numpy as np
+    import keras.backend.tensorflow_backend as tb
+    from keras import backend as K 
+    
+    
+    if request.method == 'GET':
+        return HttpResponse("error")
+    else:
+        if request.FILES is None:
+            return HttpResponse("no File error")
+        photoForm = PhotoOneForm(request.POST,request.FILES)
+        if not photoForm.is_valid():
+            raise ValueError("invaled error")
+
+        print(request.POST)
+        img = photoForm.cleaned_data['image']
+        print(img)
+
+        
+        tb._SYMBOLIC_SCOPE.value = True
+        
+        sub = request.POST['sub']
+        
+        photo_one = Photo_one(photo=img)
+        photo_one.save()
+        print(photo_one.photo.url)
+        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
+
+        #cate_label = ['控えめ','派手']
+        cate_label = ['hikaeme','hade']
+        #画像をリサイズ（今回は64）
+        cutx = cv2.resize(img,(64,64))
+        #画像の色をRGB形式に変更
+        cutx = cv2.cvtColor(cutx,cv2.COLOR_BGR2RGB).astype(np.float32)
+        #次元数を上げる
+        cutx = cutx.reshape((1,)+cutx.shape)
+        cutx /= 255
+
+        model_casual = Mynet(2)
+        model_casual.load_weights('/home/ubuntu/codnate_jango/tanuki/vol.h5')
+
+        pred = model_casual.predict(cutx,1,0)
+        label = np.argmax(pred)
+        score = np.max(pred)
+        score2 = np.where(pred==np.sort(pred)[2])
+        A = np.array(pred)
+        A.argsort()[::-1]
+        label2 = A[1]
+        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        K.clear_session()
+        
+        return HttpResponse(str(pred[0])+','+str(pred[1]))
+
 
 def Mynet(cate_num):
     import cv2
