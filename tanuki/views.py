@@ -330,7 +330,7 @@ def getColor(request):
         tb._SYMBOLIC_SCOPE.value = True
 
         print('mynet')
-        model_cate = Mynet();
+        model_cate = Mynet(11);
         model_cate.load_weights('/home/ubuntu/codnate_jango/tanuki/color.h5')
         print('kokomade')
         
@@ -339,7 +339,7 @@ def getColor(request):
         print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
-        cate_label = ['white','black','brown','gray','green','orange','pink','purple','red','yellow']
+        cate_label = ['white','black','blue','brown','gray','green','orange','pink','purple','red','yellow']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
@@ -510,7 +510,7 @@ def getsubCate(request):
         
 
 @csrf_exempt
-def get_casual(request):
+def get_type(request):
     import cv2
     import numpy as np
     import keras.backend.tensorflow_backend as tb
@@ -557,7 +557,7 @@ def get_casual(request):
         score = np.max(pred)
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
-
+        print(pred)
         return HttpResponse(str([pred[0],pred[1],pred[2]]))
 @csrf_exempt
 def get_tag(request):
@@ -578,7 +578,6 @@ def get_tag(request):
 
         print(request.POST)
         img = photoForm.cleaned_data['image']
-        print(img)
 
         
         tb._SYMBOLIC_SCOPE.value = True
@@ -587,7 +586,6 @@ def get_tag(request):
         
         photo_one = Photo_one(photo=img)
         photo_one.save()
-        print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
         #cate_label = ['ワイルド','ゆるい','かっこいい','かわいい','大人っぽい','子供っぽい','きれい','ふわふわ']
