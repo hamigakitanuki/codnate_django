@@ -597,11 +597,10 @@ def get_tag(request):
         score = np.max(pred)
         label_np = np.array(pred)
         label_sort = label_np.argsort()[::-1]
-    
+        print(label_sort)
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
-        tag = [cate_label[label_sort[0]],cate_label[label_sort[1]],cate_label[label_sort[2]],cate_label[label_sort[3]]]
-
+        tag = [cate_label[label_sort[0][0]],cate_label[label_sort[0][1]],cate_label[label_sort[0][2]],cate_label[label_sort[0][3]]]
         return HttpResponse(tag)
 
 @csrf_exempt
