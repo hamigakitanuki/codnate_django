@@ -54,7 +54,7 @@ def imgInDB(request):
         if request.FILES == None:
             HttpResponse('error')
         #アップロードされたファイルを変数に格納
-        print('print--->'+request.POST)
+        print(request.POST)
         form = PhotoForm(request.POST,request.FILES)
         if not form.is_valid():
             return HttpResponse("error")
@@ -165,7 +165,7 @@ def getImage(request):
             simple = count
     
 
-    print('print--->'+path_list)
+    print(path_list)
     #dict型にする
     d = {
         'path_list' :path_list,
@@ -271,7 +271,7 @@ def getCate(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print('print--->'+request.POST)
+        print(request.POST)
         img = photoForm.cleaned_data['image']
 
         
@@ -300,7 +300,7 @@ def getCate(request):
         
         K.clear_session()
 
-        print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         return HttpResponse(cate_label[label])
 @csrf_exempt
 def getColor(request):
@@ -318,7 +318,7 @@ def getColor(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print('print--->'+request.POST)
+        print(request.POST)
         img = photoForm.cleaned_data['image']
 
         
@@ -347,7 +347,7 @@ def getColor(request):
         
         K.clear_session()
 
-        print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         return HttpResponse(cate_label[label])
 
 @csrf_exempt
@@ -368,7 +368,7 @@ def getsubCate(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print('print--->'+request.POST)
+        print(request.POST)
         img = photoForm.cleaned_data['image']
 
         
@@ -378,7 +378,7 @@ def getsubCate(request):
         
         photo_one = Photo_one(photo=img)
         photo_one.save()
-        print('print--->'+photo_one.photo.url)
+        print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,cv2.IMREAD_COLOR)
 
         
@@ -407,7 +407,7 @@ def getsubCate(request):
             pred = model_tops.predict(cutx,1,0)
             label = np.argmax(pred)
             score = np.max(pred)
-            print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
             return HttpResponse(cate_name[label])
@@ -431,7 +431,7 @@ def getsubCate(request):
             pred = model_onepeace.predict(cutx,1,0)
             label = np.argmax(pred)
             score = np.max(pred)
-            print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
             return HttpResponse(cate_name[label])
@@ -464,7 +464,7 @@ def getsubCate(request):
             pred = model_outer.predict(cutx,1,0)
             label = np.argmax(pred)
             score = np.max(pred)
-            print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
 
@@ -495,7 +495,7 @@ def getsubCate(request):
             pred = model_botoms.predict(cutx,1,0)
             label = np.argmax(pred)
             score = np.max(pred)
-            print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
             return HttpResponse(cate_name[label])
@@ -518,7 +518,7 @@ def get_type(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print('print--->'+request.POST)
+        print(request.POST)
         img = photoForm.cleaned_data['image']
 
         
@@ -545,7 +545,7 @@ def get_type(request):
         pred = model_casual.predict(cutx,1,0)
         label = np.argmax(pred)
         score = np.max(pred)
-        print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
         print(pred)
         return HttpResponse(str([pred[0],pred[1],pred[2]]))
@@ -566,7 +566,7 @@ def get_tag(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print('print--->'+request.POST)
+        print(request.POST)
         img = photoForm.cleaned_data['image']
 
         
@@ -596,7 +596,7 @@ def get_tag(request):
         label = np.argsort(pred)[::-1]
         score = np.max(pred)
     
-        print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
         tag = [cate_label[label[0]],cate_label[label[1]],cate_label[label[2]],cate_label[label[3]]]
 
@@ -650,7 +650,7 @@ def get_vol(request):
         A = np.array(pred)
         A.argsort()[::-1]
         label2 = A[1]
-        print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
         
         return HttpResponse(str(pred[0])+','+str(pred[1]))
