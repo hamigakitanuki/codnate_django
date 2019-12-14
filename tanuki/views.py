@@ -595,7 +595,8 @@ def get_tag(request):
         pred = model_casual.predict(cutx,1,0)
         label = np.argmax(pred)
         score = np.max(pred)
-        label_sort = np.argsort(pred)[::-1]
+        label_np = np.array(pred)
+        label_sort = label_np.argsort()[::-1]
     
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
