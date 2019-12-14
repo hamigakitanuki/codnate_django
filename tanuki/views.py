@@ -551,7 +551,7 @@ def get_casual(request):
         cutx /= 255
 
         model_casual = Mynet(3)
-        model_casual.load_weights('/home/ubuntu/codnate_jango/tanuki/casu_dore.h5')
+        model_casual.load_weights('/home/ubuntu/codnate_jango/tanuki/casu_dre.h5')
 
         pred = model_casual.predict(cutx,1,0)
         label = np.argmax(pred)
