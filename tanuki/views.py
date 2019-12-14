@@ -288,8 +288,8 @@ def getCate(request):
         print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
-        cate_label = ['トップス','ワンピース','アウター','ボトムス']
-        #cate_label = ['tops','onepeace','outer','botoms']
+        #cate_label = ['トップス','ワンピース','アウター','ボトムス']
+        cate_label = ['tops','onepeace','outer','botoms']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
@@ -330,8 +330,8 @@ def getColor(request):
         tb._SYMBOLIC_SCOPE.value = True
 
         print('mynet')
-        model_cate = Mynet(4);
-        model_cate.load_weights('/home/ubuntu/codnate_jango/tanuki/huku.h5')
+        model_cate = Mynet();
+        model_cate.load_weights('/home/ubuntu/codnate_jango/tanuki/color.h5')
         print('kokomade')
         
         photo_one = Photo_one(photo=img)
@@ -339,8 +339,7 @@ def getColor(request):
         print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
-        cate_label = ['トップス','ワンピース','アウター','ボトムス']
-        #cate_label = ['tops','onepeace','outer','botoms']
+        cate_label = ['white','black','brown','gray','green','orange','pink','purple','red','yellow']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
