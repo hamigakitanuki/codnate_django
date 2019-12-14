@@ -54,7 +54,7 @@ def imgInDB(request):
         if request.FILES == None:
             HttpResponse('error')
         #アップロードされたファイルを変数に格納
-        print(request.POST)
+        print('print--->'+request.POST)
         form = PhotoForm(request.POST,request.FILES)
         if not form.is_valid():
             return HttpResponse("error")
@@ -165,7 +165,7 @@ def getImage(request):
             simple = count
     
 
-    print(path_list)
+    print('print--->'+path_list)
     #dict型にする
     d = {
         'path_list' :path_list,
@@ -271,21 +271,17 @@ def getCate(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print(request.POST)
+        print('print--->'+request.POST)
         img = photoForm.cleaned_data['image']
-        print(img)
 
         
         tb._SYMBOLIC_SCOPE.value = True
 
-        print('mynet')
         model_cate = Mynet(4);
         model_cate.load_weights('/home/ubuntu/codnate_jango/tanuki/huku.h5')
-        print('kokomade')
         
         photo_one = Photo_one(photo=img)
         photo_one.save()
-        print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
         #cate_label = ['トップス','ワンピース','アウター','ボトムス']
@@ -304,7 +300,7 @@ def getCate(request):
         
         K.clear_session()
 
-        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         return HttpResponse(cate_label[label])
 @csrf_exempt
 def getColor(request):
@@ -322,24 +318,20 @@ def getColor(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print(request.POST)
+        print('print--->'+request.POST)
         img = photoForm.cleaned_data['image']
-        print(img)
 
         
         tb._SYMBOLIC_SCOPE.value = True
 
-        print('mynet')
-        model_cate = Mynet();
+        model_cate = Mynet(11);
         model_cate.load_weights('/home/ubuntu/codnate_jango/tanuki/color.h5')
-        print('kokomade')
         
         photo_one = Photo_one(photo=img)
         photo_one.save()
-        print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
-        cate_label = ['white','black','brown','gray','green','orange','pink','purple','red','yellow']
+        cate_label = ['white','black','blue','brown','gray','green','orange','pink','purple','red','yellow']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
@@ -354,7 +346,7 @@ def getColor(request):
         
         K.clear_session()
 
-        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         return HttpResponse(cate_label[label])
 
 @csrf_exempt
@@ -375,9 +367,8 @@ def getsubCate(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print(request.POST)
+        print('print--->'+request.POST)
         img = photoForm.cleaned_data['image']
-        print(img)
 
         
         tb._SYMBOLIC_SCOPE.value = True
@@ -386,7 +377,7 @@ def getsubCate(request):
         
         photo_one = Photo_one(photo=img)
         photo_one.save()
-        print(photo_one.photo.url)
+        print('print--->'+photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,cv2.IMREAD_COLOR)
 
         
@@ -415,7 +406,7 @@ def getsubCate(request):
             pred = model_tops.predict(cutx,1,0)
             label = np.argmax(pred)
             score = np.max(pred)
-            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
             return HttpResponse(cate_name[label])
@@ -439,7 +430,7 @@ def getsubCate(request):
             pred = model_onepeace.predict(cutx,1,0)
             label = np.argmax(pred)
             score = np.max(pred)
-            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
             return HttpResponse(cate_name[label])
@@ -472,7 +463,7 @@ def getsubCate(request):
             pred = model_outer.predict(cutx,1,0)
             label = np.argmax(pred)
             score = np.max(pred)
-            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
 
@@ -503,14 +494,14 @@ def getsubCate(request):
             pred = model_botoms.predict(cutx,1,0)
             label = np.argmax(pred)
             score = np.max(pred)
-            print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
+            print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
 
             return HttpResponse(cate_name[label])
         
 
 @csrf_exempt
-def get_casual(request):
+def get_type(request):
     import cv2
     import numpy as np
     import keras.backend.tensorflow_backend as tb
@@ -526,9 +517,8 @@ def get_casual(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print(request.POST)
+        print('print--->'+request.POST)
         img = photoForm.cleaned_data['image']
-        print(img)
 
         
         tb._SYMBOLIC_SCOPE.value = True
@@ -537,7 +527,6 @@ def get_casual(request):
         
         photo_one = Photo_one(photo=img)
         photo_one.save()
-        print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
         cate_label = ['simmple','casual','dress']
@@ -555,9 +544,9 @@ def get_casual(request):
         pred = model_casual.predict(cutx,1,0)
         label = np.argmax(pred)
         score = np.max(pred)
-        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
-
+        print('print--->'+pred)
         return HttpResponse(str([pred[0],pred[1],pred[2]]))
 @csrf_exempt
 def get_tag(request):
@@ -576,9 +565,9 @@ def get_tag(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print(request.POST)
+        print('print--->'+request.POST)
         img = photoForm.cleaned_data['image']
-        print(img)
+        print('print--->'+img)
 
         
         tb._SYMBOLIC_SCOPE.value = True
@@ -587,7 +576,7 @@ def get_tag(request):
         
         photo_one = Photo_one(photo=img)
         photo_one.save()
-        print(photo_one.photo.url)
+        print('print--->'+photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
         #cate_label = ['ワイルド','ゆるい','かっこいい','かわいい','大人っぽい','子供っぽい','きれい','ふわふわ']
@@ -608,7 +597,7 @@ def get_tag(request):
         label = np.argsort(pred)[::-1]
         score = np.max(pred)
     
-        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
         tag = [cate_label[label[0]],cate_label[label[1]],cate_label[label[2]],cate_label[label[3]]]
 
@@ -631,9 +620,7 @@ def get_vol(request):
         if not photoForm.is_valid():
             raise ValueError("invaled error")
 
-        print(request.POST)
         img = photoForm.cleaned_data['image']
-        print(img)
 
         
         tb._SYMBOLIC_SCOPE.value = True
@@ -642,7 +629,6 @@ def get_vol(request):
         
         photo_one = Photo_one(photo=img)
         photo_one.save()
-        print(photo_one.photo.url)
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
         #cate_label = ['控えめ','派手']
@@ -665,7 +651,7 @@ def get_vol(request):
         A = np.array(pred)
         A.argsort()[::-1]
         label2 = A[1]
-        print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        print('print--->'+'label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
         
         return HttpResponse(str(pred[0])+','+str(pred[1]))
