@@ -548,7 +548,7 @@ def get_type(request):
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
         print(pred)
-        return HttpResponse(str(pred[0][0]*100)+','+str(pred[0][1]*100)+','+str(pred[0][2]*100))
+        return HttpResponse(str(int(pred[0][0]*100))+','+str(int(pred[0][1]*100))+','+str(int(pred[0][2]*100)))
 @csrf_exempt
 def get_tag(request):
     import cv2
@@ -650,7 +650,7 @@ def get_vol(request):
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
         
-        return HttpResponse(str(pred[0][0]*100)+','+str(pred[0][1]*100))
+        return HttpResponse(str(int(pred[0][0]*100))+','+str(int(pred[0][1]*100)))
 
 
 def Mynet(cate_num):
