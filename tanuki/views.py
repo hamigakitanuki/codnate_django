@@ -593,12 +593,13 @@ def get_tag(request):
         model_casual.load_weights('/home/ubuntu/codnate_jango/tanuki/tag_list.h5')
 
         pred = model_casual.predict(cutx,1,0)
-        label = np.argsort(pred)[::-1]
+        label = np.argmax(pred)
         score = np.max(pred)
+        label_sort = np.argsort(pred)[::-1]
     
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
-        tag = [cate_label[label[0]],cate_label[label[1]],cate_label[label[2]],cate_label[label[3]]]
+        tag = [cate_label[label_sort[0]],cate_label[label_sort[1]],cate_label[label_sort[2]],cate_label[label_sort[3]]]
 
         return HttpResponse(tag)
 
@@ -646,10 +647,6 @@ def get_vol(request):
         pred = model_casual.predict(cutx,1,0)
         label = np.argmax(pred)
         score = np.max(pred)
-        score2 = np.where(pred==np.sort(pred)[2])
-        A = np.array(pred)
-        A.argsort()[::-1]
-        label2 = A[1]
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
         
