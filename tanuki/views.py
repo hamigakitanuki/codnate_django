@@ -547,8 +547,9 @@ def get_type(request):
         score = np.max(pred)
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
+        socre = np[0][:] * 100
         print(pred)
-        return HttpResponse(str([pred[0],pred[1],pred[2]]))
+        return HttpResponse(str(pred[0]))
 @csrf_exempt
 def get_tag(request):
     import cv2
