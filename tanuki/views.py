@@ -65,15 +65,19 @@ def imgInDB(request):
         cate = request.POST['cate']
         sub = request.POST['sub']
         color = request.POST['color']
-        huku_type = request.POST['type']
+        dress = request.POST['dress']
+        casual = request.POST['casual']
+        simple = request.POST['simple']
         tag1 = request.POST['tag1']
         tag2 = request.POST['tag2']
         tag3 = request.POST['tag3']
         tag4 = request.POST['tag4']
+        vol = request.POST['vol']
 
         #画像をDBに登録
         photo = Photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'],
-                      cate=cate,sub=sub,color=color,type_name=huku_type,tag=tag1,tag2=tag2,tag3=tag3,tag4=tag4)
+                      cate=cate,sub=sub,color=color,dress=dress,casual=casual,simple=simple,
+                      tag=tag1,tag2=tag2,tag3=tag3,tag4=tag4,vol=vol)
         photo.save()
         #画像のパスを作成
         #飛んできたリクエストからURLを取得
@@ -349,7 +353,6 @@ def getColor(request):
 
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         return HttpResponse(cate_label[label])
-
 @csrf_exempt
 def getsubCate(request):
     
@@ -499,8 +502,6 @@ def getsubCate(request):
             K.clear_session()
 
             return HttpResponse(cate_name[label])
-        
-
 @csrf_exempt
 def get_type(request):
     import cv2
@@ -602,7 +603,6 @@ def get_tag(request):
         K.clear_session()
         
         return HttpResponse(cate_label[label_sort[0][0]]+','+cate_label[label_sort[0][1]]+','+cate_label[label_sort[0][2]]+','+cate_label[label_sort[0][3]])
-
 @csrf_exempt
 def get_vol(request):
     import cv2
@@ -651,8 +651,6 @@ def get_vol(request):
         K.clear_session()
         
         return HttpResponse(str(int(pred[0][0]*100))+','+str(int(pred[0][1]*100)))
-
-
 def Mynet(cate_num):
     import cv2
     from sklearn.model_selection import train_test_split

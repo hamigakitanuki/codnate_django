@@ -37,8 +37,10 @@ class Photo(models.Model):
     cate = models.CharField(verbose_name='カテゴリ',max_length=30,default='other')
     sub = models.CharField(verbose_name='サブカテゴリ',max_length=30,default='other')
     color = models.CharField(verbose_name='色',max_length=30,default='other')    
-    type_name = models.CharField(verbose_name='タイプ',max_length=10)
-    #type = models.DecimalField(verbose_name="タイプ値",max_digits=3, decimal_places=2)
+    dress_value = models.IntegerField(verbose_name="ドレス率")
+    casual_value = models.IntegerField(verbose_name="カジュアル率")
+    simple_value = models.IntegerField(verbose_name="シンプル率")
+    vol = models.CharField(verbose_name='勢い',max_length=30)
     tag = models.CharField(verbose_name='タグ1',max_length=20,null=True)
     tag2 = models.CharField(verbose_name='タグ2',max_length=20,null=True)
     tag3 = models.CharField(verbose_name='タグ3',max_length=20,null=True)
@@ -79,6 +81,14 @@ class Codnate(models.Model):
 
     def __str__(self):
         return 'sub1:' + self.sub1 + ' sub2:' + sub2 + ' sub3:' + self.sub3 + ' sub4:' + self.sub4 + ' sub5:' + self.sub5
+
+class Codnate_type_temp(models.Model):
+    class Meta:
+        db_table = 'Codnate_type_temp'
+
+    code_type = models.CharField(verbose_name='タイプ',max_length=30)
+    dores_value = models.IntegerField(vrebose_name='ドレス率')
+    casual_value = models.IntegerField(verbose_name='カジュアル率')
 
     
 
