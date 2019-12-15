@@ -87,7 +87,7 @@ class Codnate_type_temp(models.Model):
         db_table = 'Codnate_type_temp'
 
     code_type = models.CharField(verbose_name='タイプ',max_length=30)
-    dores_value = models.IntegerField(vetbose_name='ドレス率')
+    dores_value = models.IntegerField(verbose_name='ドレス率')
     casual_value = models.IntegerField(verbose_name='カジュアル率')
 
     
