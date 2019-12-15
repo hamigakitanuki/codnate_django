@@ -579,8 +579,8 @@ def get_tag(request):
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
         #cate_label = ['ワイルド','ゆるい','かっこいい','かわいい','大人っぽい','子供っぽい','きれい','ふわふわ']
-        cate_label = ['wild','yurui','cool','kawaii','adult','child','beuty','huwahuwa']
-        
+        #cate_label = ['wild','yurui','cool','kawaii','adult','child','beuty','huwahuwa']
+        cate_label = ['cool','kawaii','adult','wild','yurui','child','beuty','huwahuwa']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
