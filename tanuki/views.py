@@ -8,7 +8,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.sites.shortcuts import get_current_site
 import re
 from django.core.files import File
-from django.db.models import Max
+from django.db.models import Max,Sum
 from .forms import PhotoForm,AccountForm,PhotoOneForm
 from django.views.decorators.csrf import csrf_exempt
 import random
@@ -152,21 +152,19 @@ def getImage(request):
     cate_list  = list(ac.values_list('cate',flat=True))
     sub_list   = list(ac.values_list('sub',flat=True))
     color_list = list(ac.values_list('color',flat=True))
-    type_list = list(ac.values_list('type_name',flat=True))
+    dress_value_list = list(ac.values_list('dress_value',flat=True))
+    casual_value_list = list(ac.values_list('casual_calue',flat=True))
+    simple_value_list = list(ac.values_list('simple_value',flat=True))
+    tag1 = list(ac.values_list('tag1',flat=True))
+    tag2 = list(ac.values_list('tag2',flat=True))
+    tag3 = list(ac.values_list('tag3',flat=True))
+    tag4 = list(ac.values_list('tag4',flat=True))
+    
+    dress = sum(dress_value_list)
+    casual = sum(casual_value_list)
+    simple = sum(simple_value_list)
     
     
-    dress = 0
-    casual = 0
-    simple = 0
-    
-    for i,type in enumerate(type_list):
-        count = type_list.count(type)
-        if type == 'dress':
-            dress = count
-        elif type == 'casual':
-            casual = count
-        elif type == 'simple':
-            simple = count
     
 
     print(path_list)
@@ -179,6 +177,13 @@ def getImage(request):
         'dress':dress,
         'casual':casual,
         'simple':simple,
+        'dress_value_list':dress_value_list,
+        'casual_value_list':casual_value_list,
+        'simple_value_list':simple_value_list,
+        'tag1':tag1,
+        'tag2':tag2,
+        'tag3':tag3,
+        'tag4':tag4
     }
     return JsonResponse(d)
 
