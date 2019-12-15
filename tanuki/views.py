@@ -73,10 +73,10 @@ def imgInDB(request):
         tag3 = request.POST['tag3']
         tag4 = request.POST['tag4']
         vol = request.POST['vol']
-
+        print(userNo)
         #画像をDBに登録
         photo = Photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'],
-                      cate=cate,sub=sub,color=color,dress=dress,casual=casual,simple=simple,
+                      cate=cate,sub=sub,color=color,dress_value=dress,casual_value=casual,simple_value=simple,
                       tag=tag1,tag2=tag2,tag3=tag3,tag4=tag4,vol=vol)
         photo.save()
         #画像のパスを作成
