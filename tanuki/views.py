@@ -332,7 +332,8 @@ def getColor(request):
         photo_one.save()
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
-        cate_label = ['white','black','blue','brown','gray','green','orange','pink','purple','red','yellow']
+        cate_label = ['white','black','blue','gray','pink','green','orange','purple','brown','red','yellow']
+        #cate_label = ['white','black','blue','brown','gray','green','orange','pink','purple','red','yellow']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
@@ -579,7 +580,7 @@ def get_tag(request):
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
         #cate_label = ['ワイルド','ゆるい','かっこいい','かわいい','大人っぽい','子供っぽい','きれい','ふわふわ']
-        cate_label = ['wild','yurui','cool','kawaii','adult','child','beuty','huwahuwaa']
+        cate_label = ['wild','yurui','cool','kawaii','adult','child','beuty','huwahuwa']
         
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
@@ -600,8 +601,8 @@ def get_tag(request):
         print(label_sort)
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
-        tag = [cate_label[label_sort[0][0]],cate_label[label_sort[0][1]],cate_label[label_sort[0][2]],cate_label[label_sort[0][3]]]
-        return HttpResponse(tag)
+        
+        return HttpResponse(cate_label[label_sort[0][0]]+','+cate_label[label_sort[0][1]]+','+cate_label[label_sort[0][2]]+','+cate_label[label_sort[0][3]])
 
 @csrf_exempt
 def get_vol(request):
