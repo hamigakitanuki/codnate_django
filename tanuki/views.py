@@ -332,7 +332,7 @@ def getColor(request):
         photo_one.save()
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
-        cate_label = ['white','black','blue','gray','pink','green','orange','purple','brown','red','yellow']
+        cate_label = ['brown','black','blue','gray','pink','green','orange','purple','red','white','yellow']
         #cate_label = ['white','black','blue','brown','gray','green','orange','pink','purple','red','yellow']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
