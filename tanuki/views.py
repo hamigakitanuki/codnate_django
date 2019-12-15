@@ -100,7 +100,7 @@ def imgInDB(request):
 
     except Exception:
         #画像じゃないとき、または例外発生
-        return HttpResponse('totyu de error')
+        return HttpResponse('totyu de error ->'+Exception)
 
 @csrf_exempt
 def imgChageInfo(request):
