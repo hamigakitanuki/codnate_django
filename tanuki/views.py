@@ -65,9 +65,9 @@ def imgInDB(request):
         cate = request.POST['cate']
         sub = request.POST['sub']
         color = request.POST['color']
-        dress = request.POST['dress']
-        casual = request.POST['casual']
-        simple = request.POST['simple']
+        dress = int(request.POST['dress'])
+        casual = int(request.POST['casual'])
+        simple = int(request.POST['simple'])
         tag1 = request.POST['tag1']
         tag2 = request.POST['tag2']
         tag3 = request.POST['tag3']
