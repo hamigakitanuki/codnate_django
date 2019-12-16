@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Photo,Account,BlackList,Sub_type_value,Color_type_value,Photo_one,User_bad_list,User_good_list,Codnate_type_temp
+from .models import Photo,Account,Photo_one,Codnate_type_temp
 import json
 from django.db import models
 from django.http.response import JsonResponse

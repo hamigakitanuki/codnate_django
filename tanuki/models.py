@@ -5,26 +5,6 @@ class Photo_one(models.Model):
         db_table = 'Photo_one'
     
     photo = models.ImageField(verbose_name='画像',upload_to='tanuki')
-class Sub_type_value(models.Model):
-    class Meta:
-        db_table = 'Sub_type_value'
-
-    sub = models.CharField(verbose_name='サブ',max_length=30)
-    type1 = models.CharField(verbose_name='タイプ1',max_length=30,null=True)
-    type2 = models.CharField(verbose_name='タイプ2',max_length=30,null=True)
-
-    def __str__(self):
-        return self.sub
-
-class Color_type_value(models.Model):
-    class Meta:
-        db_table = 'Color_type_value'
-
-    color = models.CharField(verbose_name='色',max_length=30)
-    type = models.CharField(verbose_name='タイプ',max_length=30)
-    
-    def __str__(self):
-        return self.color
 
 class Photo(models.Model):
     class Meta:
@@ -59,16 +39,6 @@ class Account(models.Model):
     def __str__(self):
         return self.name
 
-class BlackList(models.Model):
-    class Meta:
-        db_table = 'BlackList'
-
-    sub1 = models.CharField(verbose_name='サブ１',max_length=30)
-    sub2 = models.CharField(verbose_name='サブ２',max_length=30)
-
-    def __str__(self):
-        return 'sub1:' + self.sub1 + ' sub2:' + self.sub2
-
 class Codnate(models.Model):
     class Meta:
         db_table = 'Codnate'
@@ -97,7 +67,6 @@ class Codnate_type_temp(models.Model):
     vol = models.CharField(verbose_name='勢い',max_length=30)
 
     
-
 
   
 
