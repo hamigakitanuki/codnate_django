@@ -317,17 +317,17 @@ def getCodenate(request):
     res_botoms_sub = []
     res_shoese_sub = []
 
-    tops_path_list = list(user_photo_all.filter(cate='tops').values_list('FilePath'))
-    botoms_path_list = list(user_photo_all.filter(cate='botoms').values_list('FilePath'))
-    shoese_path_list = list(user_photo_all.filter(cate='shoese').values_list('FilePath'))
+    tops_path_list = list(user_photo_all.filter(cate='tops').values_list('FilePath',flat=True))
+    botoms_path_list = list(user_photo_all.filter(cate='botoms').values_list('FilePath',flat=True))
+    shoese_path_list = list(user_photo_all.filter(cate='shoese').values_list('FilePath',flat=True))
 
-    tops_color_list = list(user_photo_all.filter(cate='tops').values_list('color'))
-    botoms_color_list = list(user_photo_all.filter(cate='botoms').values_list('color'))
-    shoese_color_list = list(user_photo_all.filter(cate='shoese').values_list('color'))
+    tops_color_list = list(user_photo_all.filter(cate='tops').values_list('color',flat=True))
+    botoms_color_list = list(user_photo_all.filter(cate='botoms').values_list('color',flat=True))
+    shoese_color_list = list(user_photo_all.filter(cate='shoese').values_list('color',flat=True))
 
-    tops_sub_list = list(user_photo_all.filter(cate='tops').values_list('sub'))
-    botoms_sub_list = list(user_photo_all.filter(cate='botoms').values_list('sub'))
-    shoese_sub_list = list(user_photo_all.filter(cate='shoese').values_list('sub'))
+    tops_sub_list = list(user_photo_all.filter(cate='tops').values_list('sub',flat=True))
+    botoms_sub_list = list(user_photo_all.filter(cate='botoms').values_list('sub',flat=True))
+    shoese_sub_list = list(user_photo_all.filter(cate='shoese').values_list('sub',flat=True))
 
     for i in range(len(res_idx_list)):
         res_tops_path.append(tops_path_list[tag_idx_list[res_idx_list[i]][0]])
