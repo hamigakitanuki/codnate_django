@@ -103,18 +103,18 @@ class User_good_list(models.Model):
         db_table = 'User_good_list'
 
     userNo = models.IntegerField(verbose_name='ユーザーNo')
-    tops = models.ForeignKey(verbose_name='トップス',to='Photo',on_delete=models.CASCADE)
-    botoms = models.ForeignKey(verbose_name='ボトムス',to='Photo',on_delete=models.CASCADE)
-    shoese = models.ForeignKey(verbose_name='シューズ',to='Photo',on_delete=models.CASCADE)
+    tops = models.ForeignKey(Photo,verbose_name='トップス',on_delete=models.CASCADE)
+    botoms = models.ForeignKey(Photo,verbose_name='ボトムス',on_delete=models.CASCADE)
+    shoese = models.ForeignKey(Photo,verbose_name='シューズ',on_delete=models.CASCADE)
     
 
 class User_bad_list(models.Model):
     class Meta:
         db_table = 'User_bad_list'
-    userNo = models.IntegerField(verbose_name='ユーザーNo')
-    tops = models.ForeignKey(verbose_name='トップス',to='Photo',on_delete=models.CASCADE)
-    botoms = models.ForeignKey(verbose_name='ボトムス',to='Photo',on_delete=models.CASCADE)
-    shoese = models.ForeignKey(verbose_name='シューズ',to='Photo',on_delete=models.CASCADE)
+    userNo = models.IntegerField(Photo,verbose_name='ユーザーNo')
+    tops = models.ForeignKey(Photo,verbose_name='トップス',on_delete=models.CASCADE)
+    botoms = models.ForeignKey(Photo,verbose_name='ボトムス',on_delete=models.CASCADE)
+    shoese = models.ForeignKey(Photo,verbose_name='シューズ',on_delete=models.CASCADE)
   
 
 
