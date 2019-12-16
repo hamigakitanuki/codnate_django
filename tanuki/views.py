@@ -215,7 +215,7 @@ def getCodenate(request):
     print(user_type)
 
     type_temp_all = models.QuerySet(Codnate_type_temp)
-    user_like_type_temp = type_temp_all.filter(type=user_type)
+    user_like_type_temp = type_temp_all.filter(code_type=user_type)
 
     type_dress_value = user_like_type_temp.values('dress_value')
     type_casual_value = user_like_type_temp.values('casual_value')
