@@ -208,10 +208,9 @@ def getCodenate(request):
     if botoms_count < 1:
         return HttpResponse('botoms no item')
     if shoese_count < 1:
-        return HttpResponse('tops no item')
+        return HttpResponse('shoese no item')
 
-    user_good_all = models.QuerySet(User_good_list)
-    user_bad_all = models.QuerySet(User_bad_list)
+
     user_type = models.QuerySet(Account).filter(id=userNo).values('type')
     print(user_type)
 
