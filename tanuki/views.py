@@ -383,7 +383,7 @@ def getCate(request):
         img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
 
         #cate_label = ['トップス','ワンピース','アウター','ボトムス']
-        cate_label = ['tops','onepeace','outer','botoms']
+        cate_label = ['tops','onepeace','outer','botoms','shoese']
         #画像をリサイズ（今回は64）
         cutx = cv2.resize(img,(64,64))
         #画像の色をRGB形式に変更
@@ -397,8 +397,10 @@ def getCate(request):
         score = np.max(pred)
         
         K.clear_session()
-
+        print('score'+str(pred))
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
+        if score <=0.3:
+            label =4
         return HttpResponse(cate_label[label])
 @csrf_exempt
 def getColor(request):
@@ -454,6 +456,7 @@ def getsubCate(request):
     import numpy as np
     import keras.backend.tensorflow_backend as tb
     from keras import backend as K 
+    import random
     
     
     if request.method == 'GET':
@@ -594,8 +597,18 @@ def getsubCate(request):
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
             K.clear_session()
-
             return HttpResponse(cate_name[label])
+
+        elif sub == 'shoese':
+            
+            cate_name = ['sandals_beacesandal_mules',
+                         'booty_boots_rainshoese',
+                         'sneakers_moccasin',
+                         'slipons',
+                         'loafer_pumps_dressshoese',
+                         ]
+                         
+            return HttpResponse(cate_name[int(random.uniform(0,4))])
 @csrf_exempt
 def get_type(request):
     import cv2
