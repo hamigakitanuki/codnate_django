@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Photo,Account,BlackList,Sub_type_value,Color_type_value,Photo_one
+from .models import Photo,Account,BlackList,Sub_type_value,Color_type_value,Photo_one,User_bad_list,User_good_list,Codnate_type_temp
 import json
 from django.db import models
 from django.http.response import JsonResponse
@@ -153,9 +153,9 @@ def getImage(request):
     sub_list   = list(ac.values_list('sub',flat=True))
     color_list = list(ac.values_list('color',flat=True))
     dress_value_list = list(ac.values_list('dress_value',flat=True))
-    casual_value_list = list(ac.values_list('casual_calue',flat=True))
+    casual_value_list = list(ac.values_list('casual_value',flat=True))
     simple_value_list = list(ac.values_list('simple_value',flat=True))
-    tag1 = list(ac.values_list('tag1',flat=True))
+    tag1 = list(ac.values_list('tag',flat=True))
     tag2 = list(ac.values_list('tag2',flat=True))
     tag3 = list(ac.values_list('tag3',flat=True))
     tag4 = list(ac.values_list('tag4',flat=True))
@@ -188,81 +188,170 @@ def getImage(request):
     return JsonResponse(d)
 
 def getCodenate(request):
+    import numpy as np
+
     userNo = request.GET.get('UserNo')
     photo_all = models.QuerySet(Photo)
     print(str(userNo))
     #ユーザーの服を全部出力
-    photo_all  = photo_all.filter(userNo=userNo)
-    #サブカテゴリとファイルパスを出力
-    photo_tops_sub = list(photo_all.filter(cate='トップス').values_list('sub',flat=True))
-    photo_tops_path = list(photo_all.filter(cate='トップス').values_list('FilePath',flat=True))
-    #ブラックリストを出力
-    blackList = models.QuerySet(BlackList)
-    if photo_tops_sub is None:
-        return HttpResponse("gazou ga naiyo")
-    tops_path = []
-    botoms_path = []
-    outer_path = []
-    shoese_path = []
+    user_photo_all  = photo_all.filter(userNo=userNo)
+    tops_count = user_photo_all.filter(cate='tops').count()
+    botoms_count = user_photo_all.filter(cate='botoms').count()
+    shoese_count = user_photo_all.filter(cate='shoese').count()
+
+    #アウターは冬用　まだ未開発
+    outer_count = user_photo_all.filter(cate='outer').count()
     
-    for i in range(3):
-        #トップスからランダムで出力
-        tops_idx = random.randint(0,len(photo_tops_sub)-1)
+    #服の数でコーディネートできるか判定
+    if tops_count < 1:
+        return HttpResponse('tops no item')
+    if botoms_count < 1:
+        return HttpResponse('botoms no item')
+    if shoese_count < 1:
+        return HttpResponse('tops no item')
 
-        #ブラックリストで除外するボトムスをリスト形式で出力
-        tops_out_list = list(blackList.filter(sub1=photo_tops_sub[tops_idx]).values_list('sub2',flat=True))
+    user_good_all = models.QuerySet(User_good_list)
+    user_bad_all = models.QuerySet(User_bad_list)
+    user_type = models.QuerySet(Account).filter(id=userNo).values('type')
+    print(user_type)
+
+    type_temp_all = models.QuerySet(Codnate_type_temp)
+    user_like_type_temp = type_temp_all.filter(type=user_type)
+
+    type_dress_value = user_like_type_temp.values('dress_value')
+    type_casual_value = user_like_type_temp.values('casual_value')
+    type_simple_value = user_like_type_temp.values('simple_value')
+    
+
+    tops_dress_value_list = list(user_photo_all.filter(cate='tops').values_list('dress_value'))
+    tops_casual_value_list = list(user_photo_all.filter(cate='tops').values_list('casual_value'))
+    tops_simple_value_list = list(user_photo_all.filter(cate='tops').values_list('simple_value'))
+
+    botoms_dress_value_list = list(user_photo_all.filter(cate='botoms').values_list('dress_value'))
+    botoms_casual_value_list = list(user_photo_all.filter(cate='botoms').values_list('casual_value'))
+    botoms_simple_value_list = list(user_photo_all.filter(cate='botoms').values_list('simple_value'))
+
+    shoese_dress_value_list = list(user_photo_all.filter(cate='shoese').values_list('dress_value'))
+    shoese_casual_value_list = list(user_photo_all.filter(cate='shoese').values_list('casual_value'))
+    shoese_simple_value_list = list(user_photo_all.filter(cate='shoese').values_list('simple_value'))
+
+    type_filter_list = []
+    type_filter_idx_list = []
+
+    for tops_idx in range(tops_count):
+        for botoms_idx in range(botoms_count):
+            for shoese_idx in range(shoese_count):
+                dress_sum = tops_dress_value_list[tops_idx] + botoms_dress_value_list[botoms_idx] + shoese_dress_value_list[shoese_idx]
+                casual_sum = tops_casual_value_list[tops_idx] + botoms_casual_value_list[botoms_idx] + shoese_casual_value_list[shoese_idx]
+                simple_sum = tops_simple_value_list[tops_idx] + botoms_simple_value_list[botoms_idx] + shoese_simple_value_list[shoese_idx]
+                dress_per = dress_sum / (dress_sum + casual_sum + simple_sum)
+                casual_per = casual_sum / (dress_sum + casual_sum + simple_sum)
+                simple_per = simple_sum / (dress_sum + casual_sum + simple_sum)
+
+                type_absolute =  abs(type_dress_value - dress_per) + abs(type_casual_value - casual_per) + abs(type_simple_value - simple_per)
+
+                type_filter_list.append(type_absolute)
+                type_filter_idx_list.append[tops_idx,botoms_idx,shoese_idx]
+    
+    
+    tag1 = user_like_type_temp.values('tag1')
+    tag2 = user_like_type_temp.values('tag2')
+    tag3 = user_like_type_temp.values('tag3')
+    tag4 = user_like_type_temp.values('tag4')
+    
+    if 5 < len(type_filter_list):
+        sorted_idx = np.argsort(type_filter_list)[0:4]
+    else:
+        n = len(type_filter_list)
+        sorted_idx = np.argsort(type_filter_list)[0:n]
+    tag_sum_list = []
+    tag_idx_list = []
+    for code_idx in range(len(sorted_idx)):
+        tag_list = []
+        tag_list.append(list(user_photo_all.filter(cate='tops').values_list('tag'))[type_filter_idx_list[sorted_idx[code_idx][0]]])
+        tag_list.append(list(user_photo_all.filter(cate='tops').values_list('tag1'))[type_filter_idx_list[sorted_idx[code_idx][0]]])
+        tag_list.append(list(user_photo_all.filter(cate='tops').values_list('tag2'))[type_filter_idx_list[sorted_idx[code_idx][0]]])
+        tag_list.append(list(user_photo_all.filter(cate='tops').values_list('tag3'))[type_filter_idx_list[sorted_idx[code_idx][0]]])
         
-        
-        #ボトムスのサブカテゴリリストから除外して出力するものだけを残す
-        photo_botoms_sub = list(photo_all.filter(cate='ボトムス').values_list('sub',flat=True))
-        if len(photo_botoms_sub) >=1:
-            photo_botoms_sub = [s for s in photo_botoms_sub if s != tops_out_list[:]]
+        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag'))[type_filter_idx_list[sorted_idx[code_idx][1]]])
+        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag1'))[type_filter_idx_list[sorted_idx[code_idx][1]]])
+        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag2'))[type_filter_idx_list[sorted_idx[code_idx][1]]])
+        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag3'))[type_filter_idx_list[sorted_idx[code_idx][1]]])
 
-            photo_botoms_sub = list(photo_all.filter(sub__in=photo_botoms_sub).values_list('sub',flat=True))
-            photo_botoms_path = list(photo_all.filter(sub__in=photo_botoms_sub).values_list('FilePath',flat=True))
-            #ボトムスからランダムで出力
-            if len(photo_botoms_path) >= 1:
-                botoms_idx = random.randint(0,len(photo_botoms_path)-1)
-                botoms_path.append(photo_botoms_path[botoms_idx])
-                botoms_out_list = list(blackList.filter(sub1=photo_botoms_sub[botoms_idx]).values_list('sub2',flat=True))
+        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag'))[type_filter_idx_list[sorted_idx[code_idx][2]]])
+        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag1'))[type_filter_idx_list[sorted_idx[code_idx][2]]])
+        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag2'))[type_filter_idx_list[sorted_idx[code_idx][2]]])
+        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag3'))[type_filter_idx_list[sorted_idx[code_idx][2]]])
 
-        
-        #アウターのサブカテゴリリストから除外して出力するものだけを残す
-        photo_outer_sub = list(photo_all.filter(cate='アウター').values_list('sub',flat=True))
-        if len(photo_outer_sub) >= 1:
-            photo_outer_sub = [s for s in photo_outer_sub if s != tops_out_list[:]]
+        tag1_count = tag_list.Counter(tag1) 
+        tag2_count = tag_list.Counter(tag2) 
+        tag3_count = tag_list.Counter(tag3) 
+        tag4_count = tag_list.Counter(tag4) 
 
-            photo_outer_sub = list(photo_all.filter(sub__in=photo_outer_sub).values_list('sub',flat=True))
-            photo_outer_path = list(photo_all.filter(sub__in=photo_outer_sub).values_list('FilePath',flat=True))
-            #アウターからランダムで出力       
-            if len(photo_outer_path) >= 1:
-                outer_idx = random.randint(0,len(photo_outer_path)-1)
-                outer_path.append(photo_outer_path[outer_idx])
-                outer_out_list = list(blackList.filter(sub1=photo_outer_sub[outer_idx]).values_list('sub2',flat=True))
+        tag_sum_list.append(tag1_count + tag2_count + tag3_count + tag4_count)
+        tag_idx_list.append(type_filter_idx_list[sorted_idx[code_idx]])
+        print("288->"+str(tag_sum_list))
 
+    tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
+    if 3 <= len(tag_sorted_idx):
+        res_idx_list = tag_sorted_idx[0:2]
+    else:
+        res_idx_list = tag_sorted_idx
+    
+    res_tops_path =[]
+    res_botoms_path = []
+    res_shoese_path = []
 
-        #シューズのサブカテゴリリストから除外して出力するものだけを残す
-        photo_shoese_sub = list(photo_all.filter(cate='シューズ').values_list('sub',flat=True))
-        if len(photo_shoese_sub) >= 1:
-            photo_shoese_sub = [s for s in photo_shoese_sub if s != tops_out_list[:]]
+    res_tops_color = []
+    res_botoms_color = []
+    res_shoese_color = []
 
-            photo_shoese_path = list(photo_all.filter(sub__in=photo_shoese_sub).values_list('sub',flat=True))
-            photo_shoese_path = list(photo_all.filter(sub__in=photo_shoese_sub).values_list('FilePath',flat=True))
-            #シューズからランダムで出力
-            if len(photo_shoese_path) >= 1:
-                shoese_idx = random.randint(0,len(photo_shoese_path)-1)
-                shoese_path.append(photo_shoese_path[shoese_idx])
-                shoese_out_list = list(blackList.filter(sub1=photo_shoese_sub[shoese_idx]).values_list('sub2',flat=True))
-        
-        tops_path.append(photo_tops_path[tops_idx])
+    res_tops_sub = []
+    res_botoms_sub = []
+    res_shoese_sub = []
+
+    tops_path_list = list(user_photo_all.filter(cate='tops').values_list('FilePath'))
+    botoms_path_list = list(user_photo_all.filter(cate='botoms').values_list('FilePath'))
+    shoese_path_list = list(user_photo_all.filter(cate='shoese').values_list('FilePath'))
+
+    tops_color_list = list(user_photo_all.filter(cate='tops').values_list('color'))
+    botoms_color_list = list(user_photo_all.filter(cate='botoms').values_list('color'))
+    shoese_color_list = list(user_photo_all.filter(cate='shoese').values_list('color'))
+
+    tops_sub_list = list(user_photo_all.filter(cate='tops').values_list('sub'))
+    botoms_sub_list = list(user_photo_all.filter(cate='botoms').values_list('sub'))
+    shoese_sub_list = list(user_photo_all.filter(cate='shoese').values_list('sub'))
+
+    for i in range(res_idx_list):
+        res_tops_path.append(tops_path_list[tag_idx_list[res_idx_list[i]][0]])
+        res_tops_color.append(tops_color_list[tag_idx_list[res_idx_list[i]][0]])
+        res_tops_sub.append(tops_sub_list[tag_idx_list[res_idx_list[i]][0]])
+            
+        res_botoms_path.append(botoms_path_list[tag_idx_list[res_idx_list[i]][1]])
+        res_botoms_color.append(botoms_color_list[tag_idx_list[res_idx_list[i]][1]])
+        res_botoms_sub.append(botoms_sub_list[tag_idx_list[res_idx_list[i]][1]])
+               
+        res_shoese_path.append(shoese_path_list[tag_idx_list[res_idx_list[i]][2]])
+        res_shoese_color.append(shoese_color_list[tag_idx_list[res_idx_list[i]][2]])
+        res_shoese_sub.append(shoese_sub_list[tag_idx_list[res_idx_list[i]][2]])
+
+    d = {
+        'tops_path':res_tops_path,
+        'tops_color':res_tops_color,
+        'tops_sub':res_tops_sub,
+        'botoms_path':res_botoms_path,
+        'botoms_color':res_botoms_color,
+        'botoms_sub':res_botoms_sub,
+        'shoese_path':res_shoese_path,
+        'shoese_color':res_shoese_sub,
+    }
+    
+    
         
     
-    d = {"tops_path":tops_path,
-         "botoms_path":botoms_path,
-         "outer_path":outer_path,
-         "shoese_path":shoese_path}
-    print(d)
-    return JsonResponse(d)
+
+        
+
 
 @csrf_exempt
 def getCate(request):

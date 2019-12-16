@@ -85,10 +85,43 @@ class Codnate(models.Model):
 class Codnate_type_temp(models.Model):
     class Meta:
         db_table = 'Codnate_type_temp'
-
+    TAG_IN_CHOICES = (
+        'cool','kawaii','adult','wild','yurui','child','beuty','huwahuwa'
+    )
+    VOL_IN_CHOICES = (
+        'hikaeme','hade'
+    )
     code_type = models.CharField(verbose_name='タイプ',max_length=30)
     dores_value = models.IntegerField(verbose_name='ドレス率')
     casual_value = models.IntegerField(verbose_name='カジュアル率')
+    simple_value = models.IntegerField(verbose_name='シンプル率')
+    tag1 = models.CharField(verbose_name='タグ1',choices=TAG_IN_CHOICES,max_length=30,null=True)
+    tag2 = models.CharField(verbose_name='タグ2',choices=TAG_IN_CHOICES,max_length=30,null=True)
+    tag3 = models.CharField(verbose_name='タグ3',choices=TAG_IN_CHOICES,max_length=30,null=True)
+    tag4 = models.CharField(verbose_name='タグ4',choices=TAG_IN_CHOICES,max_length=30,null=True)
+    vol = models.CharField(verbose_name='勢い',choices=VOL_IN_CHOICES,max_length=30)
+
+    
+
+class User_good_list(models.Model):
+    class Meta:
+        db_table = 'User_good_list'
+
+    userNo = models.IntegerField(verbose_name='ユーザーNo')
+    tops = models.ForeignKey(verbose_name='トップス',to='Photo',on_delete=models.CASCADE)
+    botoms = models.ForeignKey(verbose_name='ボトムス',to='Photo',on_delete=models.CASCADE)
+    shoese = models.ForeignKey(verbose_name='シューズ',to='Photo',on_delete=models.CASCADE)
+    
+
+class User_bad_list(models.Model):
+    class Meta:
+        db_table = 'User_bad_list'
+    userNo = models.IntegerField(verbose_name='ユーザーNo')
+    tops = models.ForeignKey(verbose_name='トップス',to='Photo',on_delete=models.CASCADE)
+    botoms = models.ForeignKey(verbose_name='ボトムス',to='Photo',on_delete=models.CASCADE)
+    shoese = models.ForeignKey(verbose_name='シューズ',to='Photo',on_delete=models.CASCADE)
+  
+
 
     
 
