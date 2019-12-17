@@ -280,16 +280,16 @@ def getCodenate(request):
         tag_list.append(list(user_photo_all.filter(cate='tops').values_list('tag3',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][0]])
         tag_list.append(list(user_photo_all.filter(cate='tops').values_list('tag4',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][0]])
         
-        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][0]])
-        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag2',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][0]])
-        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag3',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][0]])
-        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag4',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag2',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag3',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(list(user_photo_all.filter(cate='botoms').values_list('tag4',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][1]])
 
-        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][0]])
-        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag2',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][0]])
-        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag3',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][0]])
-        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag4',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][0]])
-
+        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag2',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag3',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(list(user_photo_all.filter(cate='shoese').values_list('tag4',flat=True))[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        print(tag_list)
         tag1_count = tag_list.count(tag1) 
         tag2_count = tag_list.count(tag2) 
         tag3_count = tag_list.count(tag3) 
@@ -297,7 +297,7 @@ def getCodenate(request):
 
         tag_sum_list.append(tag1_count + tag2_count + tag3_count + tag4_count)
         tag_idx_list.append(type_filter_idx_list[sorted_idx[code_idx]])
-        print("288->"+str(tag_sum_list))
+        print("300----------->"+str(tag_sum_list))
 
     tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
     if 3 <= len(tag_sorted_idx):
@@ -328,7 +328,7 @@ def getCodenate(request):
     tops_sub_list = list(user_photo_all.filter(cate='tops').values_list('sub',flat=True))
     botoms_sub_list = list(user_photo_all.filter(cate='botoms').values_list('sub',flat=True))
     shoese_sub_list = list(user_photo_all.filter(cate='shoese').values_list('sub',flat=True))
-
+    print('331----------->'+str(len(res_idx_list)))
     for i in range(len(res_idx_list)):
         res_tops_path.append(tops_path_list[tag_idx_list[res_idx_list[i]][0]])
         res_tops_color.append(tops_color_list[tag_idx_list[res_idx_list[i]][0]])
