@@ -67,8 +67,20 @@ class Codnate_type_temp(models.Model):
     vol = models.CharField(verbose_name='勢い',max_length=30)
 
     
+class Good_Codnate(models.Model):
+    class Meta:
+        db_table = 'Good_Codnate'
+    
+    userNo = models.IntegerField(verbose_name='ユーザーNO')
 
-  
+class Bad_Codnate(models.Model):
+    class Meta:
+        db_table = 'Good_Codnate'
+    
+    userNo = models.IntegerField(verbose_name='ユーザーNO')
+    tops_path = models.CharField(verbose_name='トップスパス',max_length=100)
+    botoms_path = models.CharField(verbose_name='ボトムスパス',max_length=100)
+    shoese_path = models.CharField(verbose_name='シューズパス',max_length=100)
 
 
     

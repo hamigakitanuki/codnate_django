@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Photo,Account,Photo_one,Codnate_type_temp
+from .models import Photo,Account,Photo_one,Codnate_type_temp,Bad_Codnate,Good_Codnate
 import json
 from django.db import models
 from django.http.response import JsonResponse
@@ -213,13 +213,18 @@ def getCodenate(request):
 
     user_type = list(models.QuerySet(Account).filter(id=userNo).values_list('type',flat=True))[0]
     print(user_type)
-
+#------------自分の好きなタイプのドレス率　カジュアル率　シンプル率の差が一番少ない順にする--------------
     type_temp_all = models.QuerySet(Codnate_type_temp)
     user_like_type_temp = type_temp_all.filter(code_type=user_type)
+    bad_codnate_list = models.QuerySet(Bad_Codnate)
 
     type_dress_value = list(user_like_type_temp.values_list('dress_value',flat=True))[0]
     type_casual_value = list(user_like_type_temp.values_list('casual_value',flat=True))[0]
     type_simple_value = list(user_like_type_temp.values_list('simple_value',flat=True))[0]
+    
+    tops_path_list = list(user_photo_all.filter(cate='tops').values_list('File_Path',flat=True))
+    botoms_path_list = list(user_photo_all.filter(cate='botoms').values_list('File_Path',flat=True))
+    shoese_path_list = list(user_photo_all.filter(cate='shoese').values_list('File_Path',flat=True))
     
 
     tops_dress_value_list = list(user_photo_all.filter(cate='tops').values_list('dress_value',flat=True))
@@ -234,12 +239,21 @@ def getCodenate(request):
     shoese_casual_value_list = list(user_photo_all.filter(cate='shoese').values_list('casual_value',flat=True))
     shoese_simple_value_list = list(user_photo_all.filter(cate='shoese').values_list('simple_value',flat=True))
 
+
     type_filter_list = []
     type_filter_idx_list = []
 
     for tops_idx in range(tops_count):
         for botoms_idx in range(botoms_count):
             for shoese_idx in range(shoese_count):
+                
+                if bad_codnate_list.filter(tops_path=tops_path_list[tops_idx],
+                                           botoms_path=botoms_path_list[botoms_idx],
+                                           shoese_path=shoese_path_list[shoese_idx]).count() > 0:
+                    type_filter_list.append(999)
+                    type_filter_idx_list.append([tops_idx,botoms_idx,shoese_idx])
+                    continue
+                
                 dress_sum = tops_dress_value_list[tops_idx] + botoms_dress_value_list[botoms_idx] + shoese_dress_value_list[shoese_idx]
                 casual_sum = tops_casual_value_list[tops_idx] + botoms_casual_value_list[botoms_idx] + shoese_casual_value_list[shoese_idx]
                 simple_sum = tops_simple_value_list[tops_idx] + botoms_simple_value_list[botoms_idx] + shoese_simple_value_list[shoese_idx]
@@ -255,7 +269,7 @@ def getCodenate(request):
                 print(type_absolute)
     print(type_filter_list)
     print(type_filter_idx_list)
-    
+#------------タグに一番当てはまっている組み合わせを選択する-------------
     tag1 = list(user_like_type_temp.values_list('tag1',flat=True))[0]
     tag2 = list(user_like_type_temp.values_list('tag2',flat=True))[0]
     tag3 = list(user_like_type_temp.values_list('tag3',flat=True))[0]
@@ -359,12 +373,20 @@ def getCodenate(request):
     print(d)
     return JsonResponse(d)
     
-    
-        
-    
+@csrf_exempt    
+def good_codnate_post(request):
+    if request.method == 'GET':
+        return HttpResponse()
+    try:
+        userNo = request.POST['user_no']
+        tops_path = request.POST['tops_path']
+        botoms_path = request.POST['botoms_path']
+        shoese_path = request.POST['shoese_path']
 
-        
+        bad = Bad_Codnate(userNo=userNo,tops_path=tops_path,botoms_path=botoms_path,shoese_path=shoese_path)
+        bad.save()
 
+        return HttpResponse('bad complete')
 
 @csrf_exempt
 def getCate(request):
