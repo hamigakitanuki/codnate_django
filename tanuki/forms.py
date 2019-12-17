@@ -18,12 +18,13 @@ class AccountForm(forms.Form):
     sex  = forms.CharField(max_length=5)
     age  = forms.IntegerField()
     type = forms.CharField(max_length=30)
+
 class PhotoOneForm(forms.Form):
     image = forms.ImageField()
     #post受付の際に使用、画像ファイル単体で受け取る方法が不明
     sub = forms.CharField(max_length=30,required=False)
 
-class Codnate_POST(forms.FORM):
+class Codnate_POST(forms.Form):
     userNo = forms.CharField()
     tops = forms.CharField(max_length=100)    
     botoms = forms.CharField(max_length=100)    
