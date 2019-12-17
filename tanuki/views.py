@@ -256,11 +256,14 @@ def getCodenate(request):
     print(type_filter_list)
     print(type_filter_idx_list)
     
-    tag1 = list(user_like_type_temp.values_list('tag1'))[0]
-    tag2 = list(user_like_type_temp.values_list('tag2'))[0]
-    tag3 = list(user_like_type_temp.values_list('tag3'))[0]
-    tag4 = list(user_like_type_temp.values_list('tag4'))[0]
-    
+    tag1 = list(user_like_type_temp.values_list('tag1',flat=True))[0]
+    tag2 = list(user_like_type_temp.values_list('tag2',flat=True))[0]
+    tag3 = list(user_like_type_temp.values_list('tag3',flat=True))[0]
+    tag4 = list(user_like_type_temp.values_list('tag4',flat=True))[0]
+    print("tag1:"+tag1)
+    print("tag2:"+tag2)
+    print("tag3:"+tag3)
+    print("tag4:"+tag4)
     if 5 < len(type_filter_list):
         n = 5
         sorted_idx = np.argsort(type_filter_list)
@@ -300,8 +303,8 @@ def getCodenate(request):
         print("300----------->"+str(tag_sum_list))
 
     tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
-    if 3 <= len(tag_sorted_idx):
-        res_idx_list = tag_sorted_idx[0:2]
+    if 6 <= len(tag_sorted_idx):
+        res_idx_list = tag_sorted_idx[0:6]
     else:
         res_idx_list = tag_sorted_idx
     
@@ -350,7 +353,8 @@ def getCodenate(request):
         'botoms_color':res_botoms_color,
         'botoms_sub':res_botoms_sub,
         'shoese_path':res_shoese_path,
-        'shoese_color':res_shoese_sub,
+        'shoese_color':res_shoese_color,
+        'shoese_sub':res_shoese_sub
     }
     print(d)
     return JsonResponse(d)
