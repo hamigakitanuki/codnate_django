@@ -222,9 +222,9 @@ def getCodenate(request):
     type_casual_value = list(user_like_type_temp.values_list('casual_value',flat=True))[0]
     type_simple_value = list(user_like_type_temp.values_list('simple_value',flat=True))[0]
     
-    tops_path_list = list(user_photo_all.filter(cate='tops').values_list('File_Path',flat=True))
-    botoms_path_list = list(user_photo_all.filter(cate='botoms').values_list('File_Path',flat=True))
-    shoese_path_list = list(user_photo_all.filter(cate='shoese').values_list('File_Path',flat=True))
+    tops_path_list = list(user_photo_all.filter(cate='tops').values_list('FilePath',flat=True))
+    botoms_path_list = list(user_photo_all.filter(cate='botoms').values_list('FilePath',flat=True))
+    shoese_path_list = list(user_photo_all.filter(cate='shoese').values_list('FilePath',flat=True))
     
 
     tops_dress_value_list = list(user_photo_all.filter(cate='tops').values_list('dress_value',flat=True))
@@ -312,9 +312,13 @@ def getCodenate(request):
         tag3_count = tag_list.count(tag3) 
         tag4_count = tag_list.count(tag4) 
 
-        tag_sum_list.append(tag1_count + tag2_count + tag3_count + tag4_count)
+        tag_sum_list.append(tag1_count*10 + tag2_count*10 + tag3_count*10 + tag4_count*10 - type_filter_list[sorted_idx[code_idx]])
         tag_idx_list.append(type_filter_idx_list[sorted_idx[code_idx]])
         print("300----------->"+str(tag_sum_list))
+
+#----------控え目か派手かで選択---------
+    
+
 
     tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
     if 6 <= len(tag_sorted_idx):
@@ -389,7 +393,21 @@ def bad_codnate_post(request):
         return HttpResponse('bad complete')
     except Exception:
         return HttpResponse('totyuude error')
+@csrg_exempt
+def bad_codnate_delete(request):
+    if request.method == 'GET':
+        return HttpResponse()
+    try:
+        userNo = request.POST['user_no']
+        tops_path = request.POST['tops_path']
+        botoms_path = request.POST['botoms_path']
+        shoese_path = request.POST['shoese_path']
 
+        bad_codnate_list = models.QuerySet(Bad_Codnate)
+        bad_codnate_list.filter(userNo=userNo,tops_path=tops_path,botoms_path=botoms_path,shoese_path=shoese_path).delete()
+        return HttpResponse("delete complete")
+    except Exception:
+        return HttpResponse("totyu de error")
 @csrf_exempt
 def getCate(request):
     import cv2
