@@ -75,7 +75,7 @@ class Good_Codnate(models.Model):
 
 class Bad_Codnate(models.Model):
     class Meta:
-        db_table = 'Good_Codnate'
+        db_table = 'Bad_Codnate'
     
     userNo = models.IntegerField(verbose_name='ユーザーNO')
     tops_path = models.CharField(verbose_name='トップスパス',max_length=100)

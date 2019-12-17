@@ -321,7 +321,7 @@ def getCodenate(request):
         res_idx_list = tag_sorted_idx[0:6]
     else:
         res_idx_list = tag_sorted_idx
-    
+#-------------一番評価の高い服を出力------------
     res_tops_path =[]
     res_botoms_path = []
     res_shoese_path = []
@@ -374,7 +374,7 @@ def getCodenate(request):
     return JsonResponse(d)
     
 @csrf_exempt    
-def good_codnate_post(request):
+def bad_codnate_post(request):
     if request.method == 'GET':
         return HttpResponse()
     try:
@@ -387,6 +387,8 @@ def good_codnate_post(request):
         bad.save()
 
         return HttpResponse('bad complete')
+    except Exception:
+        return HttpResponse('totyuude error')
 
 @csrf_exempt
 def getCate(request):
