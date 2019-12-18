@@ -46,11 +46,10 @@ class Codnate_sample(models.Model):
     sub1 = models.CharField(verbose_name='サブ1',max_length=30,null=True)
     sub2 = models.CharField(verbose_name='サブ2',max_length=30,null=True)
     sub3 = models.CharField(verbose_name='サブ3',max_length=30,null=True)
-    sub4 = models.CharField(verbose_name='サブ4',max_length=30,null=True)
-    sub5 = models.CharField(verbose_name='サブ5',max_length=30,null=True)
+    sub4 = models.CharField(verbose_name='サブ4',max_length=30,null=True,blank=True)
+    sub5 = models.CharField(verbose_name='サブ5',max_length=30,null=True,blank=True)
 
-    def __str__(self):
-        return 'sub1:' + self.sub1 + ' sub2:' + sub2 + ' sub3:' + self.sub3 + ' sub4:' + self.sub4 + ' sub5:' + self.sub5
+   
 
 class Codnate_type_temp(models.Model):
     class Meta:
