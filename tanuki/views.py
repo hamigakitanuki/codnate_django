@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Photo,Account,Photo_one,Codnate_type_temp,Bad_Codnate,Good_Codnate
+from .models import Photo,Account,Photo_one,Codnate_type_temp,Bad_Codnate,Good_Codnate,Codnate_sample
 import json
 from django.db import models
 from django.http.response import JsonResponse
@@ -338,6 +338,8 @@ def getCodenate(request):
     res_botoms_sub = []
     res_shoese_sub = []
 
+    sample_list = []
+
     tops_path_list = list(user_photo_all.filter(cate='tops').values_list('FilePath',flat=True))
     botoms_path_list = list(user_photo_all.filter(cate='botoms').values_list('FilePath',flat=True))
     shoese_path_list = list(user_photo_all.filter(cate='shoese').values_list('FilePath',flat=True))
@@ -349,19 +351,32 @@ def getCodenate(request):
     tops_sub_list = list(user_photo_all.filter(cate='tops').values_list('sub',flat=True))
     botoms_sub_list = list(user_photo_all.filter(cate='botoms').values_list('sub',flat=True))
     shoese_sub_list = list(user_photo_all.filter(cate='shoese').values_list('sub',flat=True))
+
+    codnate_sample = models.QuerySet(Codnate_sample)
+
+
     print('331----------->'+str(len(res_idx_list)))
     for i in range(len(res_idx_list)):
         res_tops_path.append(tops_path_list[tag_idx_list[res_idx_list[i]][0]])
         res_tops_color.append(tops_color_list[tag_idx_list[res_idx_list[i]][0]])
-        res_tops_sub.append(tops_sub_list[tag_idx_list[res_idx_list[i]][0]])
+        tops_sub = tops_sub_list[tag_idx_list[res_idx_list[i]][0]]
+        res_tops_sub.append(tops_sub)
             
         res_botoms_path.append(botoms_path_list[tag_idx_list[res_idx_list[i]][1]])
         res_botoms_color.append(botoms_color_list[tag_idx_list[res_idx_list[i]][1]])
-        res_botoms_sub.append(botoms_sub_list[tag_idx_list[res_idx_list[i]][1]])
+        botoms_sub = botoms_sub_list[tag_idx_list[res_idx_list[i]][1]]
+        res_botoms_sub.append(botoms_sub)
                
         res_shoese_path.append(shoese_path_list[tag_idx_list[res_idx_list[i]][2]])
         res_shoese_color.append(shoese_color_list[tag_idx_list[res_idx_list[i]][2]])
-        res_shoese_sub.append(shoese_sub_list[tag_idx_list[res_idx_list[i]][2]])
+        shoese_sub = shoese_sub_list[tag_idx_list[res_idx_list[i]][2]]
+        res_shoese_sub.append(shoese_sub)
+
+        sample_list.append(list(codnate_sample.filter(sub1=tops_sub,sub2=botoms_sub,sub3=shoese_sub).values_list('sample',flat=True))[0])
+
+        
+    
+    print(sample_list)
 
     d = {
         'tops_path':res_tops_path,
@@ -372,7 +387,8 @@ def getCodenate(request):
         'botoms_sub':res_botoms_sub,
         'shoese_path':res_shoese_path,
         'shoese_color':res_shoese_color,
-        'shoese_sub':res_shoese_sub
+        'shoese_sub':res_shoese_sub,
+        'codnate_sample':sample_list
     }
     print(d)
     return JsonResponse(d)

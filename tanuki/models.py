@@ -39,10 +39,10 @@ class Account(models.Model):
     def __str__(self):
         return self.name
 
-class Codnate(models.Model):
+class Codnate_sample(models.Model):
     class Meta:
         db_table = 'Codnate'
-
+    sample = models.CharField(verbose_name='サンプルパス',max_length=100)
     sub1 = models.CharField(verbose_name='サブ1',max_length=30,null=True)
     sub2 = models.CharField(verbose_name='サブ2',max_length=30,null=True)
     sub3 = models.CharField(verbose_name='サブ3',max_length=30,null=True)
