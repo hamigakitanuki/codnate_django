@@ -15,6 +15,7 @@ urlpatterns = [
      path(r'get_subCate',views.getsubCate,name = 'get_subCate'),
      path(r'get_Color',views.getColor,name = 'get_subColor'),
      path(r'bad_codnate_post',views.bad_codnate_post,name = 'bad_codnate_post'),
+     path(r'good_codnate_post',views.good_codnate_post,name = 'good_codnate_post'),
      path(r'bad_codnate_delete',views.bad_codnate_delete,name = 'bad_codnate_delete'),
 
      

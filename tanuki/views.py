@@ -205,8 +205,7 @@ def getCodenate(request):
     bad_tag1_weight = 1.5
     bad_tag2_weight = 1
     bad_tag3_weight = 0.5
-    bad_tag4_weight = 0.25
-    
+    bad_tag4_weight = 0.25   
 #-----------------------------------
     #ユーザーの服を全部出力
     user_photo_all  = photo_all.filter(userNo=userNo)
