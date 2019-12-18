@@ -247,12 +247,7 @@ def getCodenate(request):
         for botoms_idx in range(botoms_count):
             for shoese_idx in range(shoese_count):
                 
-                if bad_codnate_list.filter(tops_path=tops_path_list[tops_idx],
-                                           botoms_path=botoms_path_list[botoms_idx],
-                                           shoese_path=shoese_path_list[shoese_idx]).count() > 0:
-                    type_filter_list.append(999)
-                    type_filter_idx_list.append([tops_idx,botoms_idx,shoese_idx])
-                    continue
+                
                 
                 dress_sum = tops_dress_value_list[tops_idx] + botoms_dress_value_list[botoms_idx] + shoese_dress_value_list[shoese_idx]
                 casual_sum = tops_casual_value_list[tops_idx] + botoms_casual_value_list[botoms_idx] + shoese_casual_value_list[shoese_idx]
@@ -427,14 +422,73 @@ def bad_codnate_post(request):
         return HttpResponse()
     try:
         userNo = request.POST['user_no']
+
         tops_path = request.POST['tops_path']
         botoms_path = request.POST['botoms_path']
         shoese_path = request.POST['shoese_path']
 
-        bad = Bad_Codnate(userNo=userNo,tops_path=tops_path,botoms_path=botoms_path,shoese_path=shoese_path)
+        user_photo_all = models.QuerySet(Photo).filter(userNo=userNo)
+
+        tops_tag1 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag1',flat=True))[0]
+        tops_tag2 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag2',flat=True))[0]
+        tops_tag3 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag3',flat=True))[0]
+        tops_tag4 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag4',flat=True))[0]
+    
+        botoms_tag1 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag1',flat=True))[0]
+        botoms_tag2 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag2',flat=True))[0]
+        botoms_tag3 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag3',flat=True))[0]
+        botoms_tag4 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag4',flat=True))[0]
+
+        shoese_tag1 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag1',flat=True))[0]
+        shoese_tag2 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag2',flat=True))[0]
+        shoese_tag3 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag3',flat=True))[0]
+        shoese_tag4 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag4',flat=True))[0]
+        
+        bad = Bad_Codnate(userNo=userNo,tops_tag1=tops_tag1,tops_tag2=tops_tag2,tops_tag3=tops_tag3,tops_tag4=tops_tag4,
+                                        botoms_tag1=botoms_tag1,botoms_tag2=botoms_tag2,botoms_tag3=botoms_tag3,botoms_tag4=botoms_tag4,
+                                        shoese_tag1=shoese_tag1,shoese_tag2=shoese_tag2,shoese_tag3=shoese_tag3,shoese_tag4=shoese_tag4)
         bad.save()
 
         return HttpResponse('bad complete')
+    except Exception:
+        return HttpResponse('totyuude error')
+
+
+@csrf_exempt    
+def good_codnate_post(request):
+    if request.method == 'GET':
+        return HttpResponse()
+    try:
+        userNo = request.POST['user_no']
+
+        tops_path = request.POST['tops_path']
+        botoms_path = request.POST['botoms_path']
+        shoese_path = request.POST['shoese_path']
+
+        user_photo_all = models.QuerySet(Photo).filter(userNo=userNo)
+
+        tops_tag1 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag1',flat=True))[0]
+        tops_tag2 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag2',flat=True))[0]
+        tops_tag3 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag3',flat=True))[0]
+        tops_tag4 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag4',flat=True))[0]
+    
+        botoms_tag1 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag1',flat=True))[0]
+        botoms_tag2 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag2',flat=True))[0]
+        botoms_tag3 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag3',flat=True))[0]
+        botoms_tag4 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag4',flat=True))[0]
+
+        shoese_tag1 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag1',flat=True))[0]
+        shoese_tag2 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag2',flat=True))[0]
+        shoese_tag3 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag3',flat=True))[0]
+        shoese_tag4 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag4',flat=True))[0]
+        
+        good = Good_Codnate(userNo=userNo,tops_tag1=tops_tag1,tops_tag2=tops_tag2,tops_tag3=tops_tag3,tops_tag4=tops_tag4,
+                                        botoms_tag1=botoms_tag1,botoms_tag2=botoms_tag2,botoms_tag3=botoms_tag3,botoms_tag4=botoms_tag4,
+                                        shoese_tag1=shoese_tag1,shoese_tag2=shoese_tag2,shoese_tag3=shoese_tag3,shoese_tag4=shoese_tag4)
+
+        good.save()
+
+        return HttpResponse('good complete')
     except Exception:
         return HttpResponse('totyuude error')
 @csrf_exempt

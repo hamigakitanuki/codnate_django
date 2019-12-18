@@ -49,8 +49,6 @@ class Codnate_sample(models.Model):
     sub4 = models.CharField(verbose_name='サブ4',max_length=30,null=True,blank=True)
     sub5 = models.CharField(verbose_name='サブ5',max_length=30,null=True,blank=True)
 
-   
-
 class Codnate_type_temp(models.Model):
     class Meta:
         db_table = 'Codnate_type_temp'
@@ -65,21 +63,58 @@ class Codnate_type_temp(models.Model):
     tag4 = models.CharField(verbose_name='タグ4',max_length=30,null=True)
     vol = models.CharField(verbose_name='勢い',max_length=30)
 
-    
 class Good_Codnate(models.Model):
     class Meta:
         db_table = 'Good_Codnate'
     
     userNo = models.IntegerField(verbose_name='ユーザーNO')
-
+    tops = models.CharField(max_length=30)
+    botoms = models.CharField(max_length=30)
+    shoese = models.CharField(max_length=30)
+    tops_color = models.CharField(max_length=30)
+    botoms_color = models.CharField(max_length=30)
+    tops_color = models.CharField(max_length=30)
+    tag1 = models.CharField(max_length=30)
+    tag2 = models.CharField(max_length=30)
+    tag3 = models.CharField(max_length=30)
+    tag4 = models.CharField(max_length=30)
 class Bad_Codnate(models.Model):
     class Meta:
         db_table = 'Bad_Codnate'
-    
+ 
     userNo = models.IntegerField(verbose_name='ユーザーNO')
-    tops_path = models.CharField(verbose_name='トップスパス',max_length=100)
-    botoms_path = models.CharField(verbose_name='ボトムスパス',max_length=100)
-    shoese_path = models.CharField(verbose_name='シューズパス',max_length=100)
+    tops_tag1 = models.CharField(max_length=30)
+    tops_tag2 = models.CharField(max_length=30)
+    tops_tag3 = models.CharField(max_length=30)
+    tops_tag4 = models.CharField(max_length=30)
+    botoms_tag1 = models.CharField(max_length=30)
+    botoms_tag2 = models.CharField(max_length=30)
+    botoms_tag3 = models.CharField(max_length=30)
+    botoms_tag4 = models.CharField(max_length=30)
+    shoese_tag1 = models.CharField(max_length=30)
+    shoese_tag2 = models.CharField(max_length=30)
+    shoese_tag3 = models.CharField(max_length=30)
+    shoese_tag4 = models.CharField(max_length=30)
+
+class Good_Codnate(models.Model):
+    class Meta:
+        db_table = 'Good_Codnate'
+ 
+    userNo = models.IntegerField(verbose_name='ユーザーNO')
+    tops_tag1 = models.CharField(max_length=30)
+    tops_tag2 = models.CharField(max_length=30)
+    tops_tag3 = models.CharField(max_length=30)
+    tops_tag4 = models.CharField(max_length=30)
+    botoms_tag1 = models.CharField(max_length=30)
+    botoms_tag2 = models.CharField(max_length=30)
+    botoms_tag3 = models.CharField(max_length=30)
+    botoms_tag4 = models.CharField(max_length=30)
+    shoese_tag1 = models.CharField(max_length=30)
+    shoese_tag2 = models.CharField(max_length=30)
+    shoese_tag3 = models.CharField(max_length=30)
+    shoese_tag4 = models.CharField(max_length=30)
+
+
 
 
     
