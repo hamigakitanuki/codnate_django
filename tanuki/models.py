@@ -63,21 +63,7 @@ class Codnate_type_temp(models.Model):
     tag4 = models.CharField(verbose_name='タグ4',max_length=30,null=True)
     vol = models.CharField(verbose_name='勢い',max_length=30)
 
-class Good_Codnate(models.Model):
-    class Meta:
-        db_table = 'Good_Codnate'
-    
-    userNo = models.IntegerField(verbose_name='ユーザーNO')
-    tops = models.CharField(max_length=30)
-    botoms = models.CharField(max_length=30)
-    shoese = models.CharField(max_length=30)
-    tops_color = models.CharField(max_length=30)
-    botoms_color = models.CharField(max_length=30)
-    tops_color = models.CharField(max_length=30)
-    tag1 = models.CharField(max_length=30)
-    tag2 = models.CharField(max_length=30)
-    tag3 = models.CharField(max_length=30)
-    tag4 = models.CharField(max_length=30)
+
 class Bad_Codnate(models.Model):
     class Meta:
         db_table = 'Bad_Codnate'
