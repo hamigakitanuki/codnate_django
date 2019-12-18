@@ -22,6 +22,16 @@ import random
 def index(request):
     return HttpResponse("hallo django")
 
+def get_photo_count(request):
+    userNo = request.GET.get('userNo')
+    user_photo_all = models.QuerySet(Photo).filter(userNo=userNo)
+    tops_count = user_photo_all.filter(cate='tops')
+    botoms_count = user_photo_all.filter(cate='botoms')
+    shoese_count = user_photo_all.filter(cate='shoese')
+
+   
+
+    return HttpResponse(tops_count,botoms_count,shoese_count)
 @csrf_exempt
 def newAccount(request):
     if request.method == 'GET':
@@ -999,6 +1009,8 @@ def get_vol(request):
         K.clear_session()
         
         return HttpResponse(str(int(pred[0][0]*100))+','+str(int(pred[0][1]*100)))
+
+
 def Mynet(cate_num):
     import cv2
     from sklearn.model_selection import train_test_split
