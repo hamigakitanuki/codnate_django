@@ -409,7 +409,7 @@ def bad_codnate_post(request):
         return HttpResponse('bad complete')
     except Exception:
         return HttpResponse('totyuude error')
-@csrg_exempt
+@csrf_exempt
 def bad_codnate_delete(request):
     if request.method == 'GET':
         return HttpResponse()
