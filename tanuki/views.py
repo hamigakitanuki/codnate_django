@@ -203,6 +203,7 @@ def changeAccount(request):
         return HttpResponse("")
     userNo = request.POST['UserNo']
     name   = request.POST['name']
+    jiko   = request.POST['jiko']
     mytype   = request.POST['type']
     age    = request.POST['age']
 
@@ -213,7 +214,17 @@ def changeAccount(request):
     myAccount.save()
 
     return HttpResponse('account change complete')
+def getAccount(request):
+    userNo = request.Get.get('userNo')
+    myAccount = models.QuerySet(Account).filter(userNo=userNo)
+    age = list(myAccount.values_list('age',flat=True))[0]
+    name = list(myAccount.values_list('name',flat=True))[0]
+    jiko = list(myAccount.values_list('jiko',flat=True))[0]
+    sex = list(myAccount.values_list('sex',flat=True))[0]
+    type = list(myAccount.values_list('type',flat=True))[0]
 
+    return HttpResponse(str(age)+','+name+','+jiko+','+sex+','+type)
+    
 def getCodenate(request):
     import numpy as np
 

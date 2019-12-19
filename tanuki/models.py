@@ -35,6 +35,7 @@ class Account(models.Model):
     sex = models.CharField(verbose_name='性別',max_length=10,default='none')
     age = models.IntegerField(verbose_name='年齢')
     type = models.CharField(verbose_name='タイプ',max_length=30,default='none')
+    jiko = models.CharField(verbose_name='自己紹介',max_length=200,default='none',blank=True,null=True)
 
     def __str__(self):
         return self.name
