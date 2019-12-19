@@ -23,11 +23,11 @@ def index(request):
     return HttpResponse("hallo django")
 
 def get_photo_count(request):
-    userNo = request.GET.get('userNo')
+    userNo = request.GET.get('UserNo')
     user_photo_all = models.QuerySet(Photo).filter(userNo=userNo)
-    tops_count = user_photo_all.filter(cate='tops')
-    botoms_count = user_photo_all.filter(cate='botoms')
-    shoese_count = user_photo_all.filter(cate='shoese')
+    tops_count = user_photo_all.filter(cate='tops').count()
+    botoms_count = user_photo_all.filter(cate='botoms').count()
+    shoese_count = user_photo_all.filter(cate='shoese').count()
 
    
 
@@ -368,7 +368,7 @@ def getCodenate(request):
     for code_idx in range(n):
         tag_list = []
         user_like_tag_point = 0
-
+        user_bad_tag_point = 0
         tag_list.append(user_photo_tops_tag1[type_filter_idx_list[sorted_idx[code_idx]][0]])
         tag_list.append(user_photo_tops_tag2[type_filter_idx_list[sorted_idx[code_idx]][0]])
         tag_list.append(user_photo_tops_tag3[type_filter_idx_list[sorted_idx[code_idx]][0]])
@@ -429,9 +429,9 @@ def getCodenate(request):
 
     vol = list(user_like_type_temp.values_list('vol',flat=True))[0]
 
-    user_photo_tops_vol_list = list(user_tops_all(cate='tops').values_list('vol',flat=True))
-    user_photo_botoms_vol_list = list(user_photo_all.filter(cate='botoms').values_list('vol',flat=True))
-    user_photo_shoese_vol_list = list(user_photo_all.filter(cate='shoese').values_list('vol',flat=True))
+    user_photo_tops_vol_list = list(user_tops_all.values_list('vol',flat=True))
+    user_photo_botoms_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    user_photo_shoese_vol_list = list(user_botoms_all.values_list('vol',flat=True))
     for i in range(len(tag_sum_list)):
         vol_list = []
         vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][0]])
@@ -492,8 +492,11 @@ def getCodenate(request):
         res_shoese_color.append(shoese_color_list[tag_idx_list[res_idx_list[i]][2]])
         shoese_sub = shoese_sub_list[tag_idx_list[res_idx_list[i]][2]]
         res_shoese_sub.append(shoese_sub)
-
-        sample_list.append(list(codnate_sample.filter(sub1=tops_sub,sub2=botoms_sub,sub3=shoese_sub).values_list('sample',flat=True))[0])
+        sample = list(codnate_sample.filter(sub1=tops_sub,sub2=botoms_sub,sub3=shoese_sub).values_list('sample',flat=True))
+        if len(sample) > 0:
+            sample_list.append(sample[0])
+        else:
+            sample_list.append("")
 
         
     
