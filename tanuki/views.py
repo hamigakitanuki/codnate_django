@@ -197,6 +197,23 @@ def getImage(request):
     }
     return JsonResponse(d)
 
+@csrf_exempt
+def changeAccount(request):
+    if request.method == 'GET':
+        return HttpResponse("")
+    userNo = request.POST['UserNo']
+    name   = request.POST['name']
+    mytype   = request.POST['type']
+    age    = request.POST['age']
+
+    myAccount = models.QuerySet(Account).filter(userNo=userNo)
+    myAccount.name = name
+    myAccount.type = mytype
+    myAccount.age  = age
+    myAccount.save()
+
+    return HttpResponse('account change complete')
+
 def getCodenate(request):
     import numpy as np
 
