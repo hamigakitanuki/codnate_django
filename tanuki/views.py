@@ -31,7 +31,7 @@ def get_photo_count(request):
 
    
 
-    return HttpResponse(tops_count,botoms_count,shoese_count)
+    return HttpResponse(str(tops_count)+','+str(botoms_count)+','+str(shoese_count))
 @csrf_exempt
 def newAccount(request):
     if request.method == 'GET':
