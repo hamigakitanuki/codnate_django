@@ -985,7 +985,9 @@ def get_vol(request):
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
         
-        return HttpResponse(str(int(pred[0][0]*100))+','+str(int(pred[0][1]*100)))
+        hikaeme = int(pred[0][0]*100)
+        hade = int(pred[0][1]*100)
+        return HttpResponse(str(hikaeme)+','+str(int(hade)))
 
 
 def Mynet(cate_num):
