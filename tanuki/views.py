@@ -663,7 +663,8 @@ def getCate(request):
         
         photo_one = Photo_one(photo=img)
         photo_one.save()
-        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
+        path = '/home/ubuntu/codnate_jango/'+photo_one.photo.url
+        img = cv2.imread(path,1)
 
         #cate_label = ['トップス','ワンピース','アウター','ボトムス']
         cate_label = ['tops','onepeace','outer','botoms','shoese']
@@ -684,33 +685,21 @@ def getCate(request):
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         if score <=0.3:
             label =4
-        return HttpResponse(cate_label[label])
+        return HttpResponse(cate_label[label]+','+path)
 @csrf_exempt
 def getColor(request):
   
-
     if request.method == 'GET':
         return HttpResponse("error")
     else:
-        if request.FILES is None:
-            return HttpResponse("no File error")
-        photoForm = PhotoOneForm(request.POST,request.FILES)
-        if not photoForm.is_valid():
-            raise ValueError("invaled error")
-
-        print(request.POST)
-        img = photoForm.cleaned_data['image']
-
-        
+        path = request.POST['path']
+        img = cv2.imread(path,1)        
         tb._SYMBOLIC_SCOPE.value = True
 
         print('mynet')
         model_cate = Mynet(11);
         model_cate.load_weights('/home/ubuntu/codnate_jango/tanuki/color.h5')
         
-        photo_one = Photo_one(photo=img)
-        photo_one.save()
-        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
         cate_label = ['black','blue','brown','gray','green','orange','pink','purple','red','white','yellow']
         #cate_label = ['white','black','blue','brown','gray','green','orange','pink','purple','red','yellow']
         #画像をリサイズ（今回は64）
@@ -739,24 +728,13 @@ def getsubCate(request):
     if request.method == 'GET':
         return HttpResponse("error")
     else:
-        if request.FILES is None:
-            return HttpResponse("no File error")
-        photoForm = PhotoOneForm(request.POST,request.FILES)
-        if not photoForm.is_valid():
-            raise ValueError("invaled error")
-
-        print(request.POST)
-        img = photoForm.cleaned_data['image']
 
         
         tb._SYMBOLIC_SCOPE.value = True
-        
+        path = request.POST['path']        
         sub = request.POST['sub']
         
-        photo_one = Photo_one(photo=img)
-        photo_one.save()
-        print(photo_one.photo.url)
-        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,cv2.IMREAD_COLOR)
+        img = cv2.imread(path,cv2.IMREAD_COLOR)
 
         
         #画像をリサイズ（今回は64）
@@ -894,23 +872,12 @@ def get_type(request):
     if request.method == 'GET':
         return HttpResponse("error")
     else:
-        if request.FILES is None:
-            return HttpResponse("no File error")
-        photoForm = PhotoOneForm(request.POST,request.FILES)
-        if not photoForm.is_valid():
-            raise ValueError("invaled error")
-
-        print(request.POST)
-        img = photoForm.cleaned_data['image']
-
-        
+                
         tb._SYMBOLIC_SCOPE.value = True
-        
+        path = request.POST['path']
         sub = request.POST['sub']
         
-        photo_one = Photo_one(photo=img)
-        photo_one.save()
-        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
+        img = cv2.imread(path,1)
 
         cate_label = ['simmple','casual','dress']
         #画像をリサイズ（今回は64）
@@ -939,23 +906,12 @@ def get_tag(request):
     if request.method == 'GET':
         return HttpResponse("error")
     else:
-        if request.FILES is None:
-            return HttpResponse("no File error")
-        photoForm = PhotoOneForm(request.POST,request.FILES)
-        if not photoForm.is_valid():
-            raise ValueError("invaled error")
-
-        print(request.POST)
-        img = photoForm.cleaned_data['image']
-
-        
+       
         tb._SYMBOLIC_SCOPE.value = True
         
-        sub = request.POST['sub']
         
-        photo_one = Photo_one(photo=img)
-        photo_one.save()
-        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
+        path = request.POST['path']
+        img = cv2.imread(path,1)
 
         #cate_label = ['ワイルド','ゆるい','かっこいい','かわいい','大人っぽい','子供っぽい','きれい','ふわふわ']
         #cate_label = ['wild','yurui','cool','kawaii','adult','child','beuty','huwahuwa']
@@ -989,22 +945,8 @@ def get_vol(request):
     if request.method == 'GET':
         return HttpResponse("error")
     else:
-        if request.FILES is None:
-            return HttpResponse("no File error")
-        photoForm = PhotoOneForm(request.POST,request.FILES)
-        if not photoForm.is_valid():
-            raise ValueError("invaled error")
-
-        img = photoForm.cleaned_data['image']
-
-        
-        tb._SYMBOLIC_SCOPE.value = True
-        
-        sub = request.POST['sub']
-        
-        photo_one = Photo_one(photo=img)
-        photo_one.save()
-        img = cv2.imread('/home/ubuntu/codnate_jango/'+photo_one.photo.url,1)
+        path = request.POST['path']
+        img = cv2.imread(path,1)
 
         #cate_label = ['控えめ','派手']
         cate_label = ['hikaeme','hade']
