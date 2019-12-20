@@ -697,7 +697,17 @@ def getColor(request):
     if request.method == 'GET':
         return HttpResponse("error")
     else:
-        path = request.POST['path']
+        photoForm = PhotoOneForm(request.POST,request.FILES)
+        if not photoForm.is_valid():
+            raise ValueError("invaled error")
+
+        print(request.POST)
+        img = photoForm.cleaned_data['image']
+        
+        photo_one = Photo_one(photo=img)
+        photo_one.save()
+        path = '/home/ubuntu/codnate_jango'+photo_one.photo.url
+        
         img = cv2.imread(path,1)        
         tb._SYMBOLIC_SCOPE.value = True
         print('path:'+path)
@@ -722,7 +732,7 @@ def getColor(request):
         K.clear_session()
 
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
-        return HttpResponse(cate_label[label])
+        return HttpResponse(cate_label[label]+','+path)
 @csrf_exempt
 def getsubCate(request):
     import cv2
