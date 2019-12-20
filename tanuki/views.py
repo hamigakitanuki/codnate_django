@@ -894,6 +894,7 @@ def get_type(request):
         return HttpResponse("error")
     else:
                 
+        
         tb._SYMBOLIC_SCOPE.value = True
         path = request.POST['path']
         
@@ -929,11 +930,20 @@ def get_tag(request):
     if request.method == 'GET':
         return HttpResponse("error")
     else:
-       
+        photoForm = PhotoOneForm(request.POST,request.FILES)
+        if not photoForm.is_valid():
+            raise ValueError("invaled error")
+
+        print(request.POST)
+        img = photoForm.cleaned_data['image']
+        
+        photo_one = Photo_one(photo=img)
+        photo_one.save()
+        path = '/home/ubuntu/codnate_jango'+photo_one.photo.url
+
         tb._SYMBOLIC_SCOPE.value = True
         
         
-        path = request.POST['path']
         img = cv2.imread(path,1)
 
         #cate_label = ['ワイルド','ゆるい','かっこいい','かわいい','大人っぽい','子供っぽい','きれい','ふわふわ']
@@ -959,7 +969,7 @@ def get_tag(request):
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         K.clear_session()
         
-        return HttpResponse(cate_label[label_sort[0][0]]+','+cate_label[label_sort[0][1]]+','+cate_label[label_sort[0][2]]+','+cate_label[label_sort[0][3]])
+        return HttpResponse(cate_label[label_sort[0][0]]+','+cate_label[label_sort[0][1]]+','+cate_label[label_sort[0][2]]+','+cate_label[label_sort[0][3]]+','+path)
 @csrf_exempt
 def get_vol(request):
 
