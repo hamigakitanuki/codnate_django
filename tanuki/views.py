@@ -13,10 +13,7 @@ from .forms import PhotoForm,AccountForm,PhotoOneForm
 from django.views.decorators.csrf import csrf_exempt
 import random
 
-import cv2
-import numpy as np
-from keras import backend as K 
-import keras.backend.tensorflow_backend as tb
+
 
 
 
@@ -641,7 +638,10 @@ def bad_codnate_delete(request):
         return HttpResponse("totyu de error")
 @csrf_exempt
 def getCate(request):
-    
+    import cv2
+    import numpy as np
+    from keras import backend as K 
+    import keras.backend.tensorflow_backend as tb
 
     if request.method == 'GET':
         return HttpResponse("error")
@@ -690,7 +690,10 @@ def getCate(request):
         return HttpResponse(cate_label[label]+','+path)
 @csrf_exempt
 def getColor(request):
-  
+    import cv2
+    import numpy as np
+    from keras import backend as K 
+    import keras.backend.tensorflow_backend as tb
     if request.method == 'GET':
         return HttpResponse("error")
     else:
@@ -722,7 +725,10 @@ def getColor(request):
         return HttpResponse(cate_label[label])
 @csrf_exempt
 def getsubCate(request):
-    
+    import cv2
+    import numpy as np
+    from keras import backend as K 
+    import keras.backend.tensorflow_backend as tb   
    
     import random
     
@@ -868,7 +874,10 @@ def getsubCate(request):
             return HttpResponse(cate_name[int(random.uniform(0,4))])
 @csrf_exempt
 def get_type(request):
-    
+    import cv2
+    import numpy as np
+    from keras import backend as K 
+    import keras.backend.tensorflow_backend as tb
     
     
     if request.method == 'GET':
@@ -902,7 +911,10 @@ def get_type(request):
 @csrf_exempt
 def get_tag(request):
     
-    
+    import cv2
+    import numpy as np
+    from keras import backend as K 
+    import keras.backend.tensorflow_backend as tb
     
     if request.method == 'GET':
         return HttpResponse("error")
@@ -942,7 +954,10 @@ def get_tag(request):
 def get_vol(request):
 
     
-    
+    import cv2
+    import numpy as np
+    from keras import backend as K 
+    import keras.backend.tensorflow_backend as tb
     if request.method == 'GET':
         return HttpResponse("error")
     else:
@@ -972,17 +987,6 @@ def get_vol(request):
 
 
 def Mynet(cate_num):
-    import cv2
-    from sklearn.model_selection import train_test_split
-    from keras.optimizers import SGD , Adadelta
-    import numpy as np
-    from keras.preprocessing.image import ImageDataGenerator
-    from PIL import Image
-    from collections import Counter
-    import os
-    import tensorflow as tf
-    from keras import backend as K 
-    from keras.utils import np_utils
     from keras.models import Sequential
     from keras.layers.convolutional import MaxPooling2D
     from keras.layers import Activation , Conv2D , Flatten , Dense , Dropout
