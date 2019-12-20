@@ -101,7 +101,11 @@ class Good_Codnate(models.Model):
     shoese_tag3 = models.CharField(max_length=30)
     shoese_tag4 = models.CharField(max_length=30)
 
-
+class Recomend_item(models.Model):
+    class Meta:
+        db_table = 'Recomend_item'
+    type = models.CharField(max_length=30)
+    photo = models.CharField(max_length=30)
 
 
     

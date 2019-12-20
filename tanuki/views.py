@@ -13,6 +13,10 @@ from .forms import PhotoForm,AccountForm,PhotoOneForm
 from django.views.decorators.csrf import csrf_exempt
 import random
 
+import cv2
+import numpy as np
+from keras import backend as K 
+import keras.backend.tensorflow_backend as tb
 
 
 
@@ -637,10 +641,7 @@ def bad_codnate_delete(request):
         return HttpResponse("totyu de error")
 @csrf_exempt
 def getCate(request):
-    import cv2
-    import numpy as np
-    from keras import backend as K 
-    import keras.backend.tensorflow_backend as tb
+    
 
     if request.method == 'GET':
         return HttpResponse("error")
@@ -686,10 +687,7 @@ def getCate(request):
         return HttpResponse(cate_label[label])
 @csrf_exempt
 def getColor(request):
-    import cv2
-    import numpy as np
-    from keras import backend as K 
-    import keras.backend.tensorflow_backend as tb
+  
 
     if request.method == 'GET':
         return HttpResponse("error")
@@ -734,10 +732,7 @@ def getColor(request):
 @csrf_exempt
 def getsubCate(request):
     
-    import cv2
-    import numpy as np
-    import keras.backend.tensorflow_backend as tb
-    from keras import backend as K 
+   
     import random
     
     
@@ -893,10 +888,7 @@ def getsubCate(request):
             return HttpResponse(cate_name[int(random.uniform(0,4))])
 @csrf_exempt
 def get_type(request):
-    import cv2
-    import numpy as np
-    import keras.backend.tensorflow_backend as tb
-    from keras import backend as K 
+    
     
     
     if request.method == 'GET':
@@ -941,10 +933,7 @@ def get_type(request):
         return HttpResponse(str(int(pred[0][0]*100))+','+str(int(pred[0][1]*100))+','+str(int(pred[0][2]*100)))
 @csrf_exempt
 def get_tag(request):
-    import cv2
-    import numpy as np
-    import keras.backend.tensorflow_backend as tb
-    from keras import backend as K 
+    
     
     
     if request.method == 'GET':
@@ -994,10 +983,7 @@ def get_tag(request):
         return HttpResponse(cate_label[label_sort[0][0]]+','+cate_label[label_sort[0][1]]+','+cate_label[label_sort[0][2]]+','+cate_label[label_sort[0][3]])
 @csrf_exempt
 def get_vol(request):
-    import cv2
-    import numpy as np
-    import keras.backend.tensorflow_backend as tb
-    from keras import backend as K 
+
     
     
     if request.method == 'GET':
