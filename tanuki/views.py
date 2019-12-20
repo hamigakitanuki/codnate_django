@@ -663,7 +663,7 @@ def getCate(request):
         
         photo_one = Photo_one(photo=img)
         photo_one.save()
-        path = '/home/ubuntu/codnate_jango/'+photo_one.photo.url
+        path = '/home/ubuntu/codnate_jango'+photo_one.photo.url
         img = cv2.imread(path,1)
 
         #cate_label = ['トップス','ワンピース','アウター','ボトムス']
