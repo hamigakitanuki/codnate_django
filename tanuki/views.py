@@ -208,8 +208,9 @@ def changeAccount(request):
     mytype   = request.POST['type']
     age    = request.POST['age']
 
-    myAccount = models.QuerySet(Account).filter(userNo=userNo).first()
+    myAccount = models.QuerySet(Account).filter(id=userNo).first()
     myAccount.name = name
+    myAccount.jiko = jiko
     myAccount.type = mytype
     myAccount.age  = age
     myAccount.save()
