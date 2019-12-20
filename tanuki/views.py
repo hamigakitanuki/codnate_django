@@ -685,6 +685,8 @@ def getCate(request):
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         if score <=0.3:
             label =4
+
+        print(path)
         return HttpResponse(cate_label[label]+','+path)
 @csrf_exempt
 def getColor(request):
