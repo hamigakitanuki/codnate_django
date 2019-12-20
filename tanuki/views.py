@@ -656,7 +656,6 @@ def getCate(request):
         img = photoForm.cleaned_data['image']
 
         
-        tb._SYMBOLIC_SCOPE.value = True
 
         model_cate = Mynet(4);
         model_cate.load_weights('/home/ubuntu/codnate_jango/tanuki/huku.h5')
@@ -680,7 +679,6 @@ def getCate(request):
         label = np.argmax(pred)
         score = np.max(pred)
         
-        K.clear_session()
         print('score'+str(pred))
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         if score <=0.3:
@@ -699,7 +697,6 @@ def getColor(request):
     else:
         path = request.POST['path']
         img = cv2.imread(path,1)        
-        tb._SYMBOLIC_SCOPE.value = True
         print('path:'+path)
         print('mynet')
         model_cate = Mynet(11);
@@ -719,7 +716,6 @@ def getColor(request):
         label = np.argmax(pred)
         score = np.max(pred)
         
-        K.clear_session()
 
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
         return HttpResponse(cate_label[label])
@@ -738,7 +734,6 @@ def getsubCate(request):
     else:
 
         
-        tb._SYMBOLIC_SCOPE.value = True
         path = request.POST['path']        
         sub = request.POST['cate']
         
@@ -771,7 +766,6 @@ def getsubCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            K.clear_session()
 
             return HttpResponse(cate_name[label])
 
@@ -795,7 +789,6 @@ def getsubCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            K.clear_session()
 
             return HttpResponse(cate_name[label])
                
@@ -828,7 +821,6 @@ def getsubCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            K.clear_session()
 
 
             return HttpResponse(cate_name[label])
@@ -859,7 +851,6 @@ def getsubCate(request):
             label = np.argmax(pred)
             score = np.max(pred)
             print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_name[label])
-            K.clear_session()
             return HttpResponse(cate_name[label])
 
         elif sub == 'shoese':
@@ -884,7 +875,6 @@ def get_type(request):
         return HttpResponse("error")
     else:
                 
-        tb._SYMBOLIC_SCOPE.value = True
         path = request.POST['path']
         
         img = cv2.imread(path,1)
@@ -905,7 +895,6 @@ def get_type(request):
         label = np.argmax(pred)
         score = np.max(pred)
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
-        K.clear_session()
         print(pred)
         return HttpResponse(str(int(pred[0][0]*100))+','+str(int(pred[0][1]*100))+','+str(int(pred[0][2]*100)))
 @csrf_exempt
@@ -920,7 +909,6 @@ def get_tag(request):
         return HttpResponse("error")
     else:
        
-        tb._SYMBOLIC_SCOPE.value = True
         
         
         path = request.POST['path']
@@ -947,7 +935,6 @@ def get_tag(request):
         label_sort = label_np.argsort()[::-1]
         print(label_sort)
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
-        K.clear_session()
         
         return HttpResponse(cate_label[label_sort[0][0]]+','+cate_label[label_sort[0][1]]+','+cate_label[label_sort[0][2]]+','+cate_label[label_sort[0][3]])
 @csrf_exempt
@@ -981,7 +968,6 @@ def get_vol(request):
         label = np.argmax(pred)
         score = np.max(pred)
         print('label:'+str(label)+' score:'+str(score)+' cate:'+cate_label[label])
-        K.clear_session()
         
         return HttpResponse(str(int(pred[0][0]*100))+','+str(int(pred[0][1]*100)))
 
