@@ -332,7 +332,7 @@ def getCodenate(request):
     print("tag3:"+tag3)
     print("tag4:"+tag4)
     if 10 < len(type_filter_list):
-        n = len(type_filter_list)/2
+        n = int(len(type_filter_list)/2)
         sorted_idx = np.argsort(type_filter_list)
     else:
         n = len(type_filter_list)
@@ -559,20 +559,20 @@ def bad_codnate_post(request):
 
         user_photo_all = models.QuerySet(Photo).filter(userNo=userNo)
 
-        tops_tag1 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag1',flat=True))[0]
-        tops_tag2 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag2',flat=True))[0]
-        tops_tag3 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag3',flat=True))[0]
-        tops_tag4 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag4',flat=True))[0]
+        tops_tag1 = list(user_photo_all.filter(FilePath=tops_path).values_list('tag',flat=True))[0]
+        tops_tag2 = list(user_photo_all.filter(FilePath=tops_path).values_list('tag2',flat=True))[0]
+        tops_tag3 = list(user_photo_all.filter(FilePath=tops_path).values_list('tag3',flat=True))[0]
+        tops_tag4 = list(user_photo_all.filter(FilePath=tops_path).values_list('tag4',flat=True))[0]
     
-        botoms_tag1 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag1',flat=True))[0]
-        botoms_tag2 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag2',flat=True))[0]
-        botoms_tag3 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag3',flat=True))[0]
-        botoms_tag4 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag4',flat=True))[0]
+        botoms_tag1 = list(user_photo_all.filter(FilePath=botoms_path).values_list('tag',flat=True))[0]
+        botoms_tag2 = list(user_photo_all.filter(FilePath=botoms_path).values_list('tag2',flat=True))[0]
+        botoms_tag3 = list(user_photo_all.filter(FilePath=botoms_path).values_list('tag3',flat=True))[0]
+        botoms_tag4 = list(user_photo_all.filter(FilePath=botoms_path).values_list('tag4',flat=True))[0]
 
-        shoese_tag1 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag1',flat=True))[0]
-        shoese_tag2 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag2',flat=True))[0]
-        shoese_tag3 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag3',flat=True))[0]
-        shoese_tag4 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag4',flat=True))[0]
+        shoese_tag1 = list(user_photo_all.filter(FilePath=shoese_path).values_list('tag',flat=True))[0]
+        shoese_tag2 = list(user_photo_all.filter(FilePath=shoese_path).values_list('tag2',flat=True))[0]
+        shoese_tag3 = list(user_photo_all.filter(FilePath=shoese_path).values_list('tag3',flat=True))[0]
+        shoese_tag4 = list(user_photo_all.filter(FilePath=shoese_path).values_list('tag4',flat=True))[0]
         
         bad = Bad_Codnate(userNo=userNo,tops_tag1=tops_tag1,tops_tag2=tops_tag2,tops_tag3=tops_tag3,tops_tag4=tops_tag4,
                                         botoms_tag1=botoms_tag1,botoms_tag2=botoms_tag2,botoms_tag3=botoms_tag3,botoms_tag4=botoms_tag4,
@@ -596,21 +596,24 @@ def good_codnate_post(request):
         shoese_path = request.POST['shoese_path']
 
         user_photo_all = models.QuerySet(Photo).filter(userNo=userNo)
+        tops = user_photo_all.filter(FilePath=tops_path)
+        
+        tops_tag1 = list(user_photo_all.filter(FilePath=tops_path).values_list('tag',flat=True))[0]
+        tops_tag2 = list(user_photo_all.filter(FilePath=tops_path).values_list('tag2',flat=True))[0]
+        tops_tag3 = list(user_photo_all.filter(FilePath=tops_path).values_list('tag3',flat=True))[0]
+        tops_tag4 = list(user_photo_all.filter(FilePath=tops_path).values_list('tag4',flat=True))[0]
 
-        tops_tag1 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag1',flat=True))[0]
-        tops_tag2 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag2',flat=True))[0]
-        tops_tag3 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag3',flat=True))[0]
-        tops_tag4 = list(user_photo_all.filter(File_Path=tops_path).values_list('tag4',flat=True))[0]
-    
-        botoms_tag1 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag1',flat=True))[0]
-        botoms_tag2 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag2',flat=True))[0]
-        botoms_tag3 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag3',flat=True))[0]
-        botoms_tag4 = list(user_photo_all.filter(File_Path=botoms_path).values_list('tag4',flat=True))[0]
+        
 
-        shoese_tag1 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag1',flat=True))[0]
-        shoese_tag2 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag2',flat=True))[0]
-        shoese_tag3 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag3',flat=True))[0]
-        shoese_tag4 = list(user_photo_all.filter(File_Path=shoese_path).values_list('tag4',flat=True))[0]
+        botoms_tag1 = list(user_photo_all.filter(FilePath=botoms_path).values_list('tag',flat=True))[0]
+        botoms_tag2 = list(user_photo_all.filter(FilePath=botoms_path).values_list('tag2',flat=True))[0]
+        botoms_tag3 = list(user_photo_all.filter(FilePath=botoms_path).values_list('tag3',flat=True))[0]
+        botoms_tag4 = list(user_photo_all.filter(FilePath=botoms_path).values_list('tag4',flat=True))[0]
+
+        shoese_tag1 = list(user_photo_all.filter(FilePath=shoese_path).values_list('tag',flat=True))[0]
+        shoese_tag2 = list(user_photo_all.filter(FilePath=shoese_path).values_list('tag2',flat=True))[0]
+        shoese_tag3 = list(user_photo_all.filter(FilePath=shoese_path).values_list('tag3',flat=True))[0]
+        shoese_tag4 = list(user_photo_all.filter(FilePath=shoese_path).values_list('tag4',flat=True))[0]
         
         good = Good_Codnate(userNo=userNo,tops_tag1=tops_tag1,tops_tag2=tops_tag2,tops_tag3=tops_tag3,tops_tag4=tops_tag4,
                                         botoms_tag1=botoms_tag1,botoms_tag2=botoms_tag2,botoms_tag3=botoms_tag3,botoms_tag4=botoms_tag4,
@@ -970,6 +973,7 @@ def get_tag(request):
         K.clear_session()
         
         return HttpResponse(cate_label[label_sort[0][0]]+','+cate_label[label_sort[0][1]]+','+cate_label[label_sort[0][2]]+','+cate_label[label_sort[0][3]]+','+path)
+
 @csrf_exempt
 def get_vol(request):
 
