@@ -695,7 +695,7 @@ def getColor(request):
         path = request.POST['path']
         img = cv2.imread(path,1)        
         tb._SYMBOLIC_SCOPE.value = True
-
+        print('path:'+path)
         print('mynet')
         model_cate = Mynet(11);
         model_cate.load_weights('/home/ubuntu/codnate_jango/tanuki/color.h5')
@@ -732,7 +732,7 @@ def getsubCate(request):
         
         tb._SYMBOLIC_SCOPE.value = True
         path = request.POST['path']        
-        sub = request.POST['sub']
+        sub = request.POST['cate']
         
         img = cv2.imread(path,cv2.IMREAD_COLOR)
 
@@ -875,7 +875,6 @@ def get_type(request):
                 
         tb._SYMBOLIC_SCOPE.value = True
         path = request.POST['path']
-        sub = request.POST['sub']
         
         img = cv2.imread(path,1)
 
