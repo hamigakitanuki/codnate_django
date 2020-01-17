@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Photo,Account,Photo_one,Codnate_type_temp,Bad_Codnate,Good_Codnate,Codnate_sample
+from .models import *
 import json
 from django.db import models
 from django.http.response import JsonResponse
@@ -12,12 +12,6 @@ from django.db.models import Max,Sum
 from .forms import PhotoForm,AccountForm,PhotoOneForm
 from django.views.decorators.csrf import csrf_exempt
 import random
-
-
-
-
-
-
 
 #テスト用
 def index(request):
@@ -233,7 +227,7 @@ def getCodenate(request):
     userNo = request.GET.get('UserNo')
     photo_all = models.QuerySet(Photo)
     print(str(userNo))
-#---------ハイパーパラメータ---------
+    #---------ハイパーパラメータ---------
     type_DCS_weight = 1
     type_match_tag_weight = 10
     type_match_vol_weight = 10
@@ -246,7 +240,9 @@ def getCodenate(request):
     bad_tag2_weight = 1
     bad_tag3_weight = 0.5
     bad_tag4_weight = 0.25   
-#-----------------------------------
+    #-----------------------------------
+
+    photo_all = models.QuerySet(Photo)
     #ユーザーの服を全部出力
     user_photo_all  = photo_all.filter(userNo=userNo)
     #カテゴリ別のクエリを抽出
@@ -271,8 +267,7 @@ def getCodenate(request):
 
 
     user_type = list(models.QuerySet(Account).filter(id=userNo).values_list('type',flat=True))[0]
-    print(user_type)
-#------------自分の好きなタイプのドレス率　カジュアル率　シンプル率の差が一番少ない順にする--------------
+    #------------自分の好きなタイプのドレス率　カジュアル率　シンプル率の差が一番少ない順にする--------------
     type_temp_all = models.QuerySet(Codnate_type_temp)
     user_like_type_temp = type_temp_all.filter(code_type=user_type)
     bad_codnate_list = models.QuerySet(Bad_Codnate)
@@ -280,11 +275,7 @@ def getCodenate(request):
     type_dress_value = list(user_like_type_temp.values_list('dress_value',flat=True))[0]
     type_casual_value = list(user_like_type_temp.values_list('casual_value',flat=True))[0]
     type_simple_value = list(user_like_type_temp.values_list('simple_value',flat=True))[0]
-    
-    tops_path_list = list(user_tops_all.values_list('FilePath',flat=True))
-    botoms_path_list = list(user_botoms_all.values_list('FilePath',flat=True))
-    shoese_path_list = list(user_shoese_all.values_list('FilePath',flat=True))
-    
+
 
     tops_dress_value_list = list(user_tops_all.values_list('dress_value',flat=True))
     tops_casual_value_list = list(user_tops_all.values_list('casual_value',flat=True))
@@ -320,18 +311,11 @@ def getCodenate(request):
                 type_filter_list.append(type_absolute)
                 type_filter_idx_list.append([tops_idx,botoms_idx,shoese_idx])
 
-                print(type_absolute)
-    print(type_filter_list)
-    print(type_filter_idx_list)
-#------------タグに一番当てはまっている組み合わせを評価-------------
+    #------------タグに一番当てはまっている組み合わせを評価-------------
     tag1 = list(user_like_type_temp.values_list('tag1',flat=True))[0]
     tag2 = list(user_like_type_temp.values_list('tag2',flat=True))[0]
     tag3 = list(user_like_type_temp.values_list('tag3',flat=True))[0]
     tag4 = list(user_like_type_temp.values_list('tag4',flat=True))[0]
-    print("tag1:"+tag1)
-    print("tag2:"+tag2)
-    print("tag3:"+tag3)
-    print("tag4:"+tag4)
     if 10 < len(type_filter_list):
         n = int(len(type_filter_list)/2)
         sorted_idx = np.argsort(type_filter_list)
@@ -444,7 +428,6 @@ def getCodenate(request):
         user_bad_tag_point = user_bad_tag_point + bad_tag3_weight * user_bad_shoese_tag3_list.count(user_photo_shoese_tag3[type_filter_idx_list[sorted_idx[code_idx]][2]])
         user_bad_tag_point = user_bad_tag_point + bad_tag4_weight * user_bad_shoese_tag4_list.count(user_photo_shoese_tag4[type_filter_idx_list[sorted_idx[code_idx]][2]])
 
-        print(tag_list)
         tag1_count = tag_list.count(tag1) 
         tag2_count = tag_list.count(tag2) 
         tag3_count = tag_list.count(tag3) 
@@ -454,8 +437,7 @@ def getCodenate(request):
 
         tag_sum_list.append(tag1_count*type_match_tag_weight + tag2_count*type_match_tag_weight + tag3_count*type_match_tag_weight + tag4_count*type_match_tag_weight - type_filter_list[sorted_idx[code_idx]]*type_DCS_weight + user_like_tag_point - user_bad_tag_point)
         tag_idx_list.append(type_filter_idx_list[sorted_idx[code_idx]])
-        print("300----------->"+str(tag_sum_list))
-#----------控え目か派手かで評価---------
+    #----------控え目か派手かで評価---------
 
     vol = list(user_like_type_temp.values_list('vol',flat=True))[0]
 
@@ -476,7 +458,7 @@ def getCodenate(request):
         res_idx_list = tag_sorted_idx[0:6]
     else:
         res_idx_list = tag_sorted_idx
-#-------------一番評価の高い服を出力------------
+    #-------------一番評価の高い服を出力------------
     res_tops_path =[]
     res_botoms_path = []
     res_shoese_path = []
@@ -492,21 +474,20 @@ def getCodenate(request):
     sample_list = []
 
     tops_path_list = list(user_tops_all.values_list('FilePath',flat=True))
-    botoms_path_list = list(user_photo_all.filter(cate='botoms').values_list('FilePath',flat=True))
-    shoese_path_list = list(user_photo_all.filter(cate='shoese').values_list('FilePath',flat=True))
+    botoms_path_list = list(user_botoms_all.values_list('FilePath',flat=True))
+    shoese_path_list = list(user_shoese_all.values_list('FilePath',flat=True))
 
     tops_color_list = list(user_tops_all.values_list('color',flat=True))
-    botoms_color_list = list(user_photo_all.filter(cate='botoms').values_list('color',flat=True))
-    shoese_color_list = list(user_photo_all.filter(cate='shoese').values_list('color',flat=True))
+    botoms_color_list = list(user_botoms_all.values_list('color',flat=True))
+    shoese_color_list = list(user_shoese_all.values_list('color',flat=True))
 
     tops_sub_list = list(user_tops_all.values_list('sub',flat=True))
-    botoms_sub_list = list(user_photo_all.filter(cate='botoms').values_list('sub',flat=True))
-    shoese_sub_list = list(user_photo_all.filter(cate='shoese').values_list('sub',flat=True))
+    botoms_sub_list = list(user_botoms_all.values_list('sub',flat=True))
+    shoese_sub_list = list(user_shoese_all.values_list('sub',flat=True))
 
     codnate_sample = models.QuerySet(Codnate_sample)
 
 
-    print('331----------->'+str(len(res_idx_list)))
     for i in range(len(res_idx_list)):
         res_tops_path.append(tops_path_list[tag_idx_list[res_idx_list[i]][0]])
         res_tops_color.append(tops_color_list[tag_idx_list[res_idx_list[i]][0]])
@@ -530,7 +511,6 @@ def getCodenate(request):
 
         
     
-    print(sample_list)
 
     d = {
         'tops_path':res_tops_path,
@@ -625,6 +605,883 @@ def good_codnate_post(request):
         return HttpResponse('good complete')
     except Exception:
         return HttpResponse('totyuude error')
+
+def get_recomend_web_item_tops(request):
+    import numpy as np
+
+    userNo = request.GET.get('UserNo')
+    photo_all = models.QuerySet(Photo)
+    print(str(userNo))
+
+    recomend_all = models.QuerySet(Recomend_item)
+    #---------ハイパーパラメータ---------
+    type_DCS_weight = 1
+    type_match_tag_weight = 10
+    type_match_vol_weight = 10
+
+    good_tag1_weight = 1.5
+    good_tag2_weight = 1
+    good_tag3_weight = 0.5
+    good_tag4_weight = 0.25
+    bad_tag1_weight = 1.5
+    bad_tag2_weight = 1
+    bad_tag3_weight = 0.5
+    bad_tag4_weight = 0.25   
+    #-----------------------------------
+    #ユーザーの服を全部出力
+    user_photo_all  = photo_all.filter(userNo=userNo)
+    #カテゴリ別のクエリを抽出
+    user_tops_all = recomend_all.filter(cate='tops')
+    user_botoms_all = user_photo_all.filter(cate='botoms')
+    user_shoese_all = user_photo_all.filter(cate='shoese')
+
+    tops_count = user_photo_all.filter(cate='tops').count()
+    botoms_count = user_photo_all.filter(cate='botoms').count()
+    shoese_count = user_photo_all.filter(cate='shoese').count()
+
+    #アウターは冬用　まだ未開発
+    outer_count = user_photo_all.filter(cate='outer').count()
+    
+    #服の数でコーディネートできるか判定
+    if botoms_count < 1:
+        return HttpResponse('botoms no item')
+    if shoese_count < 1:
+        return HttpResponse('shoese no item')
+
+
+    user_type = list(models.QuerySet(Account).filter(id=userNo).values_list('type',flat=True))[0]
+    print(user_type)
+    #------------自分の好きなタイプのドレス率　カジュアル率　シンプル率の差が一番少ない順にする--------------
+    type_temp_all = models.QuerySet(Codnate_type_temp)
+    user_like_type_temp = type_temp_all.filter(code_type=user_type)
+    bad_codnate_list = models.QuerySet(Bad_Codnate)
+
+    type_dress_value = list(user_like_type_temp.values_list('dress_value',flat=True))[0]
+    type_casual_value = list(user_like_type_temp.values_list('casual_value',flat=True))[0]
+    type_simple_value = list(user_like_type_temp.values_list('simple_value',flat=True))[0]
+
+    tops_dress_value_list = list(user_tops_all.values_list('dress_value',flat=True))
+    tops_casual_value_list = list(user_tops_all.values_list('casual_value',flat=True))
+    tops_simple_value_list = list(user_tops_all.values_list('simple_value',flat=True))
+
+    botoms_dress_value_list = list(user_botoms_all.values_list('dress_value',flat=True))
+    botoms_casual_value_list = list(user_botoms_all.values_list('casual_value',flat=True))
+    botoms_simple_value_list = list(user_botoms_all.values_list('simple_value',flat=True))
+
+    shoese_dress_value_list = list(user_shoese_all.values_list('dress_value',flat=True))
+    shoese_casual_value_list = list(user_shoese_all.values_list('casual_value',flat=True))
+    shoese_simple_value_list = list(user_shoese_all.values_list('simple_value',flat=True))
+
+
+    type_filter_list = []
+    type_filter_idx_list = []
+
+    for tops_idx in range(tops_count):
+        for botoms_idx in range(botoms_count):
+            for shoese_idx in range(shoese_count):
+                                
+                dress_sum = tops_dress_value_list[tops_idx] + botoms_dress_value_list[botoms_idx] + shoese_dress_value_list[shoese_idx]
+                casual_sum = tops_casual_value_list[tops_idx] + botoms_casual_value_list[botoms_idx] + shoese_casual_value_list[shoese_idx]
+                simple_sum = tops_simple_value_list[tops_idx] + botoms_simple_value_list[botoms_idx] + shoese_simple_value_list[shoese_idx]
+                dress_per = dress_sum / (dress_sum + casual_sum + simple_sum)
+                casual_per = casual_sum / (dress_sum + casual_sum + simple_sum)
+                simple_per = simple_sum / (dress_sum + casual_sum + simple_sum)
+
+                type_absolute =  abs(type_dress_value - dress_per) + abs(type_casual_value - casual_per) + abs(type_simple_value - simple_per)
+
+                type_filter_list.append(type_absolute)
+                type_filter_idx_list.append([tops_idx,botoms_idx,shoese_idx])
+
+    #------------タグに一番当てはまっている組み合わせを評価-------------
+    tag1 = list(user_like_type_temp.values_list('tag1',flat=True))[0]
+    tag2 = list(user_like_type_temp.values_list('tag2',flat=True))[0]
+    tag3 = list(user_like_type_temp.values_list('tag3',flat=True))[0]
+    tag4 = list(user_like_type_temp.values_list('tag4',flat=True))[0]
+    if 10 < len(type_filter_list):
+        n = int(len(type_filter_list)/2)
+        sorted_idx = np.argsort(type_filter_list)
+    else:
+        n = len(type_filter_list)
+        sorted_idx = np.argsort(type_filter_list)
+    tag_sum_list = []
+    tag_idx_list = []
+
+    
+    user_photo_tops_tag1 = list(user_tops_all.values_list('tag',flat=True))
+    user_photo_tops_tag2 = list(user_tops_all.values_list('tag2',flat=True))
+    user_photo_tops_tag3 = list(user_tops_all.values_list('tag3',flat=True))
+    user_photo_tops_tag4 = list(user_tops_all.values_list('tag4',flat=True))
+
+    user_photo_botoms_tag1 = list(user_botoms_all.values_list('tag',flat=True))
+    user_photo_botoms_tag2 = list(user_botoms_all.values_list('tag2',flat=True))
+    user_photo_botoms_tag3 = list(user_botoms_all.values_list('tag3',flat=True))
+    user_photo_botoms_tag4 = list(user_botoms_all.values_list('tag4',flat=True))
+
+    user_photo_shoese_tag1 = list(user_shoese_all.values_list('tag',flat=True))
+    user_photo_shoese_tag2 = list(user_shoese_all.values_list('tag2',flat=True))
+    user_photo_shoese_tag3 = list(user_shoese_all.values_list('tag3',flat=True))
+    user_photo_shoese_tag4 = list(user_shoese_all.values_list('tag4',flat=True))
+
+    user_good_codnate = models.QuerySet(Good_Codnate).filter(userNo=userNo)
+
+    user_like_tops_tag1_list = list(user_good_codnate.values_list('tops_tag1',flat=True))
+    user_like_tops_tag2_list = list(user_good_codnate.values_list('tops_tag2',flat=True))
+    user_like_tops_tag3_list = list(user_good_codnate.values_list('tops_tag3',flat=True))
+    user_like_tops_tag4_list = list(user_good_codnate.values_list('tops_tag4',flat=True))
+
+    user_like_botoms_tag1_list = list(user_good_codnate.values_list('botoms_tag1',flat=True))
+    user_like_botoms_tag2_list = list(user_good_codnate.values_list('botoms_tag2',flat=True))
+    user_like_botoms_tag3_list = list(user_good_codnate.values_list('botoms_tag3',flat=True))
+    user_like_botoms_tag4_list = list(user_good_codnate.values_list('botoms_tag4',flat=True))
+
+    user_like_shoese_tag1_list = list(user_good_codnate.values_list('shoese_tag1',flat=True))
+    user_like_shoese_tag2_list = list(user_good_codnate.values_list('shoese_tag2',flat=True))
+    user_like_shoese_tag3_list = list(user_good_codnate.values_list('shoese_tag3',flat=True))
+    user_like_shoese_tag4_list = list(user_good_codnate.values_list('shoese_tag4',flat=True))
+
+    user_bad_codnate = models.QuerySet(Bad_Codnate).filter(userNo=userNo)
+
+    user_bad_tops_tag1_list = list(user_bad_codnate.values_list('tops_tag1',flat=True))
+    user_bad_tops_tag2_list = list(user_bad_codnate.values_list('tops_tag2',flat=True))
+    user_bad_tops_tag3_list = list(user_bad_codnate.values_list('tops_tag3',flat=True))
+    user_bad_tops_tag4_list = list(user_bad_codnate.values_list('tops_tag4',flat=True))
+
+    user_bad_botoms_tag1_list = list(user_bad_codnate.values_list('botoms_tag1',flat=True))
+    user_bad_botoms_tag2_list = list(user_bad_codnate.values_list('botoms_tag2',flat=True))
+    user_bad_botoms_tag3_list = list(user_bad_codnate.values_list('botoms_tag3',flat=True))
+    user_bad_botoms_tag4_list = list(user_bad_codnate.values_list('botoms_tag4',flat=True))
+
+    user_bad_shoese_tag1_list = list(user_bad_codnate.values_list('shoese_tag1',flat=True))
+    user_bad_shoese_tag2_list = list(user_bad_codnate.values_list('shoese_tag2',flat=True))
+    user_bad_shoese_tag3_list = list(user_bad_codnate.values_list('shoese_tag3',flat=True))
+    user_bad_shoese_tag4_list = list(user_bad_codnate.values_list('shoese_tag4',flat=True))
+    
+
+
+
+    for code_idx in range(n):
+        tag_list = []
+        user_like_tag_point = 0
+        user_bad_tag_point = 0
+        tag_list.append(user_photo_tops_tag1[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        tag_list.append(user_photo_tops_tag2[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        tag_list.append(user_photo_tops_tag3[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        tag_list.append(user_photo_tops_tag4[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        
+        user_like_tag_point = user_like_tag_point + good_tag1_weight * user_like_tops_tag1_list.count(user_photo_tops_tag1[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_like_tag_point = user_like_tag_point + good_tag2_weight * user_like_tops_tag2_list.count(user_photo_tops_tag2[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_like_tag_point = user_like_tag_point + good_tag3_weight * user_like_tops_tag3_list.count(user_photo_tops_tag3[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_like_tag_point = user_like_tag_point + good_tag4_weight * user_like_tops_tag4_list.count(user_photo_tops_tag4[type_filter_idx_list[sorted_idx[code_idx]][0]])
+
+        user_bad_tag_point = user_bad_tag_point + bad_tag1_weight * user_bad_tops_tag1_list.count(user_photo_tops_tag1[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag2_weight * user_bad_tops_tag2_list.count(user_photo_tops_tag2[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag3_weight * user_bad_tops_tag3_list.count(user_photo_tops_tag3[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag4_weight * user_bad_tops_tag4_list.count(user_photo_tops_tag4[type_filter_idx_list[sorted_idx[code_idx]][0]])
+
+        tag_list.append(user_photo_botoms_tag1[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(user_photo_botoms_tag2[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(user_photo_botoms_tag3[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(user_photo_botoms_tag4[type_filter_idx_list[sorted_idx[code_idx]][1]])
+
+        user_like_tag_point = user_like_tag_point + good_tag1_weight * user_like_botoms_tag1_list.count(user_photo_botoms_tag1[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_like_tag_point = user_like_tag_point + good_tag2_weight * user_like_botoms_tag2_list.count(user_photo_botoms_tag2[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_like_tag_point = user_like_tag_point + good_tag3_weight * user_like_botoms_tag3_list.count(user_photo_botoms_tag3[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_like_tag_point = user_like_tag_point + good_tag4_weight * user_like_botoms_tag4_list.count(user_photo_botoms_tag4[type_filter_idx_list[sorted_idx[code_idx]][1]])
+
+        user_bad_tag_point = user_bad_tag_point + bad_tag1_weight * user_bad_botoms_tag1_list.count(user_photo_botoms_tag1[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag2_weight * user_bad_botoms_tag2_list.count(user_photo_botoms_tag2[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag3_weight * user_bad_botoms_tag3_list.count(user_photo_botoms_tag3[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag4_weight * user_bad_botoms_tag4_list.count(user_photo_botoms_tag4[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        
+        tag_list.append(user_photo_shoese_tag1[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(user_photo_shoese_tag2[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(user_photo_shoese_tag3[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(user_photo_shoese_tag4[type_filter_idx_list[sorted_idx[code_idx]][2]])
+
+        user_like_tag_point = user_like_tag_point + good_tag1_weight * user_like_shoese_tag1_list.count(user_photo_shoese_tag1[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_like_tag_point = user_like_tag_point + good_tag2_weight * user_like_shoese_tag2_list.count(user_photo_shoese_tag2[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_like_tag_point = user_like_tag_point + good_tag3_weight * user_like_shoese_tag3_list.count(user_photo_shoese_tag3[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_like_tag_point = user_like_tag_point + good_tag4_weight * user_like_shoese_tag4_list.count(user_photo_shoese_tag4[type_filter_idx_list[sorted_idx[code_idx]][2]])
+
+        user_bad_tag_point = user_bad_tag_point + bad_tag1_weight * user_bad_shoese_tag1_list.count(user_photo_shoese_tag1[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag2_weight * user_bad_shoese_tag2_list.count(user_photo_shoese_tag2[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag3_weight * user_bad_shoese_tag3_list.count(user_photo_shoese_tag3[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag4_weight * user_bad_shoese_tag4_list.count(user_photo_shoese_tag4[type_filter_idx_list[sorted_idx[code_idx]][2]])
+
+        tag1_count = tag_list.count(tag1) 
+        tag2_count = tag_list.count(tag2) 
+        tag3_count = tag_list.count(tag3) 
+        tag4_count = tag_list.count(tag4) 
+
+
+
+        tag_sum_list.append(tag1_count*type_match_tag_weight + tag2_count*type_match_tag_weight + tag3_count*type_match_tag_weight + tag4_count*type_match_tag_weight - type_filter_list[sorted_idx[code_idx]]*type_DCS_weight + user_like_tag_point - user_bad_tag_point)
+        tag_idx_list.append(type_filter_idx_list[sorted_idx[code_idx]])
+    #----------控え目か派手かで評価---------
+
+    vol = list(user_like_type_temp.values_list('vol',flat=True))[0]
+
+    user_photo_tops_vol_list = list(user_tops_all.values_list('vol',flat=True))
+    user_photo_botoms_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    user_photo_shoese_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    for i in range(len(tag_sum_list)):
+        vol_list = []
+        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][0]])
+        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][1]])
+        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][2]])
+        vol_count = vol_list.count(vol)
+        tag_sum_list[i] = tag_sum_list[i] + vol_count * type_match_vol_weight
+    
+
+    tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
+    if 3 <= len(tag_sorted_idx):
+        res_idx_list = tag_sorted_idx[0:3]
+    else:
+        res_idx_list = tag_sorted_idx
+    #-------------一番評価の高い服を出力------------
+    res_tops_path =[]
+    res_botoms_path = []
+    res_shoese_path = []
+
+    res_tops_color = []
+    res_botoms_color = []
+    res_shoese_color = []
+
+    res_tops_sub = []
+    res_botoms_sub = []
+    res_shoese_sub = []
+
+
+    tops_path_list = list(user_tops_all.values_list('FilePath',flat=True))
+    botoms_path_list = list(user_botoms_all.values_list('FilePath',flat=True))
+    shoese_path_list = list(user_shoese_all.values_list('FilePath',flat=True))
+
+    tops_color_list = list(user_tops_all.values_list('color',flat=True))
+    botoms_color_list = list(user_botoms_all.values_list('color',flat=True))
+    shoese_color_list = list(user_shoese_all.values_list('color',flat=True))
+
+    tops_sub_list = list(user_tops_all.values_list('sub',flat=True))
+    botoms_sub_list = list(user_botoms_all.values_list('sub',flat=True))
+    shoese_sub_list = list(user_shoese_all.values_list('sub',flat=True))
+
+    for i in range(len(res_idx_list)):
+        res_tops_path.append(tops_path_list[tag_idx_list[res_idx_list[i]][0]])
+        res_tops_color.append(tops_color_list[tag_idx_list[res_idx_list[i]][0]])
+        tops_sub = tops_sub_list[tag_idx_list[res_idx_list[i]][0]]
+        res_tops_sub.append(tops_sub)
+            
+        res_botoms_path.append(botoms_path_list[tag_idx_list[res_idx_list[i]][1]])
+        res_botoms_color.append(botoms_color_list[tag_idx_list[res_idx_list[i]][1]])
+        botoms_sub = botoms_sub_list[tag_idx_list[res_idx_list[i]][1]]
+        res_botoms_sub.append(botoms_sub)
+               
+        res_shoese_path.append(shoese_path_list[tag_idx_list[res_idx_list[i]][2]])
+        res_shoese_color.append(shoese_color_list[tag_idx_list[res_idx_list[i]][2]])
+        shoese_sub = shoese_sub_list[tag_idx_list[res_idx_list[i]][2]]
+        res_shoese_sub.append(shoese_sub)
+
+
+    d = {
+        'tops_path':res_tops_path,
+        'tops_color':res_tops_color,
+        'tops_sub':res_tops_sub,
+        'botoms_path':res_botoms_path,
+        'botoms_color':res_botoms_color,
+        'botoms_sub':res_botoms_sub,
+        'shoese_path':res_shoese_path,
+        'shoese_color':res_shoese_color,
+        'shoese_sub':res_shoese_sub,
+    }
+    print(d)
+    return JsonResponse(d)
+
+def get_recomend_web_item_botoms(request):
+    import numpy as np
+
+    userNo = request.GET.get('UserNo')
+    photo_all = models.QuerySet(Photo)
+    print(str(userNo))
+
+    recomend_all = models.QuerySet(Recomend_item)
+    #---------ハイパーパラメータ---------
+    type_DCS_weight = 1
+    type_match_tag_weight = 10
+    type_match_vol_weight = 10
+
+    good_tag1_weight = 1.5
+    good_tag2_weight = 1
+    good_tag3_weight = 0.5
+    good_tag4_weight = 0.25
+    bad_tag1_weight = 1.5
+    bad_tag2_weight = 1
+    bad_tag3_weight = 0.5
+    bad_tag4_weight = 0.25   
+    #-----------------------------------
+    #ユーザーの服を全部出力
+    user_photo_all  = photo_all.filter(userNo=userNo)
+    #カテゴリ別のクエリを抽出
+    user_tops_all = user_photo_all.filter(cate='tops')
+    user_botoms_all = recomend_all.filter(cate='botoms')
+    user_shoese_all = user_photo_all.filter(cate='shoese')
+
+    tops_count = user_photo_all.filter(cate='tops').count()
+    botoms_count = user_photo_all.filter(cate='botoms').count()
+    shoese_count = user_photo_all.filter(cate='shoese').count()
+
+    #アウターは冬用　まだ未開発
+    outer_count = user_photo_all.filter(cate='outer').count()
+    
+    #服の数でコーディネートできるか判定
+    if tops_count < 1:
+        return HttpResponse('tops no item')
+    if shoese_count < 1:
+        return HttpResponse('shoese no item')
+
+
+    user_type = list(models.QuerySet(Account).filter(id=userNo).values_list('type',flat=True))[0]
+    print(user_type)
+    #------------自分の好きなタイプのドレス率　カジュアル率　シンプル率の差が一番少ない順にする--------------
+    type_temp_all = models.QuerySet(Codnate_type_temp)
+    user_like_type_temp = type_temp_all.filter(code_type=user_type)
+    bad_codnate_list = models.QuerySet(Bad_Codnate)
+
+    type_dress_value = list(user_like_type_temp.values_list('dress_value',flat=True))[0]
+    type_casual_value = list(user_like_type_temp.values_list('casual_value',flat=True))[0]
+    type_simple_value = list(user_like_type_temp.values_list('simple_value',flat=True))[0]
+
+    tops_dress_value_list = list(user_tops_all.values_list('dress_value',flat=True))
+    tops_casual_value_list = list(user_tops_all.values_list('casual_value',flat=True))
+    tops_simple_value_list = list(user_tops_all.values_list('simple_value',flat=True))
+
+    botoms_dress_value_list = list(user_botoms_all.values_list('dress_value',flat=True))
+    botoms_casual_value_list = list(user_botoms_all.values_list('casual_value',flat=True))
+    botoms_simple_value_list = list(user_botoms_all.values_list('simple_value',flat=True))
+
+    shoese_dress_value_list = list(user_shoese_all.values_list('dress_value',flat=True))
+    shoese_casual_value_list = list(user_shoese_all.values_list('casual_value',flat=True))
+    shoese_simple_value_list = list(user_shoese_all.values_list('simple_value',flat=True))
+
+
+    type_filter_list = []
+    type_filter_idx_list = []
+
+    for tops_idx in range(tops_count):
+        for botoms_idx in range(botoms_count):
+            for shoese_idx in range(shoese_count):
+                                
+                dress_sum = tops_dress_value_list[tops_idx] + botoms_dress_value_list[botoms_idx] + shoese_dress_value_list[shoese_idx]
+                casual_sum = tops_casual_value_list[tops_idx] + botoms_casual_value_list[botoms_idx] + shoese_casual_value_list[shoese_idx]
+                simple_sum = tops_simple_value_list[tops_idx] + botoms_simple_value_list[botoms_idx] + shoese_simple_value_list[shoese_idx]
+                dress_per = dress_sum / (dress_sum + casual_sum + simple_sum)
+                casual_per = casual_sum / (dress_sum + casual_sum + simple_sum)
+                simple_per = simple_sum / (dress_sum + casual_sum + simple_sum)
+
+                type_absolute =  abs(type_dress_value - dress_per) + abs(type_casual_value - casual_per) + abs(type_simple_value - simple_per)
+
+                type_filter_list.append(type_absolute)
+                type_filter_idx_list.append([tops_idx,botoms_idx,shoese_idx])
+
+    #------------タグに一番当てはまっている組み合わせを評価-------------
+    tag1 = list(user_like_type_temp.values_list('tag1',flat=True))[0]
+    tag2 = list(user_like_type_temp.values_list('tag2',flat=True))[0]
+    tag3 = list(user_like_type_temp.values_list('tag3',flat=True))[0]
+    tag4 = list(user_like_type_temp.values_list('tag4',flat=True))[0]
+    if 10 < len(type_filter_list):
+        n = int(len(type_filter_list)/2)
+        sorted_idx = np.argsort(type_filter_list)
+    else:
+        n = len(type_filter_list)
+        sorted_idx = np.argsort(type_filter_list)
+    tag_sum_list = []
+    tag_idx_list = []
+
+    
+    user_photo_tops_tag1 = list(user_tops_all.values_list('tag',flat=True))
+    user_photo_tops_tag2 = list(user_tops_all.values_list('tag2',flat=True))
+    user_photo_tops_tag3 = list(user_tops_all.values_list('tag3',flat=True))
+    user_photo_tops_tag4 = list(user_tops_all.values_list('tag4',flat=True))
+
+    user_photo_botoms_tag1 = list(user_botoms_all.values_list('tag',flat=True))
+    user_photo_botoms_tag2 = list(user_botoms_all.values_list('tag2',flat=True))
+    user_photo_botoms_tag3 = list(user_botoms_all.values_list('tag3',flat=True))
+    user_photo_botoms_tag4 = list(user_botoms_all.values_list('tag4',flat=True))
+
+    user_photo_shoese_tag1 = list(user_shoese_all.values_list('tag',flat=True))
+    user_photo_shoese_tag2 = list(user_shoese_all.values_list('tag2',flat=True))
+    user_photo_shoese_tag3 = list(user_shoese_all.values_list('tag3',flat=True))
+    user_photo_shoese_tag4 = list(user_shoese_all.values_list('tag4',flat=True))
+
+    user_good_codnate = models.QuerySet(Good_Codnate).filter(userNo=userNo)
+
+    user_like_tops_tag1_list = list(user_good_codnate.values_list('tops_tag1',flat=True))
+    user_like_tops_tag2_list = list(user_good_codnate.values_list('tops_tag2',flat=True))
+    user_like_tops_tag3_list = list(user_good_codnate.values_list('tops_tag3',flat=True))
+    user_like_tops_tag4_list = list(user_good_codnate.values_list('tops_tag4',flat=True))
+
+    user_like_botoms_tag1_list = list(user_good_codnate.values_list('botoms_tag1',flat=True))
+    user_like_botoms_tag2_list = list(user_good_codnate.values_list('botoms_tag2',flat=True))
+    user_like_botoms_tag3_list = list(user_good_codnate.values_list('botoms_tag3',flat=True))
+    user_like_botoms_tag4_list = list(user_good_codnate.values_list('botoms_tag4',flat=True))
+
+    user_like_shoese_tag1_list = list(user_good_codnate.values_list('shoese_tag1',flat=True))
+    user_like_shoese_tag2_list = list(user_good_codnate.values_list('shoese_tag2',flat=True))
+    user_like_shoese_tag3_list = list(user_good_codnate.values_list('shoese_tag3',flat=True))
+    user_like_shoese_tag4_list = list(user_good_codnate.values_list('shoese_tag4',flat=True))
+
+    user_bad_codnate = models.QuerySet(Bad_Codnate).filter(userNo=userNo)
+
+    user_bad_tops_tag1_list = list(user_bad_codnate.values_list('tops_tag1',flat=True))
+    user_bad_tops_tag2_list = list(user_bad_codnate.values_list('tops_tag2',flat=True))
+    user_bad_tops_tag3_list = list(user_bad_codnate.values_list('tops_tag3',flat=True))
+    user_bad_tops_tag4_list = list(user_bad_codnate.values_list('tops_tag4',flat=True))
+
+    user_bad_botoms_tag1_list = list(user_bad_codnate.values_list('botoms_tag1',flat=True))
+    user_bad_botoms_tag2_list = list(user_bad_codnate.values_list('botoms_tag2',flat=True))
+    user_bad_botoms_tag3_list = list(user_bad_codnate.values_list('botoms_tag3',flat=True))
+    user_bad_botoms_tag4_list = list(user_bad_codnate.values_list('botoms_tag4',flat=True))
+
+    user_bad_shoese_tag1_list = list(user_bad_codnate.values_list('shoese_tag1',flat=True))
+    user_bad_shoese_tag2_list = list(user_bad_codnate.values_list('shoese_tag2',flat=True))
+    user_bad_shoese_tag3_list = list(user_bad_codnate.values_list('shoese_tag3',flat=True))
+    user_bad_shoese_tag4_list = list(user_bad_codnate.values_list('shoese_tag4',flat=True))
+    
+
+
+
+    for code_idx in range(n):
+        tag_list = []
+        user_like_tag_point = 0
+        user_bad_tag_point = 0
+        tag_list.append(user_photo_tops_tag1[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        tag_list.append(user_photo_tops_tag2[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        tag_list.append(user_photo_tops_tag3[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        tag_list.append(user_photo_tops_tag4[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        
+        user_like_tag_point = user_like_tag_point + good_tag1_weight * user_like_tops_tag1_list.count(user_photo_tops_tag1[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_like_tag_point = user_like_tag_point + good_tag2_weight * user_like_tops_tag2_list.count(user_photo_tops_tag2[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_like_tag_point = user_like_tag_point + good_tag3_weight * user_like_tops_tag3_list.count(user_photo_tops_tag3[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_like_tag_point = user_like_tag_point + good_tag4_weight * user_like_tops_tag4_list.count(user_photo_tops_tag4[type_filter_idx_list[sorted_idx[code_idx]][0]])
+
+        user_bad_tag_point = user_bad_tag_point + bad_tag1_weight * user_bad_tops_tag1_list.count(user_photo_tops_tag1[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag2_weight * user_bad_tops_tag2_list.count(user_photo_tops_tag2[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag3_weight * user_bad_tops_tag3_list.count(user_photo_tops_tag3[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag4_weight * user_bad_tops_tag4_list.count(user_photo_tops_tag4[type_filter_idx_list[sorted_idx[code_idx]][0]])
+
+        tag_list.append(user_photo_botoms_tag1[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(user_photo_botoms_tag2[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(user_photo_botoms_tag3[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(user_photo_botoms_tag4[type_filter_idx_list[sorted_idx[code_idx]][1]])
+
+        user_like_tag_point = user_like_tag_point + good_tag1_weight * user_like_botoms_tag1_list.count(user_photo_botoms_tag1[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_like_tag_point = user_like_tag_point + good_tag2_weight * user_like_botoms_tag2_list.count(user_photo_botoms_tag2[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_like_tag_point = user_like_tag_point + good_tag3_weight * user_like_botoms_tag3_list.count(user_photo_botoms_tag3[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_like_tag_point = user_like_tag_point + good_tag4_weight * user_like_botoms_tag4_list.count(user_photo_botoms_tag4[type_filter_idx_list[sorted_idx[code_idx]][1]])
+
+        user_bad_tag_point = user_bad_tag_point + bad_tag1_weight * user_bad_botoms_tag1_list.count(user_photo_botoms_tag1[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag2_weight * user_bad_botoms_tag2_list.count(user_photo_botoms_tag2[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag3_weight * user_bad_botoms_tag3_list.count(user_photo_botoms_tag3[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag4_weight * user_bad_botoms_tag4_list.count(user_photo_botoms_tag4[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        
+        tag_list.append(user_photo_shoese_tag1[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(user_photo_shoese_tag2[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(user_photo_shoese_tag3[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(user_photo_shoese_tag4[type_filter_idx_list[sorted_idx[code_idx]][2]])
+
+        user_like_tag_point = user_like_tag_point + good_tag1_weight * user_like_shoese_tag1_list.count(user_photo_shoese_tag1[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_like_tag_point = user_like_tag_point + good_tag2_weight * user_like_shoese_tag2_list.count(user_photo_shoese_tag2[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_like_tag_point = user_like_tag_point + good_tag3_weight * user_like_shoese_tag3_list.count(user_photo_shoese_tag3[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_like_tag_point = user_like_tag_point + good_tag4_weight * user_like_shoese_tag4_list.count(user_photo_shoese_tag4[type_filter_idx_list[sorted_idx[code_idx]][2]])
+
+        user_bad_tag_point = user_bad_tag_point + bad_tag1_weight * user_bad_shoese_tag1_list.count(user_photo_shoese_tag1[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag2_weight * user_bad_shoese_tag2_list.count(user_photo_shoese_tag2[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag3_weight * user_bad_shoese_tag3_list.count(user_photo_shoese_tag3[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag4_weight * user_bad_shoese_tag4_list.count(user_photo_shoese_tag4[type_filter_idx_list[sorted_idx[code_idx]][2]])
+
+        tag1_count = tag_list.count(tag1) 
+        tag2_count = tag_list.count(tag2) 
+        tag3_count = tag_list.count(tag3) 
+        tag4_count = tag_list.count(tag4) 
+
+
+
+        tag_sum_list.append(tag1_count*type_match_tag_weight + tag2_count*type_match_tag_weight + tag3_count*type_match_tag_weight + tag4_count*type_match_tag_weight - type_filter_list[sorted_idx[code_idx]]*type_DCS_weight + user_like_tag_point - user_bad_tag_point)
+        tag_idx_list.append(type_filter_idx_list[sorted_idx[code_idx]])
+    #----------控え目か派手かで評価---------
+
+    vol = list(user_like_type_temp.values_list('vol',flat=True))[0]
+
+    user_photo_tops_vol_list = list(user_tops_all.values_list('vol',flat=True))
+    user_photo_botoms_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    user_photo_shoese_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    for i in range(len(tag_sum_list)):
+        vol_list = []
+        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][0]])
+        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][1]])
+        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][2]])
+        vol_count = vol_list.count(vol)
+        tag_sum_list[i] = tag_sum_list[i] + vol_count * type_match_vol_weight
+    
+
+    tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
+    if 3 <= len(tag_sorted_idx):
+        res_idx_list = tag_sorted_idx[0:3]
+    else:
+        res_idx_list = tag_sorted_idx
+    #-------------一番評価の高い服を出力------------
+    res_tops_path =[]
+    res_botoms_path = []
+    res_shoese_path = []
+
+    res_tops_color = []
+    res_botoms_color = []
+    res_shoese_color = []
+
+    res_tops_sub = []
+    res_botoms_sub = []
+    res_shoese_sub = []
+
+
+    tops_path_list = list(user_tops_all.values_list('FilePath',flat=True))
+    botoms_path_list = list(user_botoms_all.values_list('FilePath',flat=True))
+    shoese_path_list = list(user_shoese_all.values_list('FilePath',flat=True))
+
+    tops_color_list = list(user_tops_all.values_list('color',flat=True))
+    botoms_color_list = list(user_botoms_all.values_list('color',flat=True))
+    shoese_color_list = list(user_shoese_all.values_list('color',flat=True))
+
+    tops_sub_list = list(user_tops_all.values_list('sub',flat=True))
+    botoms_sub_list = list(user_botoms_all.values_list('sub',flat=True))
+    shoese_sub_list = list(user_shoese_all.values_list('sub',flat=True))
+
+    for i in range(len(res_idx_list)):
+        res_tops_path.append(tops_path_list[tag_idx_list[res_idx_list[i]][0]])
+        res_tops_color.append(tops_color_list[tag_idx_list[res_idx_list[i]][0]])
+        tops_sub = tops_sub_list[tag_idx_list[res_idx_list[i]][0]]
+        res_tops_sub.append(tops_sub)
+            
+        res_botoms_path.append(botoms_path_list[tag_idx_list[res_idx_list[i]][1]])
+        res_botoms_color.append(botoms_color_list[tag_idx_list[res_idx_list[i]][1]])
+        botoms_sub = botoms_sub_list[tag_idx_list[res_idx_list[i]][1]]
+        res_botoms_sub.append(botoms_sub)
+               
+        res_shoese_path.append(shoese_path_list[tag_idx_list[res_idx_list[i]][2]])
+        res_shoese_color.append(shoese_color_list[tag_idx_list[res_idx_list[i]][2]])
+        shoese_sub = shoese_sub_list[tag_idx_list[res_idx_list[i]][2]]
+        res_shoese_sub.append(shoese_sub)
+
+
+    d = {
+        'tops_path':res_tops_path,
+        'tops_color':res_tops_color,
+        'tops_sub':res_tops_sub,
+        'botoms_path':res_botoms_path,
+        'botoms_color':res_botoms_color,
+        'botoms_sub':res_botoms_sub,
+        'shoese_path':res_shoese_path,
+        'shoese_color':res_shoese_color,
+        'shoese_sub':res_shoese_sub,
+    }
+    print(d)
+    return JsonResponse(d)
+
+def get_recomend_web_item_shoese(request):
+    import numpy as np
+
+    userNo = request.GET.get('UserNo')
+    photo_all = models.QuerySet(Photo)
+    print(str(userNo))
+
+    recomend_all = models.QuerySet(Recomend_item)
+    #---------ハイパーパラメータ---------
+    type_DCS_weight = 1
+    type_match_tag_weight = 10
+    type_match_vol_weight = 10
+
+    good_tag1_weight = 1.5
+    good_tag2_weight = 1
+    good_tag3_weight = 0.5
+    good_tag4_weight = 0.25
+    bad_tag1_weight = 1.5
+    bad_tag2_weight = 1
+    bad_tag3_weight = 0.5
+    bad_tag4_weight = 0.25   
+    #-----------------------------------
+    #ユーザーの服を全部出力
+    user_photo_all  = photo_all.filter(userNo=userNo)
+    #カテゴリ別のクエリを抽出
+    user_tops_all = user_photo_all.filter(cate='tops')
+    user_botoms_all = user_photo_all.filter(cate='botoms')
+    user_shoese_all = recomend_all.filter(cate='shoese')
+
+    tops_count = user_photo_all.filter(cate='tops').count()
+    botoms_count = user_photo_all.filter(cate='botoms').count()
+    shoese_count = user_photo_all.filter(cate='shoese').count()
+
+    #アウターは冬用　まだ未開発
+    outer_count = user_photo_all.filter(cate='outer').count()
+    
+    #服の数でコーディネートできるか判定
+    if botoms_count < 1:
+        return HttpResponse('botoms no item')
+    if tops_count < 1:
+        return HttpResponse('tops no item')
+
+
+    user_type = list(models.QuerySet(Account).filter(id=userNo).values_list('type',flat=True))[0]
+    print(user_type)
+    #------------自分の好きなタイプのドレス率　カジュアル率　シンプル率の差が一番少ない順にする--------------
+    type_temp_all = models.QuerySet(Codnate_type_temp)
+    user_like_type_temp = type_temp_all.filter(code_type=user_type)
+    bad_codnate_list = models.QuerySet(Bad_Codnate)
+
+    type_dress_value = list(user_like_type_temp.values_list('dress_value',flat=True))[0]
+    type_casual_value = list(user_like_type_temp.values_list('casual_value',flat=True))[0]
+    type_simple_value = list(user_like_type_temp.values_list('simple_value',flat=True))[0]
+
+    tops_dress_value_list = list(user_tops_all.values_list('dress_value',flat=True))
+    tops_casual_value_list = list(user_tops_all.values_list('casual_value',flat=True))
+    tops_simple_value_list = list(user_tops_all.values_list('simple_value',flat=True))
+
+    botoms_dress_value_list = list(user_botoms_all.values_list('dress_value',flat=True))
+    botoms_casual_value_list = list(user_botoms_all.values_list('casual_value',flat=True))
+    botoms_simple_value_list = list(user_botoms_all.values_list('simple_value',flat=True))
+
+    shoese_dress_value_list = list(user_shoese_all.values_list('dress_value',flat=True))
+    shoese_casual_value_list = list(user_shoese_all.values_list('casual_value',flat=True))
+    shoese_simple_value_list = list(user_shoese_all.values_list('simple_value',flat=True))
+
+
+    type_filter_list = []
+    type_filter_idx_list = []
+
+    for tops_idx in range(tops_count):
+        for botoms_idx in range(botoms_count):
+            for shoese_idx in range(shoese_count):
+                                
+                dress_sum = tops_dress_value_list[tops_idx] + botoms_dress_value_list[botoms_idx] + shoese_dress_value_list[shoese_idx]
+                casual_sum = tops_casual_value_list[tops_idx] + botoms_casual_value_list[botoms_idx] + shoese_casual_value_list[shoese_idx]
+                simple_sum = tops_simple_value_list[tops_idx] + botoms_simple_value_list[botoms_idx] + shoese_simple_value_list[shoese_idx]
+                dress_per = dress_sum / (dress_sum + casual_sum + simple_sum)
+                casual_per = casual_sum / (dress_sum + casual_sum + simple_sum)
+                simple_per = simple_sum / (dress_sum + casual_sum + simple_sum)
+
+                type_absolute =  abs(type_dress_value - dress_per) + abs(type_casual_value - casual_per) + abs(type_simple_value - simple_per)
+
+                type_filter_list.append(type_absolute)
+                type_filter_idx_list.append([tops_idx,botoms_idx,shoese_idx])
+
+    #------------タグに一番当てはまっている組み合わせを評価-------------
+    tag1 = list(user_like_type_temp.values_list('tag1',flat=True))[0]
+    tag2 = list(user_like_type_temp.values_list('tag2',flat=True))[0]
+    tag3 = list(user_like_type_temp.values_list('tag3',flat=True))[0]
+    tag4 = list(user_like_type_temp.values_list('tag4',flat=True))[0]
+    if 10 < len(type_filter_list):
+        n = int(len(type_filter_list)/2)
+        sorted_idx = np.argsort(type_filter_list)
+    else:
+        n = len(type_filter_list)
+        sorted_idx = np.argsort(type_filter_list)
+    tag_sum_list = []
+    tag_idx_list = []
+
+    
+    user_photo_tops_tag1 = list(user_tops_all.values_list('tag',flat=True))
+    user_photo_tops_tag2 = list(user_tops_all.values_list('tag2',flat=True))
+    user_photo_tops_tag3 = list(user_tops_all.values_list('tag3',flat=True))
+    user_photo_tops_tag4 = list(user_tops_all.values_list('tag4',flat=True))
+
+    user_photo_botoms_tag1 = list(user_botoms_all.values_list('tag',flat=True))
+    user_photo_botoms_tag2 = list(user_botoms_all.values_list('tag2',flat=True))
+    user_photo_botoms_tag3 = list(user_botoms_all.values_list('tag3',flat=True))
+    user_photo_botoms_tag4 = list(user_botoms_all.values_list('tag4',flat=True))
+
+    user_photo_shoese_tag1 = list(user_shoese_all.values_list('tag',flat=True))
+    user_photo_shoese_tag2 = list(user_shoese_all.values_list('tag2',flat=True))
+    user_photo_shoese_tag3 = list(user_shoese_all.values_list('tag3',flat=True))
+    user_photo_shoese_tag4 = list(user_shoese_all.values_list('tag4',flat=True))
+
+    user_good_codnate = models.QuerySet(Good_Codnate).filter(userNo=userNo)
+
+    user_like_tops_tag1_list = list(user_good_codnate.values_list('tops_tag1',flat=True))
+    user_like_tops_tag2_list = list(user_good_codnate.values_list('tops_tag2',flat=True))
+    user_like_tops_tag3_list = list(user_good_codnate.values_list('tops_tag3',flat=True))
+    user_like_tops_tag4_list = list(user_good_codnate.values_list('tops_tag4',flat=True))
+
+    user_like_botoms_tag1_list = list(user_good_codnate.values_list('botoms_tag1',flat=True))
+    user_like_botoms_tag2_list = list(user_good_codnate.values_list('botoms_tag2',flat=True))
+    user_like_botoms_tag3_list = list(user_good_codnate.values_list('botoms_tag3',flat=True))
+    user_like_botoms_tag4_list = list(user_good_codnate.values_list('botoms_tag4',flat=True))
+
+    user_like_shoese_tag1_list = list(user_good_codnate.values_list('shoese_tag1',flat=True))
+    user_like_shoese_tag2_list = list(user_good_codnate.values_list('shoese_tag2',flat=True))
+    user_like_shoese_tag3_list = list(user_good_codnate.values_list('shoese_tag3',flat=True))
+    user_like_shoese_tag4_list = list(user_good_codnate.values_list('shoese_tag4',flat=True))
+
+    user_bad_codnate = models.QuerySet(Bad_Codnate).filter(userNo=userNo)
+
+    user_bad_tops_tag1_list = list(user_bad_codnate.values_list('tops_tag1',flat=True))
+    user_bad_tops_tag2_list = list(user_bad_codnate.values_list('tops_tag2',flat=True))
+    user_bad_tops_tag3_list = list(user_bad_codnate.values_list('tops_tag3',flat=True))
+    user_bad_tops_tag4_list = list(user_bad_codnate.values_list('tops_tag4',flat=True))
+
+    user_bad_botoms_tag1_list = list(user_bad_codnate.values_list('botoms_tag1',flat=True))
+    user_bad_botoms_tag2_list = list(user_bad_codnate.values_list('botoms_tag2',flat=True))
+    user_bad_botoms_tag3_list = list(user_bad_codnate.values_list('botoms_tag3',flat=True))
+    user_bad_botoms_tag4_list = list(user_bad_codnate.values_list('botoms_tag4',flat=True))
+
+    user_bad_shoese_tag1_list = list(user_bad_codnate.values_list('shoese_tag1',flat=True))
+    user_bad_shoese_tag2_list = list(user_bad_codnate.values_list('shoese_tag2',flat=True))
+    user_bad_shoese_tag3_list = list(user_bad_codnate.values_list('shoese_tag3',flat=True))
+    user_bad_shoese_tag4_list = list(user_bad_codnate.values_list('shoese_tag4',flat=True))
+    
+
+
+
+    for code_idx in range(n):
+        tag_list = []
+        user_like_tag_point = 0
+        user_bad_tag_point = 0
+        tag_list.append(user_photo_tops_tag1[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        tag_list.append(user_photo_tops_tag2[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        tag_list.append(user_photo_tops_tag3[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        tag_list.append(user_photo_tops_tag4[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        
+        user_like_tag_point = user_like_tag_point + good_tag1_weight * user_like_tops_tag1_list.count(user_photo_tops_tag1[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_like_tag_point = user_like_tag_point + good_tag2_weight * user_like_tops_tag2_list.count(user_photo_tops_tag2[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_like_tag_point = user_like_tag_point + good_tag3_weight * user_like_tops_tag3_list.count(user_photo_tops_tag3[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_like_tag_point = user_like_tag_point + good_tag4_weight * user_like_tops_tag4_list.count(user_photo_tops_tag4[type_filter_idx_list[sorted_idx[code_idx]][0]])
+
+        user_bad_tag_point = user_bad_tag_point + bad_tag1_weight * user_bad_tops_tag1_list.count(user_photo_tops_tag1[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag2_weight * user_bad_tops_tag2_list.count(user_photo_tops_tag2[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag3_weight * user_bad_tops_tag3_list.count(user_photo_tops_tag3[type_filter_idx_list[sorted_idx[code_idx]][0]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag4_weight * user_bad_tops_tag4_list.count(user_photo_tops_tag4[type_filter_idx_list[sorted_idx[code_idx]][0]])
+
+        tag_list.append(user_photo_botoms_tag1[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(user_photo_botoms_tag2[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(user_photo_botoms_tag3[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        tag_list.append(user_photo_botoms_tag4[type_filter_idx_list[sorted_idx[code_idx]][1]])
+
+        user_like_tag_point = user_like_tag_point + good_tag1_weight * user_like_botoms_tag1_list.count(user_photo_botoms_tag1[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_like_tag_point = user_like_tag_point + good_tag2_weight * user_like_botoms_tag2_list.count(user_photo_botoms_tag2[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_like_tag_point = user_like_tag_point + good_tag3_weight * user_like_botoms_tag3_list.count(user_photo_botoms_tag3[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_like_tag_point = user_like_tag_point + good_tag4_weight * user_like_botoms_tag4_list.count(user_photo_botoms_tag4[type_filter_idx_list[sorted_idx[code_idx]][1]])
+
+        user_bad_tag_point = user_bad_tag_point + bad_tag1_weight * user_bad_botoms_tag1_list.count(user_photo_botoms_tag1[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag2_weight * user_bad_botoms_tag2_list.count(user_photo_botoms_tag2[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag3_weight * user_bad_botoms_tag3_list.count(user_photo_botoms_tag3[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag4_weight * user_bad_botoms_tag4_list.count(user_photo_botoms_tag4[type_filter_idx_list[sorted_idx[code_idx]][1]])
+        
+        tag_list.append(user_photo_shoese_tag1[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(user_photo_shoese_tag2[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(user_photo_shoese_tag3[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        tag_list.append(user_photo_shoese_tag4[type_filter_idx_list[sorted_idx[code_idx]][2]])
+
+        user_like_tag_point = user_like_tag_point + good_tag1_weight * user_like_shoese_tag1_list.count(user_photo_shoese_tag1[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_like_tag_point = user_like_tag_point + good_tag2_weight * user_like_shoese_tag2_list.count(user_photo_shoese_tag2[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_like_tag_point = user_like_tag_point + good_tag3_weight * user_like_shoese_tag3_list.count(user_photo_shoese_tag3[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_like_tag_point = user_like_tag_point + good_tag4_weight * user_like_shoese_tag4_list.count(user_photo_shoese_tag4[type_filter_idx_list[sorted_idx[code_idx]][2]])
+
+        user_bad_tag_point = user_bad_tag_point + bad_tag1_weight * user_bad_shoese_tag1_list.count(user_photo_shoese_tag1[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag2_weight * user_bad_shoese_tag2_list.count(user_photo_shoese_tag2[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag3_weight * user_bad_shoese_tag3_list.count(user_photo_shoese_tag3[type_filter_idx_list[sorted_idx[code_idx]][2]])
+        user_bad_tag_point = user_bad_tag_point + bad_tag4_weight * user_bad_shoese_tag4_list.count(user_photo_shoese_tag4[type_filter_idx_list[sorted_idx[code_idx]][2]])
+
+        tag1_count = tag_list.count(tag1) 
+        tag2_count = tag_list.count(tag2) 
+        tag3_count = tag_list.count(tag3) 
+        tag4_count = tag_list.count(tag4) 
+
+
+
+        tag_sum_list.append(tag1_count*type_match_tag_weight + tag2_count*type_match_tag_weight + tag3_count*type_match_tag_weight + tag4_count*type_match_tag_weight - type_filter_list[sorted_idx[code_idx]]*type_DCS_weight + user_like_tag_point - user_bad_tag_point)
+        tag_idx_list.append(type_filter_idx_list[sorted_idx[code_idx]])
+    #----------控え目か派手かで評価---------
+
+    vol = list(user_like_type_temp.values_list('vol',flat=True))[0]
+
+    user_photo_tops_vol_list = list(user_tops_all.values_list('vol',flat=True))
+    user_photo_botoms_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    user_photo_shoese_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    for i in range(len(tag_sum_list)):
+        vol_list = []
+        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][0]])
+        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][1]])
+        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][2]])
+        vol_count = vol_list.count(vol)
+        tag_sum_list[i] = tag_sum_list[i] + vol_count * type_match_vol_weight
+    
+
+    tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
+    if 3 <= len(tag_sorted_idx):
+        res_idx_list = tag_sorted_idx[0:3]
+    else:
+        res_idx_list = tag_sorted_idx
+    #-------------一番評価の高い服を出力------------
+    res_tops_path =[]
+    res_botoms_path = []
+    res_shoese_path = []
+
+    res_tops_color = []
+    res_botoms_color = []
+    res_shoese_color = []
+
+    res_tops_sub = []
+    res_botoms_sub = []
+    res_shoese_sub = []
+
+
+    tops_path_list = list(user_tops_all.values_list('FilePath',flat=True))
+    botoms_path_list = list(user_botoms_all.values_list('FilePath',flat=True))
+    shoese_path_list = list(user_shoese_all.values_list('FilePath',flat=True))
+
+    tops_color_list = list(user_tops_all.values_list('color',flat=True))
+    botoms_color_list = list(user_botoms_all.values_list('color',flat=True))
+    shoese_color_list = list(user_shoese_all.values_list('color',flat=True))
+
+    tops_sub_list = list(user_tops_all.values_list('sub',flat=True))
+    botoms_sub_list = list(user_botoms_all.values_list('sub',flat=True))
+    shoese_sub_list = list(user_shoese_all.values_list('sub',flat=True))
+
+    for i in range(len(res_idx_list)):
+        res_tops_path.append(tops_path_list[tag_idx_list[res_idx_list[i]][0]])
+        res_tops_color.append(tops_color_list[tag_idx_list[res_idx_list[i]][0]])
+        tops_sub = tops_sub_list[tag_idx_list[res_idx_list[i]][0]]
+        res_tops_sub.append(tops_sub)
+            
+        res_botoms_path.append(botoms_path_list[tag_idx_list[res_idx_list[i]][1]])
+        res_botoms_color.append(botoms_color_list[tag_idx_list[res_idx_list[i]][1]])
+        botoms_sub = botoms_sub_list[tag_idx_list[res_idx_list[i]][1]]
+        res_botoms_sub.append(botoms_sub)
+               
+        res_shoese_path.append(shoese_path_list[tag_idx_list[res_idx_list[i]][2]])
+        res_shoese_color.append(shoese_color_list[tag_idx_list[res_idx_list[i]][2]])
+        shoese_sub = shoese_sub_list[tag_idx_list[res_idx_list[i]][2]]
+        res_shoese_sub.append(shoese_sub)
+
+
+    d = {
+        'tops_path':res_tops_path,
+        'tops_color':res_tops_color,
+        'tops_sub':res_tops_sub,
+        'botoms_path':res_botoms_path,
+        'botoms_color':res_botoms_color,
+        'botoms_sub':res_botoms_sub,
+        'shoese_path':res_shoese_path,
+        'shoese_color':res_shoese_color,
+        'shoese_sub':res_shoese_sub,
+    }
+    print(d)
+    return JsonResponse(d)
+
+def get_recomend_local_item(request):
+    userNo = request.GET.get('userNo')
+    myAccount = models.QuerySet(Account).filter(id=userNo)
+
+    x = request.GET.get('x')
+    y = request.GET.get('y')
+
+
+
 @csrf_exempt
 def bad_codnate_delete(request):
     if request.method == 'GET':
@@ -974,7 +1831,6 @@ def get_tag(request):
         K.clear_session()
         
         return HttpResponse(cate_label[label_sort[0][0]]+','+cate_label[label_sort[0][1]]+','+cate_label[label_sort[0][2]]+','+cate_label[label_sort[0][3]]+','+path)
-
 @csrf_exempt
 def get_vol(request):
 
@@ -1013,8 +1869,6 @@ def get_vol(request):
         hikaeme = int(pred[0][0]*100)
         hade = int(pred[0][1]*100)
         return HttpResponse(str(hikaeme)+','+str(int(hade)))
-
-
 def Mynet(cate_num):
     import numpy as np
     from keras.models import Sequential

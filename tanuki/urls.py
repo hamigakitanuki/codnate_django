@@ -20,6 +20,11 @@ urlpatterns = [
      path(r'bad_codnate_delete',views.bad_codnate_delete,name = 'bad_codnate_delete'),
      path(r'getAccount',views.getAccount,name = 'getAccount'),
      path(r'changeAccount',views.changeAccount,name = 'changeAccount'),
+     path(r'get_recomend_web_item_tops',views.get_recomend_web_item_tops,name = 'get_recomend_web_item_tops'),
+     path(r'get_recomend_web_item_botoms',views.get_recomend_web_item_botoms,name = 'get_recomend_web_item_botoms'),
+     path(r'get_recomend_web_item_shoese',views.get_recomend_web_item_shoese,name = 'get_recomend_web_item_shoese'),
+     path(r'get_recomend_local_item',views.get_recomend_local_item,name = 'get_recomend_local_item'),
+
 
 
      

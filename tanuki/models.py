@@ -104,8 +104,30 @@ class Good_Codnate(models.Model):
 class Recomend_item(models.Model):
     class Meta:
         db_table = 'Recomend_item'
-    type = models.CharField(max_length=30)
-    photo = models.CharField(max_length=30)
+    bland = models.CharField(max_length=30)
+    cate = models.CharField(max_length=30)
+    sub = models.CharField(max_length=30)
+    url = models.CharField(max_length=30)
+    image_url = models.CharField(max_length=30)
+    price = models.IntegerField()
+    color = models.CharField(verbose_name='色',max_length=30,default='other')    
+    dress_value = models.IntegerField(verbose_name='ドレス率')
+    casual_value = models.IntegerField(verbose_name='カジュアル率')
+    simple_value = models.IntegerField(verbose_name='シンプル率')
+    vol = models.CharField(verbose_name='勢い',max_length=30)
+    tag = models.CharField(verbose_name='タグ1',max_length=20,null=True)
+    tag2 = models.CharField(verbose_name='タグ2',max_length=20,null=True)
+    tag3 = models.CharField(verbose_name='タグ3',max_length=20,null=True)
+    tag4 = models.CharField(verbose_name='タグ4',max_length=20,null=True)
+
+class Local_shop(models.Model):
+    class Meta:
+        db_table = 'Local_shop'
+    name = models.CharField(max_length=30)
+    x = models.IntegerField()
+    y = models.IntegerField()
+    image = models.ImageField(upload_to='shop_image')
+
 
 
     
