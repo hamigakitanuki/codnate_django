@@ -108,7 +108,7 @@ class Recomend_item(models.Model):
     cate = models.CharField(max_length=30)
     sub = models.CharField(max_length=30)
     url = models.CharField(max_length=30)
-    image_url = models.CharField(max_length=30)
+    FilePath = models.CharField(max_length=30)
     price = models.IntegerField()
     color = models.CharField(verbose_name='色',max_length=30,default='other')    
     dress_value = models.IntegerField(verbose_name='ドレス率')
