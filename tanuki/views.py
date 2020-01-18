@@ -835,10 +835,11 @@ def get_recomend_web_item_tops(request):
     
 
     tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
-    if 0 <= len(tag_sorted_idx):
-        res_idx_list = tag_sorted_idx[0]
+    if 3 <= len(tag_sorted_idx):
+        res_idx_list = tag_sorted_idx[0:2]
     else:
         res_idx_list = tag_sorted_idx
+    print(res_idx_list)
     #-------------一番評価の高い服を出力------------
     res_tops_path =[]
     res_botoms_path = []
