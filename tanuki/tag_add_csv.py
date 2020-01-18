@@ -82,7 +82,7 @@ tag_label = ["huwahuwa","beuty", "child","adult","kawaii","cool","yurui","wild"]
 color_label = ['black','blue','brown','gray','green','orange','pink','purple','red','white','yellow']
 dre_label = ['simmple','casual','dress']
 vol_label = ['hikaeme','hade']
-
+file_idx = 0
 with open('/Users/kakizakikazuki/Documents/codnate_jango/tanuki/zozotown_huku.csv','r') as rf:
     with open('/Users/kakizakikazuki/Documents/codnate_jango/tanuki/zozotown_huku_tagadd.csv','w') as wf:
         r = csv.reader(rf)
@@ -110,7 +110,7 @@ with open('/Users/kakizakikazuki/Documents/codnate_jango/tanuki/zozotown_huku.cs
             #次元数を上げる
             cutx = cutx.reshape((1,)+cutx.shape)
             cutx /= 255
-
+            line = [file_idx,line[0],line[1],line[2],line[3],line[4],line[5]]
             #モデルに掛ける（チェック）
             pred = model_color.predict(cutx,1,0)
             label = np.argmax(pred)
@@ -136,5 +136,6 @@ with open('/Users/kakizakikazuki/Documents/codnate_jango/tanuki/zozotown_huku.cs
             K.clear_session()
             print(line)
             w.writerow(line)
+            file_idx += 1
 
 
