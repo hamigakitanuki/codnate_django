@@ -444,12 +444,12 @@ def getCodenate(request):
 
     user_photo_tops_vol_list = list(user_tops_all.values_list('vol',flat=True))
     user_photo_botoms_vol_list = list(user_botoms_all.values_list('vol',flat=True))
-    user_photo_shoese_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    user_photo_shoese_vol_list = list(user_shoese_all.values_list('vol',flat=True))
     for i in range(len(tag_sum_list)):
         vol_list = []
         vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][0]])
-        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][1]])
-        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][2]])
+        vol_list.append(user_photo_botoms_vol_list[tag_idx_list[i][1]])
+        vol_list.append(user_photo_shoese_vol_list[tag_idx_list[i][2]])
         vol_count = vol_list.count(vol)
         tag_sum_list[i] = tag_sum_list[i] + vol_count * type_match_vol_weight
     
@@ -824,12 +824,12 @@ def get_recomend_web_item_tops(request):
 
     user_photo_tops_vol_list = list(user_tops_all.values_list('vol',flat=True))
     user_photo_botoms_vol_list = list(user_botoms_all.values_list('vol',flat=True))
-    user_photo_shoese_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    user_photo_shoese_vol_list = list(user_shoese_all.values_list('vol',flat=True))
     for i in range(len(tag_sum_list)):
         vol_list = []
         vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][0]])
-        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][1]])
-        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][2]])
+        vol_list.append(user_photo_botoms_vol_list[tag_idx_list[i][1]])
+        vol_list.append(user_photo_shoese_vol_list[tag_idx_list[i][2]])
         vol_count = vol_list.count(vol)
         tag_sum_list[i] = tag_sum_list[i] + vol_count * type_match_vol_weight
     
@@ -1114,12 +1114,12 @@ def get_recomend_web_item_botoms(request):
 
     user_photo_tops_vol_list = list(user_tops_all.values_list('vol',flat=True))
     user_photo_botoms_vol_list = list(user_botoms_all.values_list('vol',flat=True))
-    user_photo_shoese_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    user_photo_shoese_vol_list = list(user_shoese_all.values_list('vol',flat=True))
     for i in range(len(tag_sum_list)):
         vol_list = []
         vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][0]])
-        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][1]])
-        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][2]])
+        vol_list.append(user_photo_botoms_vol_list[tag_idx_list[i][1]])
+        vol_list.append(user_photo_shoese_vol_list[tag_idx_list[i][2]])
         vol_count = vol_list.count(vol)
         tag_sum_list[i] = tag_sum_list[i] + vol_count * type_match_vol_weight
     
@@ -1403,12 +1403,12 @@ def get_recomend_web_item_shoese(request):
 
     user_photo_tops_vol_list = list(user_tops_all.values_list('vol',flat=True))
     user_photo_botoms_vol_list = list(user_botoms_all.values_list('vol',flat=True))
-    user_photo_shoese_vol_list = list(user_botoms_all.values_list('vol',flat=True))
+    user_photo_shoese_vol_list = list(user_shoese_all.values_list('vol',flat=True))
     for i in range(len(tag_sum_list)):
         vol_list = []
         vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][0]])
-        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][1]])
-        vol_list.append(user_photo_tops_vol_list[tag_idx_list[i][2]])
+        vol_list.append(user_photo_botoms_vol_list[tag_idx_list[i][1]])
+        vol_list.append(user_photo_shoese_vol_list[tag_idx_list[i][2]])
         vol_count = vol_list.count(vol)
         tag_sum_list[i] = tag_sum_list[i] + vol_count * type_match_vol_weight
     
