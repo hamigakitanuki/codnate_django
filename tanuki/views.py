@@ -835,8 +835,8 @@ def get_recomend_web_item_tops(request):
     
 
     tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
-    if 3 <= len(tag_sorted_idx):
-        res_idx_list = tag_sorted_idx[0:3]
+    if 0 <= len(tag_sorted_idx):
+        res_idx_list = tag_sorted_idx[0]
     else:
         res_idx_list = tag_sorted_idx
     #-------------一番評価の高い服を出力------------
@@ -1124,8 +1124,8 @@ def get_recomend_web_item_botoms(request):
     
 
     tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
-    if 3 <= len(tag_sorted_idx):
-        res_idx_list = tag_sorted_idx[0:3]
+    if 0 <= len(tag_sorted_idx):
+        res_idx_list = tag_sorted_idx[0]
     else:
         res_idx_list = tag_sorted_idx
     #-------------一番評価の高い服を出力------------
@@ -1413,8 +1413,8 @@ def get_recomend_web_item_shoese(request):
     
 
     tag_sorted_idx = np.argsort(tag_sum_list)[::-1]
-    if 3 <= len(tag_sorted_idx):
-        res_idx_list = tag_sorted_idx[0:3]
+    if 0 <= len(tag_sorted_idx):
+        res_idx_list = tag_sorted_idx[0]
     else:
         res_idx_list = tag_sorted_idx
     #-------------一番評価の高い服を出力------------
