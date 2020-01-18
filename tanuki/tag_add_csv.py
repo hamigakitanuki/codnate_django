@@ -84,11 +84,17 @@ dre_label = ['simmple','casual','dress']
 vol_label = ['hikaeme','hade']
 
 with open('/Users/kakizakikazuki/Documents/codnate_jango/tanuki/zozotown_huku.csv','r') as rf:
-    with open('/Users/kakizakikazuki/Documents/codnate_jango/tanuki/zozotown_huku_tagadd.csv','a') as wf:
+    with open('/Users/kakizakikazuki/Documents/codnate_jango/tanuki/zozotown_huku_tagadd.csv','w') as wf:
         r = csv.reader(rf)
         w = csv.writer(wf)
+        cate_list=[]
         for idx,line in enumerate(r):
+            if cate_list.count(line[1]) < 10:
+                cate_list.append(line[1])
+            else:
+                continue
             print(idx)
+
             url = line[4]
             filename = 'sample_image.png'
             response = requests.get(url)
@@ -96,6 +102,8 @@ with open('/Users/kakizakikazuki/Documents/codnate_jango/tanuki/zozotown_huku.cs
             with open('/Users/kakizakikazuki/Documents/codnate_jango/tanuki/'+filename,'wb') as image:
                 image.write(dl_image)
             read_image = cv2.imread(filename,1)
+            if read_image is None:
+                continue
             cutx = cv2.resize(read_image,(64,64))
             #画像の色をRGB形式に変更
             cutx = cv2.cvtColor(cutx,cv2.COLOR_BGR2RGB).astype(np.float32)
@@ -106,30 +114,27 @@ with open('/Users/kakizakikazuki/Documents/codnate_jango/tanuki/zozotown_huku.cs
             #モデルに掛ける（チェック）
             pred = model_color.predict(cutx,1,0)
             label = np.argmax(pred)
-            list(line).append(color_label[label])
+            line.append(color_label[label])
             
             pred = model_dre.predict(cutx,1,0)
-            list(line).append(int(pred[0][0]*100))
-            list(line).append(int(pred[0][1]*100))
-            list(line).append(int(pred[0][2]*100))
+            line.append(int(pred[0][0]*100))
+            line.append(int(pred[0][1]*100))
+            line.append(int(pred[0][2]*100))
 
             pred = model_vol.predict(cutx,1,0)
             label = np.argmax(pred)
-            list(line).append(vol_label[label])
+            line.append(vol_label[label])
 
             pred = model_tag.predict(cutx,1,0)
             pred_idx = np.argsort(-pred)
             
-            print(pred_idx)
-            print(pred)
-            list(line).append(tag_label[pred_idx[0][0]])
-            list(line).append(tag_label[pred_idx[0][1]])
-            list(line).append(tag_label[pred_idx[0][2]])
-            list(line).append(tag_label[pred_idx[0][3]])
-            print(line)
+            line.append(tag_label[pred_idx[0][0]])
+            line.append(tag_label[pred_idx[0][1]])
+            line.append(tag_label[pred_idx[0][2]])
+            line.append(tag_label[pred_idx[0][3]])
 
             K.clear_session()
-
+            print(line)
             w.writerow(line)
 
 
