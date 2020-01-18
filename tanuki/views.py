@@ -1217,7 +1217,7 @@ def get_recomend_web_item_shoese(request):
 
     tops_count = user_photo_all.filter(cate='tops').count()
     botoms_count = user_photo_all.filter(cate='botoms').count()
-    shoese_count = user_photo_all.filter(cate='シューズ').count()
+    shoese_count = recomend_all.filter(cate='シューズ').count()
 
     #アウターは冬用　まだ未開発
     outer_count = user_photo_all.filter(cate='outer').count()
