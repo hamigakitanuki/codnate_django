@@ -12,6 +12,7 @@ from django.db.models import Max,Sum
 from .forms import PhotoForm,AccountForm,PhotoOneForm
 from django.views.decorators.csrf import csrf_exempt
 import random
+from django.db.models import Q
 
 #テスト用
 def index(request):
@@ -631,7 +632,7 @@ def get_recomend_web_item_tops(request):
     #ユーザーの服を全部出力
     user_photo_all  = photo_all.filter(userNo=userNo)
     #カテゴリ別のクエリを抽出
-    user_tops_all = recomend_all.filter(cate='tops')
+    user_tops_all = recomend_all.filter(cate='トップス')
     user_botoms_all = user_photo_all.filter(cate='botoms')
     user_shoese_all = user_photo_all.filter(cate='shoese')
 
@@ -921,7 +922,7 @@ def get_recomend_web_item_botoms(request):
     user_photo_all  = photo_all.filter(userNo=userNo)
     #カテゴリ別のクエリを抽出
     user_tops_all = user_photo_all.filter(cate='tops')
-    user_botoms_all = recomend_all.filter(cate='botoms')
+    user_botoms_all = recomend_all.filter(Q(cate='パンツ')|Q(cate='スカート')).distinct()
     user_shoese_all = user_photo_all.filter(cate='shoese')
 
     tops_count = user_photo_all.filter(cate='tops').count()
@@ -1215,7 +1216,7 @@ def get_recomend_web_item_shoese(request):
 
     tops_count = user_photo_all.filter(cate='tops').count()
     botoms_count = user_photo_all.filter(cate='botoms').count()
-    shoese_count = user_photo_all.filter(cate='shoese').count()
+    shoese_count = user_photo_all.filter(cate='シューズ').count()
 
     #アウターは冬用　まだ未開発
     outer_count = user_photo_all.filter(cate='outer').count()
