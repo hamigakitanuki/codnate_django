@@ -1213,7 +1213,7 @@ def get_recomend_web_item_shoese(request):
     #カテゴリ別のクエリを抽出
     user_tops_all = user_photo_all.filter(cate='tops')
     user_botoms_all = user_photo_all.filter(cate='botoms')
-    user_shoese_all = recomend_all.filter(cate='shoese')
+    user_shoese_all = recomend_all.filter(cate='シューズ')
 
     tops_count = user_photo_all.filter(cate='tops').count()
     botoms_count = user_photo_all.filter(cate='botoms').count()
