@@ -1476,7 +1476,7 @@ def get_recomend_web_item_shoese(request):
     return JsonResponse(d)
 
 def get_recomend_item_list(request):
-    
+    import numpy as np
     user_id = request.GET.get('UserNo')
     user_type = list(models.QuerySet(Account).filter(id=user_id).values_list('type',flat=True))[0]
     print(user_type)
@@ -1491,31 +1491,46 @@ def get_recomend_item_list(request):
     tag4 = type_value.tag4
     vol = type_value.vol
 
-    order_list = (dress_value,
-                  casual_value,
-                  simple_value,
-                  tag1,
-                  tag2,
-                  tag3,
-                  tag4,
-                  vol)
-    recomend_item = models.QuerySet(Recomend_item).all().order_by(*order_list)
+    recomend_item = models.QuerySet(Recomend_item).all()
+
+    recomend_dress_value = list(recomend_item.values_list('dress_value',flat=True))
+    recomend_casual_value = list(recomend_item.values_list('casual_value',flat=True))
+    recomend_simple_value = list(recomend_item.values_list('simple_value',flat=True))
+
+    dress_range = []
+    casual_range = []
+    simple_range = []
+
+    dress_range.append(abs(recomend_dress_value[：]-dress_value))
+    casual_range.append(abs(recomend_casual_value[:]-casual_value))
+    simple_range.append(abs(recomend_simple_value[:]-simple_value))
+
+    range_list = []
+    range_list.append(dress_range[:]+casual_range[:]+simple_range[:])
+    
+    range_idx = np.argsort(range_list)
+
     
     link_url = recomend_item.values_list('url',flat=True)
     image_url = recomend_item.values_list('FilePath',flat=True)
     sub = recomend_item.values_list().values_list('sub',flat=True)
     price = recomend_item.values_list().values_list('price',flat=True)
 
-    d = {
-        'link_url':link_url,
-        'image_url':image_url,
-        'sub':sub,
-    }
+    select_link_url = []
+    select_url = []
+    select_sub = []
+    select_price = []
+
+    select_link_url.append(link_url[range_idx[:]])
+    select_url.append(image_url[range_idx[:]])
+    select_sub.append(sub[range_idx[:]])
+    select_price.append(price[range_idx[:]])
+
     return HttpResponse('{'+
-                          '"link_url":'+link_url+','+
-                          '"image_url":'+image_url+','+
-                          '"sub":'+sub+',',+
-                          '"price":'+price+','+
+                          '"link_url":'+selece_link_url+','+
+                          '"image_url":'+select_image_url+','+
+                          '"sub":'+select_sub+',',+
+                          '"price":'+select_price+','+
                           '}')
 
 
