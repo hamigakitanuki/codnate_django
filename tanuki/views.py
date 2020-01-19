@@ -1498,7 +1498,9 @@ def get_recomend_item_list(request):
     recomend_simple_value = np.array(list(recomend_item.values_list('simple_value',flat=True)))
 
     abs(recomend_dress_value-dress_value)
+    print(recomend_dress_value)
     recomend_casual_value-casual_value
+    print(recomend_casual_value)
     recomend_simple_value-simple_value
 
 
