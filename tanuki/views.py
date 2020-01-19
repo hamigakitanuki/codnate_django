@@ -1497,15 +1497,13 @@ def get_recomend_item_list(request):
     recomend_casual_value = np.array(list(recomend_item.values_list('casual_value',flat=True)))
     recomend_simple_value = np.array(list(recomend_item.values_list('simple_value',flat=True)))
 
+    print(recomend_dress_value)
     abs(recomend_dress_value-dress_value)
     print(recomend_dress_value)
-    recomend_casual_value-casual_value
-    print(recomend_casual_value)
-    recomend_simple_value-simple_value
+    
+    abs(recomend_casual_value-casual_value)
+    abs(recomend_simple_value-simple_value)
 
-
-
-    range_idx = np.argsort(range_list)
 
     
     link_url = recomend_item.values_list('url',flat=True)
