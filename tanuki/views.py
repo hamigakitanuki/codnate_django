@@ -1491,14 +1491,14 @@ def get_recomend_item_list(request):
     tag4 = type_value.tag4
     vol = type_value.vol
 
-    order_list = [dress_value,
+    order_list = (dress_value,
                   casual_value,
                   simple_value,
                   tag1,
                   tag2,
                   tag3,
                   tag4,
-                  vol]
+                  vol)
     recomend_item = models.QuerySet(Recomend_item).all().order_by(*order_list)
     
     link_url = recomend_item.values_list('url',flat=True)
