@@ -1493,21 +1493,16 @@ def get_recomend_item_list(request):
 
     recomend_item = models.QuerySet(Recomend_item).all()
 
-    recomend_dress_value = list(recomend_item.values_list('dress_value',flat=True))
-    recomend_casual_value = list(recomend_item.values_list('casual_value',flat=True))
-    recomend_simple_value = list(recomend_item.values_list('simple_value',flat=True))
+    recomend_dress_value =  np.array(list(recomend_item.values_list('dress_value',flat=True)))
+    recomend_casual_value = np.array(list(recomend_item.values_list('casual_value',flat=True)))
+    recomend_simple_value = np.array(list(recomend_item.values_list('simple_value',flat=True)))
 
-    dress_range = []
-    casual_range = []
-    simple_range = []
+    abs(recomend_dress_value-dress_value)
+    recomend_casual_value-casual_value
+    recomend_simple_value-simple_value
 
-    dress_range.append(abs(recomend_dress_value[：]-dress_value))
-    casual_range.append(abs(recomend_casual_value[:]-casual_value))
-    simple_range.append(abs(recomend_simple_value[:]-simple_value))
 
-    range_list = []
-    range_list.append(dress_range[:]+casual_range[:]+simple_range[:])
-    
+
     range_idx = np.argsort(range_list)
 
     
