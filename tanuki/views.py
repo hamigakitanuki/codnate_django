@@ -1496,16 +1496,14 @@ def get_recomend_item_list(request):
     recomend_dress_value =  np.array(list(recomend_item.values_list('dress_value',flat=True)))
     recomend_casual_value = np.array(list(recomend_item.values_list('casual_value',flat=True)))
     recomend_simple_value = np.array(list(recomend_item.values_list('simple_value',flat=True)))
-    print(dress_value)
-    print(recomend_dress_value)
     recomend_dress_value = abs(recomend_dress_value-dress_value)
-    print(recomend_dress_value)
-    
-    abs(recomend_casual_value-casual_value)
-    abs(recomend_simple_value-simple_value)
+    recomend_casual_value = abs(recomend_casual_value-casual_value)
+    recomend_simple_value = abs(recomend_simple_value-simple_value)
 
-
+    range_list = recomend_dress_value + recomend_casual_value + recomend_simple_value
     
+    recomend_idx = range_list.argsort()
+
     link_url = recomend_item.values_list('url',flat=True)
     image_url = recomend_item.values_list('FilePath',flat=True)
     sub = recomend_item.values_list().values_list('sub',flat=True)
@@ -1516,10 +1514,10 @@ def get_recomend_item_list(request):
     select_sub = []
     select_price = []
 
-    select_link_url.append(link_url[range_idx[:]])
-    select_url.append(image_url[range_idx[:]])
-    select_sub.append(sub[range_idx[:]])
-    select_price.append(price[range_idx[:]])
+    select_link_url.append(link_url[i for i in recomend_idx])
+    select_url.append(image_url[range_idx[i for i in recomend_idx]])
+    select_sub.append(sub[range_idx[i for i in recomend_idx]])
+    select_price.append(price[range_idx[i for i in recomend_idx]])
 
     return HttpResponse('{'+
                           '"link_url":'+selece_link_url+','+
