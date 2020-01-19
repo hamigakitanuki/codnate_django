@@ -23,6 +23,7 @@ urlpatterns = [
      path(r'get_recomend_web_item_tops',views.get_recomend_web_item_tops,name = 'get_recomend_web_item_tops'),
      path(r'get_recomend_web_item_botoms',views.get_recomend_web_item_botoms,name = 'get_recomend_web_item_botoms'),
      path(r'get_recomend_web_item_shoese',views.get_recomend_web_item_shoese,name = 'get_recomend_web_item_shoese'),
+     path(r'get_recomend_list',views.get_recomend_item_list,name='get_recomend_item_list'),
      path(r'get_recomend_local_item',views.get_recomend_local_item,name = 'get_recomend_local_item'),
 
 

@@ -1475,6 +1475,63 @@ def get_recomend_web_item_shoese(request):
     print(d)
     return JsonResponse(d)
 
+def get_recomend_item_list(request):
+    
+    user_id = request.GET.get('userNo')
+    user_type = list(models.QuerySet(Account).filter(id=user_id).values_list('type',flat=True))
+    type_value = models.QuerySet('Codnate_type_temp').filter(code_type=user_type).first()
+    dress_value = type_value.dress_value
+    casual_value = type_value.casual_value
+    simple_value = type_value.simple_value
+
+    tag1 = type_value.tag1
+    tag2 = type_value.tag2
+    tag3 = type_value.tag3
+    tag4 = type_value.tag4
+    vol = type_value.vol
+
+    order_list = [dress_value,
+                  casual_value,
+                  simple_value,
+                  tag1,
+                  tag2,
+                  tag3,
+                  tag4,
+                  vol]
+    recomend_item = models.QuerySet(Recomend_item).all().order_by(*order_list)
+    
+    link_url = recomend_item.values_list('url',flat=True)
+    image_url = recomend_item.values_list('FilePath',flat=True)
+    sub = recomend_item.values_list().values_list('sub',flat=True)
+
+    top_link_url = []
+    top_image_url = []
+    top_sub = []
+    
+    top_link_url.append(link_url[0:3])
+    top_image_url.append(image_url[0:3])
+    top_sub.append(sub[0:3])
+
+    d = {
+        'link_url':link_url,
+        'image_url':image_url,
+        'sub':sub,
+        'top_link_url':top_link_url,
+        'top_image_url':top_image_url,
+        'top_sub':top_sub
+    }
+    return HttpResponse('{'+
+                          '"link_url":'+link_url+','+
+                          '"image_url":'+image_url+','+
+                          '"sub":'+sub+',',
+                          '"top_link_url":'+top_link_url+','+
+                          '"top_image_url":'+top_image_url+','+
+                          '"top_sub":'+top_sub+','+
+                          '}')
+
+
+    
+
 def get_recomend_local_item(request):
     userNo = request.GET.get('userNo')
     myAccount = models.QuerySet(Account).filter(id=userNo)
