@@ -1503,30 +1503,18 @@ def get_recomend_item_list(request):
     link_url = recomend_item.values_list('url',flat=True)
     image_url = recomend_item.values_list('FilePath',flat=True)
     sub = recomend_item.values_list().values_list('sub',flat=True)
-
-    top_link_url = []
-    top_image_url = []
-    top_sub = []
-    
-    top_link_url.append(link_url[0:3])
-    top_image_url.append(image_url[0:3])
-    top_sub.append(sub[0:3])
+    price = recomend_item.values_list().values_list('price',flat=True)
 
     d = {
         'link_url':link_url,
         'image_url':image_url,
         'sub':sub,
-        'top_link_url':top_link_url,
-        'top_image_url':top_image_url,
-        'top_sub':top_sub
     }
     return HttpResponse('{'+
                           '"link_url":'+link_url+','+
                           '"image_url":'+image_url+','+
-                          '"sub":'+sub+',',
-                          '"top_link_url":'+top_link_url+','+
-                          '"top_image_url":'+top_image_url+','+
-                          '"top_sub":'+top_sub+','+
+                          '"sub":'+sub+',',+
+                          '"price":'+price+','+
                           '}')
 
 
