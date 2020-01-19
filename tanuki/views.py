@@ -1479,6 +1479,7 @@ def get_recomend_item_list(request):
     
     user_id = request.GET.get('userNo')
     user_type = list(models.QuerySet(Account).filter(id=user_id).values_list('type',flat=True))
+    print(user_type)
     type_value = models.QuerySet('Codnate_type_temp').filter(code_type=user_type).first()
     dress_value = type_value.dress_value
     casual_value = type_value.casual_value
