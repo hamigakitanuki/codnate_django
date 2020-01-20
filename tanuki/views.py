@@ -1510,7 +1510,7 @@ def get_recomend_item_list(request):
     price = list(recomend_item.values_list().values_list('price',flat=True))
 
     select_link_url = []
-    select_url = []
+    select_image_url = []
     select_sub = []
     select_price = []
     for i in recomend_idx:
