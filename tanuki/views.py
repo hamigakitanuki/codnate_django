@@ -1513,11 +1513,11 @@ def get_recomend_item_list(request):
     select_url = []
     select_sub = []
     select_price = []
-    print(recomend_idx)
-    select_link_url.append(link_url[i for i in recomend_idx])
-    select_url.append(image_url[range_idx[i for i in recomend_idx]])
-    select_sub.append(sub[range_idx[i for i in recomend_idx]])
-    select_price.append(price[range_idx[i for i in recomend_idx]])
+    for i in recomend_idx
+        select_link_url.append(link_url[i])
+        select_url.append(image_url[i]])
+        select_sub.append(sub[i]])
+        select_price.append(price[i]])
 
     return HttpResponse('{'+
                           '"link_url":'+selece_link_url+','+
