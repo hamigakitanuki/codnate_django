@@ -1518,6 +1518,9 @@ def get_recomend_item_list(request):
         select_image_url.append(image_url[i])
         select_sub.append(sub[i])
         select_price.append(price[i])
+    d = {'link_url':select_link_url,
+         'image_url':select_image_url}
+    print(d)
 
     return HttpResponse('{'+
                           '"link_url":'+str(select_link_url)+','+
