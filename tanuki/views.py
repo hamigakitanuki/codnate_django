@@ -1504,20 +1504,20 @@ def get_recomend_item_list(request):
     
     recomend_idx = range_list.argsort()
 
-    link_url = recomend_item.values_list('url',flat=True)
-    image_url = recomend_item.values_list('FilePath',flat=True)
-    sub = recomend_item.values_list().values_list('sub',flat=True)
-    price = recomend_item.values_list().values_list('price',flat=True)
+    link_url = list(recomend_item.values_list('url',flat=True))
+    image_url = list(recomend_item.values_list('FilePath',flat=True))
+    sub = list(recomend_item.values_list().values_list('sub',flat=True))
+    price = list(recomend_item.values_list().values_list('price',flat=True))
 
     select_link_url = []
     select_url = []
     select_sub = []
     select_price = []
     print(recomend_idx)
-    #select_link_url.append(link_url[idx for i,idx in enumerate(recomend_idx)])
-    #select_url.append(image_url[range_idx[i for i in recomend_idx]])
-    #select_sub.append(sub[range_idx[i for i in recomend_idx]])
-    #select_price.append(price[range_idx[i for i in recomend_idx]])
+    select_link_url.append(link_url[i for i in recomend_idx])
+    select_url.append(image_url[range_idx[i for i in recomend_idx]])
+    select_sub.append(sub[range_idx[i for i in recomend_idx]])
+    select_price.append(price[range_idx[i for i in recomend_idx]])
 
     return HttpResponse('{'+
                           '"link_url":'+selece_link_url+','+
