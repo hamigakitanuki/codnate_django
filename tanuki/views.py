@@ -1515,7 +1515,7 @@ def get_recomend_item_list(request):
     select_price = []
     for i in recomend_idx:
         select_link_url.append(link_url[i])
-        select_url.append(image_url[i])
+        select_image_url.append(image_url[i])
         select_sub.append(sub[i])
         select_price.append(price[i])
 
