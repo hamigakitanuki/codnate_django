@@ -1520,7 +1520,7 @@ def get_recomend_item_list(request):
         select_price.append(price[i])
 
     return HttpResponse('{'+
-                          '"link_url":'+selece_link_url+','+
+                          '"link_url":'+select_link_url+','+
                           '"image_url":'+select_image_url+','+
                           '"sub":'+select_sub+','+
                           '"price":'+select_price+','+
