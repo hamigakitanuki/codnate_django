@@ -1514,7 +1514,7 @@ def get_recomend_item_list(request):
     select_sub = []
     select_price = []
     print(recomend_idx)
-    select_link_url.append(link_url[i for i in recomend_idx])
+    select_link_url.append(link_url[idx for i,idx in enumerate(recomend_idx)])
     select_url.append(image_url[range_idx[i for i in recomend_idx]])
     select_sub.append(sub[range_idx[i for i in recomend_idx]])
     select_price.append(price[range_idx[i for i in recomend_idx]])
