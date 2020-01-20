@@ -1522,7 +1522,7 @@ def get_recomend_item_list(request):
     return HttpResponse('{'+
                           '"link_url":'+selece_link_url+','+
                           '"image_url":'+select_image_url+','+
-                          '"sub":'+select_sub+',',+
+                          '"sub":'+select_sub+','+
                           '"price":'+select_price+','+
                           '}')
 
