@@ -1539,8 +1539,8 @@ def post_shop_info(request):
         return HttpResponse("conection error")
     else:
         name = request.POST['name']
-        latitube = (float)request.POST['latitube']
-        longitube = (float)request.POST['longitube']
+        latitube = float(request.POST['latitube'])
+        longitube = float(request.POST['longitube'])
 
         shop = Local_shop(name=name,latitube=latitube,longitube=longitube)
         shop.save()
