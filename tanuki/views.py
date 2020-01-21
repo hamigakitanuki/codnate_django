@@ -1547,7 +1547,7 @@ def post_shop_info(request):
         shop.save()
         UserNo = models.QuerySet(Local_shop).all().aggregate(Max('id'))
 
-        return HttpResponse(UserNo)
+        return HttpResponse(str(UserNo['id__max']))
 
  
 
