@@ -1538,6 +1538,7 @@ def post_shop_info(request):
     if request.method == "GET":
         return HttpResponse("conection error")
     else:
+        print(request)
         name = request.POST['name']
         latitube = float(request.POST['latitube'])
         longitube = float(request.POST['longitube'])
