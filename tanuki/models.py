@@ -127,6 +127,26 @@ class Local_shop(models.Model):
     latitube = models.FloatField()
     longitube = models.FloatField()
 
+class Shop_photo(models.Model):
+    class Meta:
+        db_table = 'Shop_photo'
+
+    userNo = models.IntegerField(verbose_name='ユーザーNo')
+    FileName = models.CharField(verbose_name='ファイル名',max_length=40,default='none')
+    file = models.ImageField(verbose_name='ファイル',upload_to='tanuki')
+    FilePath = models.CharField(verbose_name='ファイルパス',max_length=100,default='none')
+    cate = models.CharField(verbose_name='カテゴリ',max_length=30,default='other')
+    sub = models.CharField(verbose_name='サブカテゴリ',max_length=30,default='other')
+    color = models.CharField(verbose_name='色',max_length=30,default='other')    
+    dress_value = models.IntegerField(verbose_name='ドレス率')
+    casual_value = models.IntegerField(verbose_name='カジュアル率')
+    simple_value = models.IntegerField(verbose_name='シンプル率')
+    vol = models.CharField(verbose_name='勢い',max_length=30)
+    tag = models.CharField(verbose_name='タグ1',max_length=20,null=True)
+    tag2 = models.CharField(verbose_name='タグ2',max_length=20,null=True)
+    tag3 = models.CharField(verbose_name='タグ3',max_length=20,null=True)
+    tag4 = models.CharField(verbose_name='タグ4',max_length=20,null=True)
+
 
 
     

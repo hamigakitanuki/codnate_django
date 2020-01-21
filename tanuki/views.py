@@ -1545,8 +1545,9 @@ def post_shop_info(request):
 
         shop = Local_shop(name=name,latitube=latitube,longitube=longitube)
         shop.save()
+        UserNo = models.QuerySet(Local_shop).all().aggregate(Max('id'))
 
-        return HttpResponse('shop save')
+        return HttpResponse(UserNo)
 
  
 
