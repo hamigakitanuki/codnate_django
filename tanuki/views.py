@@ -1535,7 +1535,7 @@ def get_recomend_item_list(request):
 
 @csrf_exempt
 def post_shop_info(request):
-    if request.methos == "GET":
+    if request.method == "GET":
         return HttpResponse("conection error")
     else:
         name = request.POST['name']
