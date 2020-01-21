@@ -1533,7 +1533,21 @@ def get_recomend_item_list(request):
                           '}')
 """
 
-    
+@csrf_exempt
+def post_shop_info(request):
+if request.methos == "GET":
+    return HttpResponse("conection error")
+else:
+    name = request.POST['name']
+    latitube = (float)request.POST['latitube']
+    longitube = (float)request.POST['longitube']
+
+    shop = Local_shop(name=name,latitube=latitube,longitube=longitube)
+    shop.save()
+
+    return HttpResponse('shop save')
+
+ 
 
 def get_recomend_local_item(request):
     userNo = request.GET.get('userNo')

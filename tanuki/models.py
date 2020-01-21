@@ -124,9 +124,8 @@ class Local_shop(models.Model):
     class Meta:
         db_table = 'Local_shop'
     name = models.CharField(max_length=30)
-    x = models.IntegerField()
-    y = models.IntegerField()
-    image = models.ImageField(upload_to='shop_image')
+    latitube = models.FloatField()
+    longitube = models.FloatField()
 
 
 
