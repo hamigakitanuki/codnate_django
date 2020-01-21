@@ -25,7 +25,7 @@ urlpatterns = [
      path(r'get_recomend_web_item_shoese',views.get_recomend_web_item_shoese,name = 'get_recomend_web_item_shoese'),
      path(r'get_recomend_list',views.get_recomend_item_list,name='get_recomend_item_list'),
      path(r'get_recomend_local_item',views.get_recomend_local_item,name = 'get_recomend_local_item'),
-     path(r'post_shop_info',views.post_shop_info = 'post_shop_info'),
+     path(r'post_shop_info',views.post_shop_info ,name = 'post_shop_info'),
 
 
 
