@@ -1685,6 +1685,9 @@ def get_recomend_local_item(request):
     shop_latitube_list = np.array(list(shop_all.values_list('latitube',flat=True)))
     shop_longitube_list = np.array(list(shop_all.values_list('longitube',flat=True)))
 
+    print('latitube')
+    print(shop_latitube_list)
+    print(shop_longitube_list)
     shop_user_latitube_range = abs(shop_latitube_list - user_latitube)
     shop_user_longitube_range = abs(shop_longitube_list - user_longitube)
 
