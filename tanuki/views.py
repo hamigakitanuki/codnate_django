@@ -211,6 +211,7 @@ def changeAccount(request):
     myAccount.save()
 
     return HttpResponse('account change complete')
+
 def getAccount(request):
     userNo = request.GET.get('userNo')
     myAccount = models.QuerySet(Account).filter(id=userNo)
@@ -1549,7 +1550,129 @@ def post_shop_info(request):
 
         return HttpResponse(str(UserNo['id__max']))
 
- 
+#画像のPOST用　userNoとファイルとファイル名がセットで来る
+@csrf_exempt
+def imgInDB_shop(request):
+    
+    #GETだった場合
+    if request.method == 'GET':
+        return HttpResponse("error")
+    
+    try:
+        #ファイルが入っているか確認
+        if request.FILES == None:
+            HttpResponse('error')
+        #アップロードされたファイルを変数に格納
+        print(request.POST)
+        form = PhotoForm(request.POST,request.FILES)
+        if not form.is_valid():
+            return HttpResponse("error")
+            raise ValueError('invalid form')        
+        filename = str(form.cleaned_data['image'])
+        userNo = re.split('_',filename)
+        userNo = int(userNo[0])
+        cate = request.POST['cate']
+        sub = request.POST['sub']
+        color = request.POST['color']
+        dress = int(request.POST['dress'])
+        casual = int(request.POST['casual'])
+        simple = int(request.POST['simple'])
+        tag1 = request.POST['tag1']
+        tag2 = request.POST['tag2']
+        tag3 = request.POST['tag3']
+        tag4 = request.POST['tag4']
+        vol = request.POST['vol']
+        print('user->'+str(userNo))
+        #画像をDBに登録
+        photo = Shop_photo(userNo=userNo,FileName=filename,file=form.cleaned_data['image'],
+                      cate=cate,sub=sub,color=color,dress_value=dress,casual_value=casual,simple_value=simple,
+                      tag=tag1,tag2=tag2,tag3=tag3,tag4=tag4,vol=vol)
+        photo.save()
+        #画像のパスを作成
+        #飛んできたリクエストからURLを取得
+        current_site = get_current_site(request)
+        #URLのドメインのみを取得
+        domain = current_site.domain
+        #画像のURLを作成
+        download_url = '{0}://{1}{2}'.format(
+        request.scheme,
+        domain,
+        photo.file.url,
+        )
+        #DBの画像のURLを更新
+        photo = models.QuerySet(Shop_photo)
+        photo_obj = photo.filter(FileName=filename).first()
+        photo_obj.FilePath = download_url
+        photo_obj.save()
+        #URLを文字列として返してあげる
+        return HttpResponse("File Up load Complete")
+
+    except Exception:
+        #画像じゃないとき、または例外発生
+        return HttpResponse('totyu de error') 
+
+def getImage_shop(request):
+    #それぞれを抽出(UserNo以外配列)
+    userNo = request.GET.get('UserNo')
+    cate = request.GET.get('cate')
+    sub = request.GET.get('sub')
+    color = request.GET.get('color')
+    
+    #UserNoがない場合はエラー
+    if(userNo is 'None'):
+        return HttpResponse('UserNo None')
+    #画像のクエリ作成
+    ac = models.QuerySet(Shop_photo)
+    #画像からUserNoで抽出
+    ac =  ac.filter(userNo = userNo)
+    #カテゴリで選別
+    if(cate is not None):
+        ac = ac.filter(cate = cate)
+    if(sub is not None):
+        ac = ac.filter(sub = cate)
+    if(color is not None):
+        ac = ac.filter(color = cate)
+    
+    #クエリをリスト型にする 画像のあるURLを送る
+    path_list  = list(ac.values_list('FilePath',flat=True))
+    cate_list  = list(ac.values_list('cate',flat=True))
+    sub_list   = list(ac.values_list('sub',flat=True))
+    color_list = list(ac.values_list('color',flat=True))
+    dress_value_list = list(ac.values_list('dress_value',flat=True))
+    casual_value_list = list(ac.values_list('casual_value',flat=True))
+    simple_value_list = list(ac.values_list('simple_value',flat=True))
+    tag1 = list(ac.values_list('tag',flat=True))
+    tag2 = list(ac.values_list('tag2',flat=True))
+    tag3 = list(ac.values_list('tag3',flat=True))
+    tag4 = list(ac.values_list('tag4',flat=True))
+    
+    dress = sum(dress_value_list)
+    casual = sum(casual_value_list)
+    simple = sum(simple_value_list)
+    
+    
+    
+
+    print(path_list)
+    #dict型にする
+    d = {
+        'path_list' :path_list,
+        'cate_list' :cate_list,
+        'sub_list'  :sub_list,
+        'color_list':color_list,
+        'dress':dress,
+        'casual':casual,
+        'simple':simple,
+        'dress_value_list':dress_value_list,
+        'casual_value_list':casual_value_list,
+        'simple_value_list':simple_value_list,
+        'tag1':tag1,
+        'tag2':tag2,
+        'tag3':tag3,
+        'tag4':tag4
+    }
+    return JsonResponse(d)
+
 
 def get_recomend_local_item(request):
     userNo = request.GET.get('userNo')
