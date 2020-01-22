@@ -1675,11 +1675,47 @@ def getImage_shop(request):
 
 
 def get_recomend_local_item(request):
-    userNo = request.GET.get('userNo')
-    myAccount = models.QuerySet(Account).filter(id=userNo)
+    import numpy as np
 
-    x = request.GET.get('x')
-    y = request.GET.get('y')
+    user_latitube = request.GET.get('latitube')
+    user_longitube = request.GET.get('longitube')
+
+    shop_all = models.QuerySet(Local_shop).all()
+
+    shop_latitube_list = np.array(list(shop_all.values_list('latitube',flat=True)))
+    shop_longitube_list = np.array(list(shop_all.values_list('longitube',flat=True)))
+
+    shop_user_latitube_range = abs(shop_latitube_list - user_latitube)
+    shop_user_longitube_range = abs(shop_longitube_list - user_longitube)
+
+    range_list = shop_latitube_list + shop_longitube_list
+
+    range_list = range_list.argsort()
+    
+    shop_name = list(shop_all.values_list('name',flat=True))
+    shop_id = list(shop_all.values_list('id',flat=True))
+
+    tikai_omise_name = []
+    tikai_omise_photo = []
+    tikai_omise_latitube = []
+    tikai_omise_longitube = []
+
+    for i ,select_idx in enumerate(range_list):
+        tikai_omise_name.append(shop_name[select_idx])
+        tikai_omise_photo.append(list(models.QuerySet(Shop_photo).filter(shop_id[idx]).values_list('FilePath',flat=True)))
+        tikai_omise_latitube.append(shop_latitube_list[select_idx])
+        tikai_omise_longitube.append(shop_longitube_list[select_idx])
+
+    d = {
+        'shop_name':tikai_omise_name,
+        'shop_photo':tikai_omise_photo,
+        'shop_latitube':tikai_omise_latitube,
+        'shop_longitube':tikai_omise_longitube
+    }
+
+    return JsonResponse(d)
+
+
 
 
 

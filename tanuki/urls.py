@@ -28,6 +28,7 @@ urlpatterns = [
      path(r'post_shop_info',views.post_shop_info ,name = 'post_shop_info'),
      path(r'imgInDB_shop',views.imgInDB_shop,name = 'imgInDB_shop'),
      path(r'getImage_shop',views.getImage_shop,name = 'getImage_shop'),
+     path(r'get_recomend_local_item',views.get_recomend_local_item,name = 'get_recomend_local_item'),
 
 
 
