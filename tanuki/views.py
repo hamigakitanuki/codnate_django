@@ -1677,8 +1677,8 @@ def getImage_shop(request):
 def get_recomend_local_item(request):
     import numpy as np
 
-    user_latitube = request.GET.get('latitube')
-    user_longitube = request.GET.get('longitube')
+    user_latitube = float(request.GET.get('latitube'))
+    user_longitube = float(request.GET.get('longitube'))
 
     shop_all = models.QuerySet(Local_shop).all()
 
@@ -1688,6 +1688,7 @@ def get_recomend_local_item(request):
     print('latitube')
     print(shop_latitube_list)
     print(shop_longitube_list)
+
     shop_user_latitube_range = abs(shop_latitube_list - user_latitube)
     shop_user_longitube_range = abs(shop_longitube_list - user_longitube)
 
