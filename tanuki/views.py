@@ -1718,8 +1718,8 @@ def get_recomend_local_item(request):
     return HttpResponse("{"+
         "'shop_name':"+tikai_omise_name+","+
         "'shop_photo':"+tikai_omise_photo+","+
-        "'shop_latitube':"+tikai_omise_latitube+","
-        "'shop_longitube':"tikai_omise_longitube+"}"
+        "'shop_latitube':"+tikai_omise_latitube+","+
+        "'shop_longitube':"+tikai_omise_longitube+"}"
     )
 
 
