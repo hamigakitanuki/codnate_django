@@ -1705,8 +1705,11 @@ def get_recomend_local_item(request):
     tikai_omise_longitube = []
 
     for i ,select_idx in enumerate(range_list):
+        print(select_idx)
         tikai_omise_name.append(shop_name[select_idx])
-        tikai_omise_photo.append(list(models.QuerySet(Shop_photo).filter(shop_id[select_idx]).values_list('FilePath',flat=True)))
+        shop_photo_list = list(models.QuerySet(Shop_photo).filter(shop_id[select_idx]).values_list('FilePath',flat=True))
+        print(shop_photo_list)
+        tikai_omise_photo.append(shop_photo_list)
         tikai_omise_latitube.append(shop_latitube_list[select_idx])
         tikai_omise_longitube.append(shop_longitube_list[select_idx])
 
