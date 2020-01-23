@@ -1520,10 +1520,10 @@ def get_recomend_item_list(request):
         select_sub.append(sub[i])
         select_price.append(price[i])
     
-    return HttpResponse("{'link_url':"+select_link_url+","+
-         "'image_url':"+select_image_url+","+
-         "'sub':"+select_sub+","+
-         "'price':"+select_price+"}")
+    return HttpResponse("{'link_url':"+str(select_link_url)+","+
+                        "'image_url':"+str(select_image_url)+","+
+                        "'sub':"+str(select_sub)+","+
+                        "'price':"+str(select_price)+"}")
     
 
 @csrf_exempt
