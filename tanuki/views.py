@@ -1680,7 +1680,9 @@ def get_recomend_local_item(request):
     user_latitube = float(request.GET.get('latitube'))
     user_longitube = float(request.GET.get('longitube'))
 
-    shop_all = models.QuerySet(Local_shop).all()
+    shop_id = list(models.QuerySet.all().distinct('id').values_list('id',flat=True))
+
+    shop_all = models.QuerySet(Local_shop).filter(id__in=shop_id)
 
     shop_latitube_list = np.array(list(shop_all.values_list('latitube',flat=True)))
     shop_longitube_list = np.array(list(shop_all.values_list('longitube',flat=True)))
@@ -1713,14 +1715,13 @@ def get_recomend_local_item(request):
         tikai_omise_latitube.append(shop_latitube_list[select_idx])
         tikai_omise_longitube.append(shop_longitube_list[select_idx])
 
-    d = {
-        'shop_name':tikai_omise_name,
-        'shop_photo':tikai_omise_photo,
-        'shop_latitube':tikai_omise_latitube,
-        'shop_longitube':tikai_omise_longitube
-    }
+    return HttpResponse("{"+
+        "'shop_name':"+tikai_omise_name+","+
+        "'shop_photo':"+tikai_omise_photo+","+
+        "'shop_latitube':"+tikai_omise_latitube+","
+        "'shop_longitube':"tikai_omise_longitube+"}"
+    )
 
-    return JsonResponse(d)
 
 
 
