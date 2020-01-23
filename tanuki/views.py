@@ -1519,20 +1519,12 @@ def get_recomend_item_list(request):
         select_image_url.append(image_url[i])
         select_sub.append(sub[i])
         select_price.append(price[i])
-    d = {'link_url':select_link_url,
-         'image_url':select_image_url,
-         'sub':select_sub,
-         'price':select_price}
-    print(d)
-    return JsonResponse(d)
-    """
-    return HttpResponse('{'+
-                          '"link_url":'+str(select_link_url)+','+
-                          '"image_url":'+str(select_image_url)+','+
-                          '"sub":'+str(select_sub)+','+
-                          '"price":'+str(select_price)+','+
-                          '}')
-"""
+    
+    return HttpResponse("{'link_url':"+select_link_url+","+
+         "'image_url':"+select_image_url+","+
+         "'sub':"+select_sub+","+
+         "'price':"+select_price+"}")
+    
 
 @csrf_exempt
 def post_shop_info(request):
@@ -1680,7 +1672,7 @@ def get_recomend_local_item(request):
     user_latitube = float(request.GET.get('latitube'))
     user_longitube = float(request.GET.get('longitube'))
 
-    shop_id = list(models.QuerySet(Shop_photo).all().distinct('id').values_list('id',flat=True))
+    shop_id = list(models.QuerySet(Shop_photo).all().distinct('userNo').values_list('userNo',flat=True))
 
     shop_all = models.QuerySet(Local_shop).filter(id__in=shop_id)
 
