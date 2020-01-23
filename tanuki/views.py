@@ -1680,7 +1680,7 @@ def get_recomend_local_item(request):
     user_latitube = float(request.GET.get('latitube'))
     user_longitube = float(request.GET.get('longitube'))
 
-    shop_id = list(models.QuerySet.all().distinct('id').values_list('id',flat=True))
+    shop_id = list(models.QuerySet(Shop_photo).all().distinct('id').values_list('id',flat=True))
 
     shop_all = models.QuerySet(Local_shop).filter(id__in=shop_id)
 
